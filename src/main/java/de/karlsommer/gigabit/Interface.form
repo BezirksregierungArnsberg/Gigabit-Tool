@@ -1,0 +1,316 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="de.karlsommer.gigabit.Interface">
+  <grid id="27dc6" binding="mainView" layout-manager="GridLayoutManager" row-count="10" column-count="8" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+    <margin top="0" left="0" bottom="0" right="0"/>
+    <constraints>
+      <xy x="20" y="20" width="1227" height="430"/>
+    </constraints>
+    <properties/>
+    <border type="none"/>
+    <children>
+      <component id="7f716" class="javax.swing.JButton" binding="memasysEinlesenUndBedarfeAktualisieren">
+        <constraints>
+          <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Go!"/>
+        </properties>
+      </component>
+      <component id="dad5f" class="javax.swing.JLabel">
+        <constraints>
+          <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="&lt;html&gt;Memasystabelle einlesen &lt;br&gt; und in Datenbank Bedarfe aktualisieren"/>
+        </properties>
+      </component>
+      <component id="240b1" class="javax.swing.JLabel">
+        <constraints>
+          <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="&lt;html&gt;Javascript und HTML-Dateien&lt;br&gt; Gigabit schreiben"/>
+        </properties>
+      </component>
+      <component id="3d434" class="javax.swing.JLabel">
+        <constraints>
+          <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="&lt;html&gt;Memasys-Tabelle mit &lt;br&gt;Datenbank vergleichen"/>
+        </properties>
+      </component>
+      <component id="3406b" class="javax.swing.JButton" binding="javascriptUndHTMLGigabitSchreiben">
+        <constraints>
+          <grid row="5" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Go!"/>
+        </properties>
+      </component>
+      <component id="70d1b" class="javax.swing.JButton" binding="compareToMemasys">
+        <constraints>
+          <grid row="6" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Go!"/>
+        </properties>
+      </component>
+      <component id="e67fb" class="javax.swing.JLabel" binding="ausgabeLabel">
+        <constraints>
+          <grid row="8" column="0" row-span="1" col-span="4" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Ausgabe"/>
+        </properties>
+      </component>
+      <component id="3103a" class="javax.swing.JLabel">
+        <constraints>
+          <grid row="7" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Testbutton"/>
+        </properties>
+      </component>
+      <component id="f08f" class="javax.swing.JButton" binding="goButton" default-binding="true">
+        <constraints>
+          <grid row="7" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Go!"/>
+        </properties>
+      </component>
+      <component id="11404" class="javax.swing.JLabel">
+        <constraints>
+          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Tabelle von IT-NRW einlesen"/>
+        </properties>
+      </component>
+      <component id="bdf0e" class="javax.swing.JLabel">
+        <constraints>
+          <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Fehlende Schulen anzeigen"/>
+        </properties>
+      </component>
+      <component id="dc599" class="javax.swing.JButton" binding="toDoButton1" default-binding="true">
+        <constraints>
+          <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
+            <preferred-size width="41" height="30"/>
+          </grid>
+        </constraints>
+        <properties>
+          <text value="toDo"/>
+        </properties>
+      </component>
+      <component id="f8a63" class="javax.swing.JLabel">
+        <constraints>
+          <grid row="0" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="&lt;html&gt;Fehlende Schulen in&lt;br&gt; Memasys erstellen"/>
+        </properties>
+      </component>
+      <component id="66a91" class="javax.swing.JButton" binding="toDoButton3" default-binding="true">
+        <constraints>
+          <grid row="0" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="toDo"/>
+        </properties>
+      </component>
+      <component id="b179a" class="javax.swing.JLabel">
+        <constraints>
+          <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Geschl. Schulen anzeigen"/>
+        </properties>
+      </component>
+      <component id="d94a" class="javax.swing.JButton" binding="toDoButton2" default-binding="true">
+        <constraints>
+          <grid row="1" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
+            <preferred-size width="41" height="30"/>
+          </grid>
+        </constraints>
+        <properties>
+          <text value="toDo"/>
+        </properties>
+      </component>
+      <component id="78ba8" class="javax.swing.JLabel">
+        <constraints>
+          <grid row="1" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="&lt;html&gt;Geschlossene Schulen&lt;br&gt; in Memasys löschen"/>
+        </properties>
+      </component>
+      <component id="952c3" class="javax.swing.JButton" binding="toDoButton4" default-binding="true">
+        <constraints>
+          <grid row="1" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="toDo"/>
+        </properties>
+      </component>
+      <component id="11052" class="javax.swing.JLabel">
+        <constraints>
+          <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="&lt;html&gt;Schulen mit fehlenden&lt;br&gt;Geocoordinaten zeigen"/>
+        </properties>
+      </component>
+      <component id="baae4" class="javax.swing.JLabel">
+        <constraints>
+          <grid row="0" column="6" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="&lt;html&gt;Fehlende Schulen&lt;br&gt; in Datenbank erstellen"/>
+        </properties>
+      </component>
+      <component id="4782b" class="javax.swing.JButton" binding="toDoButton5" default-binding="true">
+        <constraints>
+          <grid row="0" column="7" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="toDo"/>
+        </properties>
+      </component>
+      <component id="5600a" class="javax.swing.JLabel">
+        <constraints>
+          <grid row="1" column="6" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="&lt;html&gt;Geschl. Schulen&lt;br&gt; in Datenbank löschen"/>
+        </properties>
+      </component>
+      <component id="4689d" class="javax.swing.JButton" binding="toDoButton6" default-binding="true">
+        <constraints>
+          <grid row="1" column="7" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="toDo"/>
+        </properties>
+      </component>
+      <component id="e56c9" class="javax.swing.JButton" binding="toDoButton" default-binding="true">
+        <constraints>
+          <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="toDo"/>
+        </properties>
+      </component>
+      <component id="f0a81" class="javax.swing.JButton" binding="showAndLoadSchoolsWithoutGeodata" default-binding="true">
+        <constraints>
+          <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Go!"/>
+        </properties>
+      </component>
+      <component id="cd232" class="javax.swing.JLabel">
+        <constraints>
+          <grid row="2" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Geokoordinaten in DB laden"/>
+        </properties>
+      </component>
+      <component id="752fb" class="javax.swing.JButton" binding="geokoordinatenLaden">
+        <constraints>
+          <grid row="2" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
+            <preferred-size width="41" height="30"/>
+          </grid>
+        </constraints>
+        <properties>
+          <text value="Go!"/>
+        </properties>
+      </component>
+      <component id="6cb8a" class="javax.swing.JLabel">
+        <constraints>
+          <grid row="5" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Dateien ADV schreiben"/>
+        </properties>
+      </component>
+      <component id="5b8a9" class="javax.swing.JButton" binding="toDoButton8" default-binding="true">
+        <constraints>
+          <grid row="5" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
+            <preferred-size width="41" height="30"/>
+          </grid>
+        </constraints>
+        <properties>
+          <text value="toDo"/>
+        </properties>
+      </component>
+      <component id="cb686" class="javax.swing.JButton" binding="breitbandCSVDateiEinlesen" default-binding="true">
+        <constraints>
+          <grid row="4" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
+            <preferred-size width="78" height="34"/>
+          </grid>
+        </constraints>
+        <properties>
+          <text value="Go!"/>
+        </properties>
+      </component>
+      <scrollpane id="6cda5">
+        <constraints>
+          <grid row="9" column="0" row-span="1" col-span="8" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties/>
+        <border type="none"/>
+        <children>
+          <component id="c8efa" class="javax.swing.JTable" binding="ausgabeTabelle">
+            <constraints/>
+            <properties/>
+          </component>
+        </children>
+      </scrollpane>
+      <component id="22c53" class="javax.swing.JLabel">
+        <constraints>
+          <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="&lt;html&gt;Gigabit Tabelle einlesen und&lt;br&gt; fehlende Schulen ausgeben"/>
+        </properties>
+      </component>
+      <component id="20d4d" class="javax.swing.JLabel">
+        <constraints>
+          <grid row="4" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="&lt;html&gt;Gigabit Tabelle einlesen&lt;br&gt; und Daten aktualisieren"/>
+        </properties>
+      </component>
+      <component id="af824" class="javax.swing.JButton" binding="toDoButton7" default-binding="true">
+        <constraints>
+          <grid row="4" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Go!"/>
+        </properties>
+      </component>
+      <component id="19139" class="javax.swing.JLabel">
+        <constraints>
+          <grid row="2" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="&lt;html&gt;Doppelte Geocoordinaten&lt;br&gt;durch verschieben lösen"/>
+        </properties>
+      </component>
+      <component id="7cfba" class="javax.swing.JButton" binding="goButton1" default-binding="true">
+        <constraints>
+          <grid row="2" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Go!"/>
+        </properties>
+      </component>
+    </children>
+  </grid>
+</form>
