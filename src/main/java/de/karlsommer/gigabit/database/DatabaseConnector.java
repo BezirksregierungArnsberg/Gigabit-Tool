@@ -3,10 +3,17 @@ package de.karlsommer.gigabit.database;
 import de.karlsommer.gigabit.datastructures.QueryResult;
 import de.karlsommer.gigabit.datastructures.Queue;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
+import java.sql.*;
+import java.text.Format;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.text.DateFormat;
 
 /**
  * <p>
@@ -56,8 +63,20 @@ public class DatabaseConnector{
   
   public static DatabaseConnector getInstance()
   {
-      if(_this == null)
-          _this = new DatabaseConnector("","","/Users/karl/NetBeansProjects/JSIandGMC/database.db","","");
+      if(_this == null) {
+        Date date = new Date();
+        Format formatter = new SimpleDateFormat("YYYY-MM-dd");
+        File src = new File("./databases/gigabit.db");
+        File target = new File("./databases/gigabit-"+formatter.format(date)+".db");
+
+        try {
+          Files.copy(src.toPath(), target.toPath());
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
+
+        _this = new DatabaseConnector("", "", "./databases/gigabit.db", "", "");
+      }
       return _this;
   }
 

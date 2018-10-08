@@ -5,8 +5,8 @@
  */
 package de.karlsommer.gigabit.filehandling;
 
-import de.karlsommer.jsiandgmc.database.model.Schule;
-import de.karlsommer.jsiandgmc.database.repositories.SchuleRepository;
+import de.karlsommer.gigabit.database.model.Schule;
+import de.karlsommer.gigabit.database.repositories.SchuleRepository;
 import de.micromata.opengis.kml.v_2_2_0.*;
 import org.apache.commons.io.FileUtils;
 
@@ -49,7 +49,7 @@ public class JavascriptWriter {
 
     public void writeJavaScript()
     {
-        final Kml kml = Kml.unmarshal(new File("/Users/karl/NetBeansProjects/JSIandGMC/gadm36_DEU_2_NRW_Arnsberg.kml"));
+        final Kml kml = Kml.unmarshal(new File("./output/gadm36_DEU_2_NRW_Arnsberg.kml"));
         final Document document = (Document) kml.getFeature();
         final Folder folder = (Folder) document.getFeature().get(0);
         StringBuilder stringBuilder = new StringBuilder();
