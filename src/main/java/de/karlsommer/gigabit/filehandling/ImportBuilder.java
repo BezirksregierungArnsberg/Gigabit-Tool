@@ -91,9 +91,16 @@ public class ImportBuilder {
     public ImportBuilder(){
     }
 
+    public boolean ladeCSVWebsiteDaten(String filename)
+    {
+        daten = new Tabelle(filename,',', true, false);
+
+        return (daten.gibZeilenanzahl() > 0);
+    }
+
     public boolean ladeBreitbandDaten(String filename)
     {
-        daten = new Tabelle(filename,';', true);
+        daten = new Tabelle(filename,';', true, true);
         if (daten.gibZeilenanzahl() > 0){
             daten.gibSpaltenbezeichner().set(0, "Angaben zum Schulträger"); //Hack, da am Anfang immer ein Sonderzeichen steht.
         }
@@ -102,14 +109,14 @@ public class ImportBuilder {
     }
 
     public boolean ladeMemasysDaten(String filename){
-        daten = new Tabelle(filename,';', true);
+        daten = new Tabelle(filename,';', true, true);
         if (daten.gibZeilenanzahl() > 0){
             daten.gibSpaltenbezeichner().set(0, "Interne Nummer"); //Hack, da am Anfang immer ein Sonderzeichen steht.
         }
 
         return (daten.gibZeilenanzahl() > 0);        
     }
-    public ArrayList<ArrayList<String>> holeSchuldatenAusBreitbandDatei(){
+    public ArrayList<ArrayList<String>> gibArrayListsAusTabellen(){
 
         return daten.getStrings();
 

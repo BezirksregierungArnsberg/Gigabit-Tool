@@ -70,7 +70,9 @@ public class DatabaseConnector{
         File target = new File("./databases/gigabit-"+formatter.format(date)+".db");
 
         try {
-          Files.copy(src.toPath(), target.toPath());
+          if(!target.exists() && !target.isDirectory()) {
+            Files.copy(src.toPath(), target.toPath());
+          }
         } catch (IOException e) {
           e.printStackTrace();
         }

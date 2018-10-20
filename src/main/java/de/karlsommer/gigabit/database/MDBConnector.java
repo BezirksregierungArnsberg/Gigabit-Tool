@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class MDBConnector {
-    private String filename = "schulver.mdb";
+    private String filename = "./databases/schulver.mdb";
     private static MDBConnector _instance = null;
     public static final ArrayList<String> columnsFromDatabase = new ArrayList<String>() {{
         add("Schulnr");

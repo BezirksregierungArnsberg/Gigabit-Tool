@@ -19,7 +19,7 @@ $from .= "Reply-To: noreply@bra.nrw.de\r\n";
 $from .= "Content-Type: text/plain\r\n";
 $text = "";
 foreach ($_POST as $key => $value)
-    $text .= htmlspecialchars($value).";";
+    $text .= htmlspecialchars($value)."|";
  
 //mail($empfaenger, $betreff, $text, $from);
 

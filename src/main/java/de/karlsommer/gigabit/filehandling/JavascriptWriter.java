@@ -47,6 +47,11 @@ public class JavascriptWriter {
         return "";
     }
 
+    public void publishBericht()
+    {
+
+    }
+
     public void writeJavaScript()
     {
         final Kml kml = Kml.unmarshal(new File("./output/gadm36_DEU_2_NRW_Arnsberg.kml"));
@@ -61,41 +66,17 @@ public class JavascriptWriter {
                 "    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0\">\n" +
                 "    <meta name=\"apple-mobile-web-app-capable\" content=\"yes\">\n" +
                 "        <script src=\"lib/jQuery.js\"></script>\n" +
-                "        <script src=\"lib/jQueryUI.js\"></script>\n" +
-                "        <script src=\"lib/bootstrap_table.js\"></script>\n" +
-                "        <script src=\"lib/bootstrap_tables_locales.js\"></script>\n" +
-                "    <link rel=\"stylesheet\" href=\"lib/jQueryUI.css\" type=\"text/css\">\n" +
+                "        <script src=\"lib/jquery-ui.min.js\"></script>\n" +
+                "        <script src=\"lib/bootstrap-table.js\"></script>\n" +
+                "        <script src=\"lib/custom.js\"></script>\n" +
+                "        <script src=\"./lib/OpenLayers.js\"></script>\n" +
+                "    <link rel=\"stylesheet\" href=\"lib/jquery-ui.min.css\" type=\"text/css\">\n" +
                 "    <link rel=\"stylesheet\" href=\"lib/olstyle.css\" type=\"text/css\">\n" +
                 "    <link rel=\"stylesheet\" href=\"lib/fontawesome.css\" type=\"text/css\">\n" +
-                "    <link rel=\"stylesheet\" href=\"lib/bootstrap_table.css\" type=\"text/css\">\n" +
+                "    <link rel=\"stylesheet\" href=\"lib/bootstrap-table.css\" type=\"text/css\">\n" +
                 "    <link rel=\"stylesheet\" href=\"lib/custom.css\" type=\"text/css\">\n" +
                 "        <title>Schulen in der Bezirksregierung</title>\n" +
-                "        <script src=\"lib/custom.js\"></script>\n" +
                 "\n" +
-                "        <style>\n" +
-                "\n" +
-                "      /* Always set the map height explicitly to define the size of the div\n" +
-                "       * element that contains the map. */\n" +
-                "      #map {\n" +
-                "        height: 90%;\n" +
-                "      }\n" +
-                "      #table {\n" +
-                "       margin-right:80px;        height:10%;\n" +
-                "        overflow-y: scroll;\n" +
-                "      }\n" +
-                "\n" +
-                "      /* Optional: Makes the sample page fill the window. */\n" +
-                "      html, body {\n" +
-                "        height: 100%;\n" +
-                "        min-height: 100%;\n" +
-                "      }\n" +
-                "   label, input { display:block; }\n" +
-                "    input.text { margin-bottom:12px; width:95%; padding: .4em; }\n" +
-                "    fieldset { padding:0; border:0; margin-top:25px; }\n" +
-                "    h1 { font-size: 1.2em; margin: .6em 0; }\n" +
-                "    .ui-dialog .ui-state-error { padding: .3em; }\n" +
-                "    .validateTips { border: 1px solid transparent; padding: 0.3em; }    </style>\n" +
-                "        <script src=\"./lib/OpenLayers.js\"></script>\n" +
                 "        <script>\n" +
                 "            var map, mappingLayer, vectorLayer, selectMarkerControl, selectedFeature;\n" +
                 "\n" +
@@ -103,7 +84,7 @@ public class JavascriptWriter {
                 "            selectedFeature = feature;\n" +
                 "            popup = new OpenLayers.Popup.FramedCloud(\"tempId\", feature.geometry.getBounds().getCenterLonLat(),\n" +
                 "                                     null,\n" +
-                "                                     selectedFeature.attributes.salutation + \" from Lat:\" + selectedFeature.attributes.Lat + \" Lon:\" + selectedFeature.attributes.Lon,\n" +
+                "                                     selectedFeature.attributes.salutation,\n" +
                 "                                     null, true);\n" +
                 "            feature.popup = popup;\n" +
                 "            map.addPopup(popup);\n" +
@@ -115,11 +96,49 @@ public class JavascriptWriter {
                 "            feature.popup = null;\n" +
                 "        }   \n" +
                 "\n" +
+                "        function popupClear() {\n" +
+                "            //alert('number of popups '+map.popups.length);\n" +
+                "            while( map.popups.length ) {\n" +
+                "                 map.removePopup(map.popups[0]);\n" +
+                "            }\n" +
+                "        }\n" +
+                "\n" +
                 "        function init(){\n" +
-                "            map = new OpenLayers.Map( 'map');\n" +
+                "        var acceptingDialog = $( \"#accepting-dialog\" ).dialog({\n" +
+                "              autoOpen: true,\n" +
+                "              height: 300,\n" +
+                "              width: 350,\n" +
+                "              modal: true,\n" +
+                "              closeOnEscape: false,\n" +
+                "              open: function(event, ui) {\n" +
+                "                    $(\".ui-dialog-titlebar-close\", ui.dialog | ui).hide();\n" +
+                "                },\n" +
+                "              buttons: {\n" +
+                "                \"akzeptieren\": function() {\n" +
+                "                  acceptingDialog.dialog( \"close\" );\n" +
+                "                  initMap();\n" +
+                "                }\n" +
+                "              }\n" +
+                "            });\n" +
+                "         }\n" +
+                "            \n" +
+                "        function initMap(){\n" +
+                "            map = new OpenLayers.Map( 'map', {theme: null});\n" +
                 "            mappingLayer = new OpenLayers.Layer.OSM(\"Simple OSM Map\");\n" +
+                "            var kmlLayer = new OpenLayers.Layer.Vector(\"KML\", {\n" +
+                "            strategies: [new OpenLayers.Strategy.Fixed()],\n" +
+                "            protocol: new OpenLayers.Protocol.HTTP({\n" +
+                "                url: \"./gadm36_DEU_2_NRW_Arnsberg.kml\",\n" +
+                "                format: new OpenLayers.Format.KML({\n" +
+                "                    extractStyles: true, \n" +
+                "                    extractAttributes: true,\n" +
+                "                    maxDepth: 8\n" +
+                "                })\n" +
+                "        })\n" +
+                "        });\n" +
                 "\n" +
                 "            map.addLayer(mappingLayer);\n" +
+                "            map.addLayer(kmlLayer);\n" +
                 "            vectorLayer = new OpenLayers.Layer.Vector(\"Vector Layer\", {projection: \"EPSG:4326\"}); \n" +
                 "            selectMarkerControl = new OpenLayers.Control.SelectFeature(vectorLayer, {onSelect: onFeatureSelect, onUnselect: onFeatureUnselect});\n" +
                 "            map.addControl(selectMarkerControl);\n" +
@@ -131,7 +150,7 @@ public class JavascriptWriter {
                 "                    new OpenLayers.Projection(\"EPSG:4326\"),\n" +
                 "                    map.getProjectionObject())\n" +
                 "\n" +
-                "                , 10\n" +
+                "                , 8\n" +
                 "            );\n");
         for(Schule schule: (new SchuleRepository()).getSchoolsWithGeodata())
         {
@@ -158,7 +177,7 @@ public class JavascriptWriter {
                 "            vectorLayer.addFeatures(feature);\n" +
                 "            var popup = new OpenLayers.Popup.FramedCloud(\"tempId\", new OpenLayers.LonLat( lon, lat).transform(\"EPSG:4326\", map.getProjectionObject()),\n" +
                 "                       null,\n" +
-                "                       feature.attributes.salutation + \" from Lat:\" + feature.attributes.Lat + \" Lon:\" + feature.attributes.Lon,\n" +
+                "                       feature.attributes.salutation ,\n" +
                 "                       null, true);\n" +
                 "            feature.popup = popup;\n" +
                 "        }\n" +
@@ -166,10 +185,13 @@ public class JavascriptWriter {
                 "        </script>\n" +
                 "    </head>\n" +
                 "    <body onload=\"init()\">\n" +
+                "<div id=\"confirm-dialog\" title=\"Daten &uuml;bertragen\"><span style=\"color:red;\">Daten erfolgreich übertragen.<span></div>\n" +
+                "        <div id=\"accepting-dialog\" title = \"Einverst&auml;ndniserkl&auml;rung\">Hiermit best&auml;tige ich, die dargestellten Informationen ausschließlich f&uuml;r den dienstlichen Gebrauch zu nutzen und nicht an Dritte weiterzugeben.</div>\n" +
+                "\n" +
                 "<div id=\"dialog-form\" title=\"Neue Schule hinzuf&uuml;gen\">\n" +
                 "  <p class=\"validateTips\">Es ist notwendig alle Felder auszuf&uuml;llen.</p>\n" +
                 " \n" +
-                "  <form>\n" +
+                "  <form id=\"myForm\">\n" +
                 "    <fieldset>\n" +
                 "      <input type=\"hidden\" name=\"interneNumme\" id=\"interneNumme\" value=\"0\">\n" +
                 "      <label for=\"schulnummer\">Schulnummer</label>\n" +
@@ -198,8 +220,7 @@ public class JavascriptWriter {
                 "</div>"+
                 "    <div id=\"map\"></div>\n" +
                 "    <div id=\"table\">\n" +
-                "    <table data-toggle=\"table\">"+
-                "<thead>\n" +
+                "    <table class=\"table\" data-toggle=\"table\" data-classes=\"table table-hover table-condensed\" data-striped=\"true\"><thead>\n" +
                 "    <tr>\n" +
                 "      <th>Ver&auml;ndern</th>\n"+
                 "      <th data-field=\"Schulname\" data-sortable=\"true\">Schulname</th>\n" +
@@ -219,7 +240,7 @@ public class JavascriptWriter {
             stringBuilder.append("<td>").append(schule.getPLZ()).append("</td>\n");
             stringBuilder.append("<td>").append(schule.getOrt()).append("</td>\n");
             stringBuilder.append("<td>").append(schule.getStrasse_Hsnr()).append("</td>\n");
-            stringBuilder.append("<td>").append(schule.getVorwahl()).append("</td><td>").append(schule.getRufnummer()).append("</td>\n");
+            stringBuilder.append("<td>0").append(schule.getVorwahl()).append("</td><td>").append(schule.getRufnummer()).append("</td>\n");
             if(schule.getAnbindung_Kbit_DL() == 0)
                 stringBuilder.append("<td>").append("n.v.");
             else
@@ -237,7 +258,7 @@ public class JavascriptWriter {
                 "      <div controlheight=\"153\" style=\"margin: 10px; user-select: none; position: absolute; bottom: 30px; right: 10px;\">\n" +
                 "      <div style=\"box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 4px -1px; border-radius: 2px; cursor: pointer; background-color: rgb(255, 255, 255); width: 40px; height: 80px;\">\n" +
                 "        <button id=\"toggleButton\" title=\"Vergrößern\" aria-label=\"Vergrößern\" onClick=\"toggle()\" type=\"button\" style=\"background: none; display: block; border: 0px; margin: 0px; padding: 0px; position: relative; cursor: pointer; user-select: none; overflow: hidden; width: 40px; height: 40px; top: 0px; left: 0px;\">\n" +
-                "<i class=\"fa fa-chevron-up\" style=\"font-size:24px\"></i>\n" +
+                "<span id=\"chevron\" class=\"ui-icon ui-icon-caret-1-n\"></span>\n" +
                 "        </button>\n" +
                 "        <button id=\"add_school\" title=\"Vergrößern\" aria-label=\"Vergrößern\" type=\"button\" style=\"background: none; display: block; border: 0px; margin: 0px; padding: 0px; position: relative; cursor: pointer; user-select: none; overflow: hidden; width: 40px; height: 40px; top: 0px; left: 0px;\">\n" +
                 "<i style=\"font-size:10pt\">hinzu-<br />f&uuml;gen</i>\n" +
@@ -626,7 +647,7 @@ public class JavascriptWriter {
     {
         StringBuilder stringBuilder = new StringBuilder();
 
-        stringBuilder.append("<button onClick=\"modifyTable(").append(schule.getId()).append(", ").append(escapedQuote).append(schule.getName_der_Schule()).append(escapedQuote).append(", ").append(schule.getPLZ()).append(", ").append(escapedQuote).append(schule.getOrt()).append(escapedQuote).append(", ").append(escapedQuote).append(schule.getStrasse_Hsnr()).append(escapedQuote).append(", ").append(escapedQuote).append(schule.getVorwahl()).append(escapedQuote).append(", ").append(escapedQuote).append(schule.getRufnummer()).append(escapedQuote).append(", ").append(schule.getAnbindung_Kbit_DL()).append(", ").append(schule.getAnbindung_Kbit_UL()).append(") \" class=\"ui-button ui-widget ui-corner-all\"><i style=\"font-size:10pt;\">&Auml;ndern</i></button>");
+        stringBuilder.append("<button onClick=\"modifyTable(").append(schule.getId()).append(", ").append(escapedQuote).append(schule.getName_der_Schule()).append(escapedQuote).append(", ").append(schule.getPLZ()).append(", ").append(escapedQuote).append(schule.getOrt()).append(escapedQuote).append(", ").append(escapedQuote).append(schule.getStrasse_Hsnr()).append(escapedQuote).append(", ").append(escapedQuote).append("0").append(schule.getVorwahl()).append(escapedQuote).append(", ").append(escapedQuote).append(schule.getRufnummer()).append(escapedQuote).append(", ").append(schule.getAnbindung_Kbit_DL()).append(", ").append(schule.getAnbindung_Kbit_UL()).append(") \" class=\"ui-button ui-widget ui-corner-all\"><i style=\"font-size:10pt;\">&Auml;ndern</i></button>");
         return stringBuilder.toString();
     }
     

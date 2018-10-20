@@ -11,7 +11,7 @@ public class Tabelle{
     private ArrayList<ArrayList<String>> daten;
     private ArrayList<String> spaltenbezeichner;
 
-    public Tabelle(String pDateiname, char pTrenner, boolean pSpaltenbezeichner){
+    public Tabelle(String pDateiname, char pTrenner, boolean pSpaltenbezeichner, boolean firstLineContainsData){
         //Zeilen aus Datei lesen und an Trennzeichen in Stringfelder zerlegen.
         System.out.println(pDateiname);
         daten = new ArrayList<>();
@@ -20,7 +20,11 @@ public class Tabelle{
             BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(pDateiname), "UTF8"));
 
             String zeile = null;
-            int firstLine = 0;
+            int firstLine;
+            if(firstLineContainsData)
+                firstLine = 0;
+            else
+                firstLine = 1;
             zeile = reader.readLine();
             do {
                 zeile = zeile.replace("'","");

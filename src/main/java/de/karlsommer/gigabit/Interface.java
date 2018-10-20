@@ -9,9 +9,13 @@ import de.karlsommer.gigabit.database.model.Schule;
 import org.apache.commons.lang.StringUtils;
 
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -27,84 +31,51 @@ public class Interface {
     private JPanel mainView;
     private JButton geokoordinatenLaden;
     private JButton javascriptUndHTMLGigabitSchreiben;
-    private JButton compareToMemasys;
     private JLabel ausgabeLabel;
-    private JButton goButton;
-    private JButton toDoButton1;
-    private JButton toDoButton3;
-    private JButton toDoButton2;
-    private JButton toDoButton4;
-    private JButton toDoButton5;
-    private JButton toDoButton6;
-    private JButton toDoButton;
+    private JButton testButton;
+    private JButton csvDataEinlesenButton;
+    private JButton tabelleMitITNRWAbgleichenButton;
     private JButton showAndLoadSchoolsWithoutGeodata;
-    private JButton toDoButton8;
     private JButton breitbandCSVDateiEinlesen;
     private JTable ausgabeTabelle;
-    private JButton toDoButton7;
+    private JButton gigabitTabelleabgleichen;
     private JButton goButton1;
+    private JButton writeBerichtButton;
+    private JButton toDoButton1;
     private String filename = "";
     private GoogleGeoUtils geoUtils;
     private ImportBuilder builder;
     private SchuleRepository schuleRepository;
     private ArrayList<Schule> schulenImZwischenspeicher;
+    private JFrame schuleBearbeitenFrame;
+    private EditSchoolFrame editSchoolFrame;
 
     private Interface()
     {
         schuleRepository = new SchuleRepository();
         builder = new ImportBuilder();
 
-        memasysEinlesenUndBedarfeAktualisieren.addActionListener(new ActionListener() {
-            /**
-             * Memasys-Tabelle einlesen und Bedarfe aktualisieren.
-             * Die Memasys-Tabelle muss im .csv-Format vorliegen und überschreibt alle Bedarfe in der Datenbank
-             * @param e
-             */
+        schuleBearbeitenFrame = new JFrame("Schulen bearbeiten");
+        editSchoolFrame = new EditSchoolFrame();
+        schuleBearbeitenFrame.setContentPane(editSchoolFrame.mainView);
+        schuleBearbeitenFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+
+        schuleBearbeitenFrame.addWindowListener(new WindowAdapter() {
+            //I skipped unused callbacks for readability
+
             @Override
-            public void actionPerformed(ActionEvent e) {
-
-                JFileChooser c = new JFileChooser();
-                // Demonstrate "Open" dialog:
-                int rVal = c.showOpenDialog(mainView);
-                if (rVal == JFileChooser.APPROVE_OPTION) {
-                    //Hier Änderung für Dateiauswahl ohne Dialog
-                        /*
-                        filename = "/Users/karl/ownCloud/ADV/temp.csv";
-                        */
-                    filename = c.getCurrentDirectory().toString() + File.separator + c.getSelectedFile().getName();
-                    ausgabeLabel.setText("done");
-                    if (!builder.ladeMemasysDaten(filename)) {
-                        ausgabeLabel.setText("FEHLER");
-                        ausgabeLabel.setVisible(true);
-                    }
-                    else
-                    {
-                        ausgabeLabel.setText("GEFUNDEN");
-                        ausgabeLabel.setVisible(true);
-
-                        ArrayList<Schule> eingeleseneDaten = builder.holeSchuldatenAusMemasysDatei();
-
-
-                        String col[] = {"Interne Nummer","SNR","Name der Schule","Art der Schule","PLZ","Ort"};//,"Stra�e + Hsnr.","Zust�ndiges Schulamt","Vorwahl","Rufnummer","SF","Schultyp","Mailadresse","FB","Zust�ndig","Bedarf S1","Status S1","Moderator S1","Datum S1","Bedarf S2","Status S2","Moderator S2","Datum S2","Bedarf S3","Status S3","Moderator S3","Datum S3","Bedarf S4","Status S4","Moderator S4","Datum S4","Bedarf R1","Status R1","Moderator R1","Datum R1","Bedarf R2","Status R2","Moderator R2","Datum R2","Bedarf L1","Status L1","Moderator L1","Datum L1","Bedarf K1","Status K1","Moderator K1","Datum K1","Bedarf K2","Status K2","Moderator K2","Datum K2","Bedarf A1","Status A1","Moderator A1","Datum A1","Bedarf X2","Status X2","Moderator X2","Datum X2","Bedarf X3","Status X3","Moderator X3","Datum X3","Bemerkungen"};
-
-                        DefaultTableModel tableModel = new DefaultTableModel(col,0);
-
-                        for(Schule schule: eingeleseneDaten)
-                        {
-                            if(schuleRepository.schoolWithSNRExists(schule.getSNR()))
-                            {
-                                schuleRepository.saveSchoolBedarfe(schule);
-                            }
-                        }
-                        ausgabeLabel.setText("Schulbedarfe aktualisiert");
-
-                    }
-                }
-                else if (rVal == JFileChooser.CANCEL_OPTION) {
-                    ausgabeLabel.setText("Bitte vor Abgleich auswählen");
-                }
+            public void windowClosing(WindowEvent e) {
+                schuleBearbeitenFrame.setVisible(false);
+                schuleBearbeitenFrame.dispose();
             }
         });
+
+        schuleBearbeitenFrame.pack();
+
+
+        ArrayList<Schule> schulen = schuleRepository.getAllUnflagedSchools();
+        showSchooldataInTable(ausgabeSpalten,schulen,"Alle Schulen.", false);
+
         geokoordinatenLaden.addActionListener(new ActionListener() {
             /**
              * Methode füllt für alle Schulen im Zwischenspeicher die Geodaten aus.
@@ -145,16 +116,15 @@ public class Interface {
                 javascriptWriter.writeJavaScript();
             }
         });
-        compareToMemasys.addActionListener(new ActionListener() {
+        //Testbutton
+        testButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                String col[] = {"Interne Nummer","SNR","Name der Schule","Art der Schule","PLZ","Ort"};//,"Stra�e + Hsnr.","Zust�ndiges Schulamt","Vorwahl","Rufnummer","SF","Schultyp","Mailadresse","FB","Zust�ndig","Bedarf S1","Status S1","Moderator S1","Datum S1","Bedarf S2","Status S2","Moderator S2","Datum S2","Bedarf S3","Status S3","Moderator S3","Datum S3","Bedarf S4","Status S4","Moderator S4","Datum S4","Bedarf R1","Status R1","Moderator R1","Datum R1","Bedarf R2","Status R2","Moderator R2","Datum R2","Bedarf L1","Status L1","Moderator L1","Datum L1","Bedarf K1","Status K1","Moderator K1","Datum K1","Bedarf K2","Status K2","Moderator K2","Datum K2","Bedarf A1","Status A1","Moderator A1","Datum A1","Bedarf X2","Status X2","Moderator X2","Datum X2","Bedarf X3","Status X3","Moderator X3","Datum X3","Bemerkungen"};
 
-            }
-        });
-        goButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
 
+                ArrayList<Schule> schulen = schuleRepository.getAllUnflagedSchools();
+                showSchooldataInTable(ausgabeSpalten,schulen,"Alle Schulen.", false);
             }
         });
         showAndLoadSchoolsWithoutGeodata.addActionListener(new ActionListener() {
@@ -200,7 +170,7 @@ public class Interface {
 
                     //String  col[] ={"Bezeichnung","Straße und Hausnummer","Ort","Postleitzahl","Auskunft erteilt (Ansprechpartner)","Telefonnummer Ansprechpartner","E-Mail-Adresse Ansprechpartner","Schulbezeichnung","Straße u. Hausnummer","Ort3","Postleitzahl4","Schul-ID(Schulnummer)"};
 
-                    ArrayList<ArrayList<String>> eingeleseneDaten = builder.holeSchuldatenAusBreitbandDatei();
+                    ArrayList<ArrayList<String>> eingeleseneDaten = builder.gibArrayListsAusTabellen();
                     schuleRepository.resetFlags();
                     for (ArrayList<String> data:eingeleseneDaten)
                     {
@@ -265,7 +235,7 @@ public class Interface {
             // }
             //}
         });
-        toDoButton.addActionListener(new ActionListener() {
+        tabelleMitITNRWAbgleichenButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 ArrayList<ArrayList<String>> itNRWSchulen = MDBConnector.getInstance().getAllSchools();
@@ -273,14 +243,17 @@ public class Interface {
                 int i = 0;
                 for (ArrayList<String> school:itNRWSchulen)
                 {
-                    if(!schuleRepository.schoolWithSNRExists(Integer.parseInt(school.get(0))))
+                    Schule schule = schuleRepository.getSchoolWithSNR(school.get(0));
+                    i++;
+                    if(schule == null)
                     {
-                        System.out.println(++i+":Schule mit Schulnummer:"+school.get(0)+" fehlt. Adding...");
+                        System.out.print(":Schule mit Schulnummer:"+school.get(0)+" fehlt:");
                         for (int j = 0; j < MDBConnector.columnsFromDatabase.size();j++)
                         {
                             System.out.print(school.get(j)+";");
                         }
-                        Schule schule = new Schule();
+                        System.out.println("");
+                        schule = new Schule();
                         schule.setSNR(Integer.parseInt(school.get(0)));
                         schule.setName_der_Schule(school.get(2));
                         schule.setArt_der_Schule(school.get(3));
@@ -294,75 +267,96 @@ public class Interface {
                     }
                     else
                     {
+                        if(schule.getPLZ() != Integer.parseInt(school.get(5)) && school.get(5).length() > 4) {
+                            schule.setPLZ(Integer.parseInt(school.get(5)));
+                            System.out.println(":Schule mit Schulnummer:"+school.get(0)+" PLZänderung. Changing:"+schule.getPLZ()+" to:"+school.get(5)+"...");
+                            schuleRepository.save(schule);
+                        }
+                        if(!schule.getOrt().equals(school.get(6))) {
+                            System.out.println(":Schule mit Schulnummer:"+school.get(0)+" Ortsänderung. Changing:"+schule.getOrt()+" to:"+school.get(6)+"...");
+                            schule.setOrt(school.get(6));
+                            schuleRepository.save(schule);
+                        }
+                        if(!schule.getStrasse_Hsnr().equals(school.get(7).replaceAll("'",""))) {
+                            System.out.println(":Schule mit Schulnummer:"+school.get(0)+" Strassenänderung. Changing:"+schule.getStrasse_Hsnr()+" to:"+school.get(7).replaceAll("'","")+"...");
+                            schule.setStrasse_Hsnr(school.get(7).replaceAll("'",""));
+                            schuleRepository.save(schule);
+                        }
+                        if(!schule.getVorwahl().equals(school.get(8)) && !("0"+schule.getVorwahl()).equals(school.get(8)) && school.get(8).length() > 3) {
+                            System.out.println(":Schule mit Schulnummer:"+school.get(0)+" Vorwahländerung. Changing:"+schule.getVorwahl()+" to:"+school.get(8)+"...");
+                            schule.setVorwahl(school.get(8));
+                            schuleRepository.save(schule);
+                        }
+                        if(!schule.getRufnummer().equals(school.get(9))) {
+                            System.out.println(":Schule mit Schulnummer:"+school.get(0)+" Rufnummernänderung. Changing:"+schule.getRufnummer()+" to:"+school.get(9)+"...");
+                            schule.setRufnummer(school.get(9));
+                            schuleRepository.save(schule);
+                        }
+
                         schuleRepository.flagSchool(school.get(0));
                     }
                 }
                 ArrayList<Schule> nichtGefundeneSchulen = schuleRepository.getAllUnflagedSchools();
                 showSchooldataInTable(ausgabeSpalten,nichtGefundeneSchulen,"Schulen in der Datenbank, die nicht in der IT-NRW-Datenbank vorhanden sind",true);
+                schuleRepository.resetFlags();
             }
         });
         goButton1.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 ArrayList<Schule> schulen = schuleRepository.getSchulenMitGleichenGeolocations();
-                for(Schule schule:schulen)
-                {
-                    schule.setLat(schule.getLat()+0.0002);
-                    schule.setLng(schule.getLng()+0.0002);
-                    schuleRepository.save(schule);
-                    System.out.println("Schule mit SNR:"+schule.getSNR()+" und Name:"+schule.getName_der_Schule()+" bereinigt.");
+                while(schulen.size() > 0) {
+                    for (Schule schule : schulen) {
+                        schule.setLat(schule.getLat() + 0.0002);
+                        schule.setLng(schule.getLng() + 0.0002);
+                        schuleRepository.save(schule);
+                        System.out.println("Schule mit SNR:" + schule.getSNR() + " und Name:" + schule.getName_der_Schule() + " bereinigt.");
+                    }
+                    schulen = schuleRepository.getSchulenMitGleichenGeolocations();
                 }
             }
         });
-        toDoButton7.addActionListener(new ActionListener() {
+        gigabitTabelleabgleichen.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                /*
                 JFileChooser c = new JFileChooser();
                 // Demonstrate "Open" dialog:
                 int rVal = c.showOpenDialog(mainView);
                 if (rVal == JFileChooser.APPROVE_OPTION) {
                     //Hier Änderung für Dateiauswahl ohne Dialog
-                        /*
-                        filename = "/Users/karl/ownCloud/ADV/temp.csv";
-
+                    //filename = "/Users/karl/NetBeansProjects/JSIandGMC/Breitband_Schulen.csv";
                     filename = c.getCurrentDirectory().toString() + File.separator + c.getSelectedFile().getName();
-                    ausgabeLabel.setText("done");*/
-                filename = "/Users/karl/NetBeansProjects/JSIandGMC/Breitband_Schulen.csv";
-                if (!builder.ladeBreitbandDaten(filename)) {
-                    ausgabeLabel.setText("FEHLER");
-                    ausgabeLabel.setVisible(true);
-                }
-                else
-                {
-                    ausgabeLabel.setText("GEFUNDEN");
-                    ausgabeLabel.setVisible(true);
+                    if (!builder.ladeCSVWebsiteDaten(filename)) {
+                        ausgabeLabel.setText("FEHLER");
+                        ausgabeLabel.setVisible(true);
+                    }
+                    else {
+                        ausgabeLabel.setText("GEFUNDEN");
+                        ausgabeLabel.setVisible(true);
 
-                    //String  col[] ={"Bezeichnung","Straße und Hausnummer","Ort","Postleitzahl","Auskunft erteilt (Ansprechpartner)","Telefonnummer Ansprechpartner","E-Mail-Adresse Ansprechpartner","Schulbezeichnung","Straße u. Hausnummer","Ort3","Postleitzahl4","Schul-ID(Schulnummer)"};
+                        //String  col[] ={"Bezeichnung","Straße und Hausnummer","Ort","Postleitzahl","Auskunft erteilt (Ansprechpartner)","Telefonnummer Ansprechpartner","E-Mail-Adresse Ansprechpartner","Schulbezeichnung","Straße u. Hausnummer","Ort3","Postleitzahl4","Schul-ID(Schulnummer)"};
 
-                    ArrayList<ArrayList<String>> eingeleseneDaten = builder.holeSchuldatenAusBreitbandDatei();
+                        ArrayList<ArrayList<String>> eingeleseneDaten = builder.gibArrayListsAusTabellen();
 
-                    ArrayList<Schule> anzuzeigendeSchulen = new ArrayList<>();
+                        ArrayList<Schule> anzuzeigendeSchulen = new ArrayList<>();
 
 
-                    for (ArrayList<String> data:eingeleseneDaten)
-                    {
-                        if(data.size() > 11)
-                        {
-                            data.set(11,trim(data.get(Schule.GIGABIT_TABELLE_SNR)).replaceAll(" ",""));
-                            if(StringUtils.isNumeric(data.get(Schule.GIGABIT_TABELLE_SNR)) && data.get(Schule.GIGABIT_TABELLE_SNR).length()==6) {
-                                if(schuleRepository.schoolWithSNRExists(Integer.parseInt(data.get(Schule.GIGABIT_TABELLE_SNR)))) {
-                                    Schule toUpdate = schuleRepository.getSchool(data.get(Schule.GIGABIT_TABELLE_SNR));
-                                    if (toUpdate != null) {
-                                        System.out.println("Updating Schule:"+toUpdate.getSNR());
-                                        toUpdate.updateBreitbandData(data);
-                                        schuleRepository.save(toUpdate);
-                                        anzuzeigendeSchulen.add(toUpdate);
+                        for (ArrayList<String> data : eingeleseneDaten) {
+                            if (data.size() > 11) {
+                                data.set(11, trim(data.get(Schule.GIGABIT_TABELLE_SNR)).replaceAll(" ", ""));
+                                if (StringUtils.isNumeric(data.get(Schule.GIGABIT_TABELLE_SNR)) && data.get(Schule.GIGABIT_TABELLE_SNR).length() == 6) {
+                                    if (schuleRepository.schoolWithSNRExists(Integer.parseInt(data.get(Schule.GIGABIT_TABELLE_SNR)))) {
+                                        Schule toUpdate = schuleRepository.getSchoolWithSNR(data.get(Schule.GIGABIT_TABELLE_SNR));
+                                        if (toUpdate != null) {
+                                            System.out.println("Updating Schule:" + toUpdate.getSNR());
+                                            toUpdate.updateBreitbandData(data);
+                                            schuleRepository.save(toUpdate);
+                                            anzuzeigendeSchulen.add(toUpdate);
+                                        }
                                     }
                                 }
                             }
                         }
-                    }
 
                     //Auf fehlende Schulen prüfen
                     //Daten aktualisieren
@@ -382,7 +376,91 @@ public class Interface {
                         }
                         ausgabeLabel.setText("Schulbedarfe aktualisiert");*/
 
+                    }
                 }
+                else if (rVal == JFileChooser.CANCEL_OPTION) {
+                    ausgabeLabel.setText("Bitte vor Abgleich auswählen");
+                }
+            }
+        });
+        csvDataEinlesenButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFileChooser c = new JFileChooser();
+                int rVal = c.showOpenDialog(mainView);
+                if (rVal == JFileChooser.APPROVE_OPTION) {
+                    //Hier Änderung für Dateiauswahl ohne Dialog
+                        /*
+                        filename = "/Users/karl/ownCloud/ADV/temp.csv";
+                        */
+                    filename = c.getCurrentDirectory().toString() + File.separator + c.getSelectedFile().getName();
+                    ausgabeLabel.setText("done");
+                    if (!builder.ladeCSVWebsiteDaten(filename)) {
+                        ausgabeLabel.setText("FEHLER");
+                        ausgabeLabel.setVisible(true);
+                    }
+                    else {
+                        ausgabeLabel.setText("GEFUNDEN");
+                        ausgabeLabel.setVisible(true);
+
+                        //String  col[] ={"Bezeichnung","Straße und Hausnummer","Ort","Postleitzahl","Auskunft erteilt (Ansprechpartner)","Telefonnummer Ansprechpartner","E-Mail-Adresse Ansprechpartner","Schulbezeichnung","Straße u. Hausnummer","Ort3","Postleitzahl4","Schul-ID(Schulnummer)"};
+
+                        ArrayList<ArrayList<String>> eingeleseneDaten = builder.gibArrayListsAusTabellen();
+
+                        ArrayList<Schule> anzuzeigendeSchulen = new ArrayList<>();
+
+
+                        for (ArrayList<String> data : eingeleseneDaten) {
+                            System.out.println(data.get(1));
+                            if (data.size() > 9) {
+                                if (StringUtils.isNumeric(data.get(Schule.CSV_DATA_SRN)) && data.get(Schule.CSV_DATA_SRN).length() == 6) {
+                                    if (schuleRepository.schoolWithSNRExists(Integer.parseInt(data.get(Schule.CSV_DATA_SRN)))) {
+                                        Schule toUpdate = schuleRepository.getSchoolWithSNR(data.get(Schule.CSV_DATA_SRN));
+                                        if (toUpdate != null) {
+                                            System.out.println("Updating Schule:" + toUpdate.getSNR());
+                                            toUpdate.updateCSVData(data);
+                                            schuleRepository.save(toUpdate);
+                                            anzuzeigendeSchulen.add(toUpdate);
+                                        }
+                                    }
+                                }
+                                else if(StringUtils.isNumeric(data.get(Schule.CSV_INTERNE_ID)) && data.get(Schule.CSV_INTERNE_ID).length() >0)
+                                {
+                                    if (schuleRepository.schoolWithInterneIDExists(Integer.parseInt(data.get(Schule.CSV_INTERNE_ID)))) {
+                                        Schule toUpdate = schuleRepository.getSchoolWithID(data.get(Schule.CSV_INTERNE_ID));
+                                        if (toUpdate != null) {
+                                            System.out.println("Updating Schule:" + toUpdate.getSNR());
+                                            toUpdate.updateCSVData(data);
+                                            schuleRepository.save(toUpdate);
+                                            anzuzeigendeSchulen.add(toUpdate);
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    Schule toUpdate = new Schule();
+                                    toUpdate.setData(data);
+                                    schuleRepository.save(toUpdate);
+                                    anzuzeigendeSchulen.add(toUpdate);
+                                }
+
+                            }
+                        }
+                        showSchooldataInTable(ausgabeSpalten,anzuzeigendeSchulen,"Schulen in der Datenbank, die aktualisiert wurden",true);
+                    }
+
+                }
+                else if (rVal == JFileChooser.CANCEL_OPTION) {
+                    ausgabeLabel.setText("Bitte vor Abgleich auswählen");
+                }
+            }
+        });
+        // Bericht schreiben
+        writeBerichtButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JavascriptWriter javascriptWriter = new JavascriptWriter();
+                javascriptWriter.publishBericht();
             }
         });
     }
@@ -406,15 +484,28 @@ public class Interface {
             else
                 tableModel.addRow(schule.getVector());
         }
-        Interface.this.ausgabeTabelle.setModel(tableModel);
+        ausgabeTabelle.setAutoCreateRowSorter(true);
+        ausgabeTabelle.setModel(tableModel);
         ausgabeLabel.setText(ausgabe);
+        ausgabeTabelle.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
+            public void valueChanged(ListSelectionEvent event) {
+                // do some actions here, for example
+                // print first column value from selected row
+                if(ausgabeTabelle.getSelectedRow()>-1)
+                {
+                    System.out.println(ausgabeTabelle.getValueAt(ausgabeTabelle.getSelectedRow(), 1).toString());
+                    editSchoolFrame.setSchule(schuleRepository.getSchoolWithID(ausgabeTabelle.getValueAt(ausgabeTabelle.getSelectedRow(), 0).toString()));
+                    schuleBearbeitenFrame.setVisible(true);
+                }
+            }
+        });
     }
 
     public static void main(String[] args) {
-        JFrame frame = new JFrame("Manager");
-        frame.setContentPane(new Interface().mainView);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.pack();
-        frame.setVisible(true);
+        JFrame mainFrame = new JFrame("Manager V1.0 22.10.2018");
+        mainFrame.setContentPane(new Interface().mainView);
+        mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        mainFrame.pack();
+        mainFrame.setVisible(true);
     }
 }
