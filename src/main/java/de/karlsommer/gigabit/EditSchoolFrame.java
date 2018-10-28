@@ -4,17 +4,21 @@ import de.karlsommer.gigabit.database.model.Schule;
 import de.karlsommer.gigabit.database.repositories.SchuleRepository;
 
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.ArrayList;
 
 import static de.karlsommer.gigabit.database.model.Schule.HAUPTSTANDORT;
+import static de.karlsommer.gigabit.database.model.Schule.ausgabeSpalten;
 
-public class EditSchoolFrame{
+public class EditSchoolFrame implements DataUpdater {
     public JPanel mainView;
-    private JList list1;
     private JButton teilstandortHinzufügenButton;
     private JButton speichernButton;
     private JTextField textFieldSchulnummer;
@@ -39,16 +43,25 @@ public class EditSchoolFrame{
     private JTextField textFieldStatusInhouse;
     private JLabel textLabelFlag;
     private JLabel jLabelID;
+    private JTable ausgabeTabelle;
+    private JTextField textFieldAnsprechpartner;
+    private JTextField textFieldTelefonAnsprechpartner;
+    private JTextField textFieldEmailAnsprechpartner;
+    private JTextField textFieldSchuelerzahl;
     private Schule schule;
     private AddTeilstandortFrame addTeilstandortFrame;
     private JFrame teilstandortBearbeitenFrame;
     private SchuleRepository schuleRepository;
+    private JFrame frame;
+    private DataUpdater dataUpdater;
 
-    public EditSchoolFrame() {
+    public EditSchoolFrame(JFrame frame, DataUpdater dataUpdater) {
+        this.frame = frame;
+        this.dataUpdater = dataUpdater;
         schuleRepository = new SchuleRepository();
 
-        teilstandortBearbeitenFrame = new JFrame("Schulen bearbeiten");
-        addTeilstandortFrame = new AddTeilstandortFrame();
+        teilstandortBearbeitenFrame = new JFrame("Teilstandort bearbeiten");
+        addTeilstandortFrame = new AddTeilstandortFrame(teilstandortBearbeitenFrame, this);
         teilstandortBearbeitenFrame.setContentPane(addTeilstandortFrame.mainView);
         teilstandortBearbeitenFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 
@@ -88,7 +101,16 @@ public class EditSchoolFrame{
                 schule.setAnbindung_Kbit_DL(Integer.parseInt(textFieldDownload.getText()));
                 schule.setLat(Double.parseDouble(textFieldLatitude.getText()));
                 schule.setLng(Double.parseDouble(textFieldLongitude.getText()));
+                schule.setSchuelerzahl(Integer.parseInt(textFieldSchuelerzahl.getText()));
+                schule.setAnsprechpartner(textFieldAnsprechpartner.getText());
+                schule.setEmail_Ansprechpartner(textFieldEmailAnsprechpartner.getText());
+                schule.setTelefon_Ansprechpartner(textFieldTelefonAnsprechpartner.getText());
                 schuleRepository.save(schule);
+
+                EditSchoolFrame.this.dataUpdater.updateData();
+
+                EditSchoolFrame.this.frame.setVisible(false);
+                EditSchoolFrame.this.frame.dispose();
             }
         });
         teilstandortHinzufügenButton.addActionListener(new ActionListener() {
@@ -105,6 +127,11 @@ public class EditSchoolFrame{
         if(!schule.getStandort().equals(HAUPTSTANDORT))
             this.schule = schuleRepository.getSchoolWithSNR(String.valueOf(schule.getSNR()));
         this.schule = schule;
+        updateData();
+    }
+
+    @Override
+    public void updateData() {
         jLabelID.setText(String.valueOf(this.schule.getId()));
         textFieldSchulnummer.setText(String.valueOf(this.schule.getSNR()));
         textFieldNameDerSchule.setText(this.schule.getName_der_Schule());
@@ -127,5 +154,38 @@ public class EditSchoolFrame{
         textFieldStatusGB.setText(this.schule.getStatus_GB());
         textFieldStatusMK.setText(this.schule.getStatus_MK());
         textFieldStatusInhouse.setText(this.schule.getStatus_Inhouse());
+        textFieldAnsprechpartner.setText(schule.getAnsprechpartner());
+        textFieldTelefonAnsprechpartner.setText(schule.getTelefon_Ansprechpartner());
+        textFieldEmailAnsprechpartner.setText(schule.getEmail_Ansprechpartner());
+        textFieldSchuelerzahl.setText(String.valueOf(schule.getSchuelerzahl()));
+        if(schuleRepository.getTeilstandorteZu(String.valueOf(schule.getSNR())).size() > 0)
+            showTeilstandorteInTable();
+        else {
+            DefaultTableModel model = (DefaultTableModel) ausgabeTabelle.getModel();
+            model.setRowCount(0);
+        }
+    }
+
+
+
+    private void showTeilstandorteInTable() {
+        DefaultTableModel tableModel = new DefaultTableModel(ausgabeSpalten,0);
+        for (Schule teilstandOrt : schuleRepository.getTeilstandorteZu(String.valueOf(schule.getSNR()))) {
+            tableModel.addRow(teilstandOrt.getVector());
+        }
+        ausgabeTabelle.setAutoCreateRowSorter(true);
+        ausgabeTabelle.setModel(tableModel);
+        ausgabeTabelle.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
+            public void valueChanged(ListSelectionEvent event) {
+                // do some actions here, for example
+                // print first column value from selected row
+                if(ausgabeTabelle.getSelectedRow()>-1)
+                {
+                    System.out.println(ausgabeTabelle.getValueAt(ausgabeTabelle.getSelectedRow(), 0).toString());
+                    addTeilstandortFrame.setSchule(schuleRepository.getSchoolWithID(ausgabeTabelle.getValueAt(ausgabeTabelle.getSelectedRow(), 0).toString()), schule);
+                    teilstandortBearbeitenFrame.setVisible(true);
+                }
+            }
+        });
     }
 }

@@ -13,6 +13,8 @@ import org.apache.commons.io.FileUtils;
 import java.io.File;
 import java.util.List;
 
+import static de.karlsommer.gigabit.Interface.RELEASE;
+
 /**
  *
  * @author karl
@@ -45,11 +47,6 @@ public class JavascriptWriter {
             return "{lat: "+coordinate.getLatitude()+", lng: "+coordinate.getLongitude()+"},";
         }
         return "";
-    }
-
-    public void publishBericht()
-    {
-
     }
 
     public void writeJavaScript()
@@ -269,7 +266,10 @@ public class JavascriptWriter {
                 "  </body>\n" +
                 "</html>");
         try{
-            FileUtils.writeStringToFile(new File("output/output.html"), stringBuilder.toString());
+            if(RELEASE)
+                FileUtils.writeStringToFile(new File("output/index.html"), stringBuilder.toString());
+            else
+                FileUtils.writeStringToFile(new File("output/output.html"), stringBuilder.toString());
         }
         catch(Exception e)
         {

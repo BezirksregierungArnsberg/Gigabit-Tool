@@ -3,13 +3,13 @@ $file = "data".".csv"; //filename
 
 if (!file_exists($file)) {   
 $fp = fopen($file, 'w');
-fputcsv($fp, array_keys($_POST)); //write headers (key of the $_POST array (id,username,password,etc)
+fputcsv($fp, array_keys($_POST),"|");//write headers (key of the $_POST array (id,username,password,etc)
 }
 else
 {
 $fp = fopen($file, 'a');
 }
-fputcsv($fp, $_POST );
+fputcsv($fp, $_POST,"|");
 fclose($fp);
 
 $empfaenger = "gigabit@bra.nrw.de";

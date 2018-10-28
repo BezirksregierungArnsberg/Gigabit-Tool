@@ -16,6 +16,14 @@ import java.util.Vector;
  */
 public class Schule {
 
+
+    public static final int GIGABIT_TABELLE_ANSPRECHPARTNER = 4;
+    public static final int GIGABIT_TABELLE_TELEFON_ANSPRECHPARTNER = 5;
+    public static final int GIGABIT_TABELLE_EMAIL_ANSPRECHPARTNER = 6;
+    public static final int GIGABIT_TABELLE_SCHULNAME = 7;
+    public static final int GIGABIT_TABELLE_STRASSE_UND_HAUSNUMMER = 8;
+    public static final int GIGABIT_TABELLE_ORT = 9;
+    public static final int GIGABIT_TABELLE_PLZ = 10;
     public static final int GIGABIT_TABELLE_SNR = 11;
     public static final int GIGABIT_TABELLE_DOWNSTREAM = 13;
     public static final int GIGABIT_TABELLE_UPSTREAM = 14;
@@ -33,6 +41,7 @@ public class Schule {
     public static final int CSV_DATA_DOWNLOAD = 8;
 
     public static final String HAUPTSTANDORT = "H";
+    public static final String TEILSTANDORT = "T";
     
     private int id;
     private int SNR;
@@ -56,6 +65,45 @@ public class Schule {
     private String Status_Inhouse;
     private double lat;
     private double lng;
+    private int Schuelerzahl;
+
+    public int getSchuelerzahl()
+    {
+        return Schuelerzahl;
+    }
+
+    public void setSchuelerzahl(int schuelerzahl)
+    {
+        Schuelerzahl = schuelerzahl;
+    }
+
+    public String getAnsprechpartner() {
+        return Ansprechpartner;
+    }
+
+    public void setAnsprechpartner(String ansprechpartner) {
+        Ansprechpartner = ansprechpartner;
+    }
+
+    public String getTelefon_Ansprechpartner() {
+        return Telefon_Ansprechpartner;
+    }
+
+    public void setTelefon_Ansprechpartner(String telefon_Ansprechpartner) {
+        Telefon_Ansprechpartner = telefon_Ansprechpartner;
+    }
+
+    public String getEmail_Ansprechpartner() {
+        return Email_Ansprechpartner;
+    }
+
+    public void setEmail_Ansprechpartner(String email_Ansprechpartner) {
+        Email_Ansprechpartner = email_Ansprechpartner;
+    }
+
+    private String Ansprechpartner;
+    private String Telefon_Ansprechpartner;
+    private String Email_Ansprechpartner;
 
     public String getStandort() {
         return standort;
@@ -105,7 +153,11 @@ public class Schule {
             this.Status_Inhouse = daten.get(i++);
             this.lat = Double.parseDouble(daten.get(i++));
             this.lng = Double.parseDouble(daten.get(i++));
-            this.standort = daten.get(i);
+            this.standort = daten.get(i++);
+            this.Ansprechpartner = daten.get(i++);
+            this.Telefon_Ansprechpartner = daten.get(i++);
+            this.Email_Ansprechpartner = daten.get(i++);
+            this.Schuelerzahl = Integer.parseInt(daten.get(i));
         }
         else
         {
@@ -132,6 +184,26 @@ public class Schule {
         this.Rufnummer = (data.get(CSV_DATA_TELEFONNUMMER));
         this.Anbindung_Kbit_UL = Integer.parseInt(data.get(CSV_DATA_UPLOAD));
         this.Anbindung_Kbit_DL = Integer.parseInt(data.get(CSV_DATA_DOWNLOAD));
+    }
+
+    public void createFromGigabitTabelle(ArrayList<String> data)
+    {
+        this.standort = HAUPTSTANDORT;
+        this.Ansprechpartner = data.get(GIGABIT_TABELLE_ANSPRECHPARTNER);
+        this.Telefon_Ansprechpartner = data.get(GIGABIT_TABELLE_TELEFON_ANSPRECHPARTNER);
+        this.Email_Ansprechpartner = data.get(GIGABIT_TABELLE_EMAIL_ANSPRECHPARTNER);
+        this.Name_der_Schule = data.get(GIGABIT_TABELLE_SCHULNAME);
+        this.Strasse_Hsnr = data.get(GIGABIT_TABELLE_STRASSE_UND_HAUSNUMMER);
+        this.Ort = data.get(GIGABIT_TABELLE_ORT);
+        this.PLZ = Integer.parseInt(data.get(GIGABIT_TABELLE_PLZ));
+        if(!data.get(GIGABIT_TABELLE_DOWNSTREAM).equals(""))
+            this.Anbindung_Kbit_DL = Integer.parseInt(data.get(GIGABIT_TABELLE_DOWNSTREAM));
+        else
+            this.Anbindung_Kbit_DL = 0;
+        if(!data.get(GIGABIT_TABELLE_UPSTREAM).equals(""))
+            this.Anbindung_Kbit_UL = Integer.parseInt(data.get(GIGABIT_TABELLE_UPSTREAM));
+        else
+            this.Anbindung_Kbit_UL = 0;
     }
 
     public int getId() {
@@ -348,9 +420,48 @@ public class Schule {
     { //13 ist Download 14 Upload
         if(this.getSNR() == Integer.parseInt(data.get(GIGABIT_TABELLE_SNR)))
         {
-            this.Anbindung_Kbit_DL = getNormalizedDataInKbitFromString(data.get(GIGABIT_TABELLE_DOWNSTREAM));
-            this.Anbindung_Kbit_UL = getNormalizedDataInKbitFromString(data.get(GIGABIT_TABELLE_UPSTREAM));
+            if(data.size() > 14) {
+                this.Anbindung_Kbit_DL = getNormalizedDataInKbitFromString(data.get(GIGABIT_TABELLE_DOWNSTREAM));
+                this.Anbindung_Kbit_UL = getNormalizedDataInKbitFromString(data.get(GIGABIT_TABELLE_UPSTREAM));
+                this.Ansprechpartner = data.get(GIGABIT_TABELLE_ANSPRECHPARTNER);
+                this.Telefon_Ansprechpartner = data.get(GIGABIT_TABELLE_TELEFON_ANSPRECHPARTNER);
+                this.Email_Ansprechpartner = data.get(GIGABIT_TABELLE_EMAIL_ANSPRECHPARTNER);
+            }
+            else
+                System.out.println("-----"+data+"----");
         }
+    }
+
+    public void createTeilstandortWithCSV(Schule hauptstandort, ArrayList<String> data)
+    {
+        this.standort = TEILSTANDORT;
+        this.Ansprechpartner = data.get(GIGABIT_TABELLE_ANSPRECHPARTNER);
+        this.Telefon_Ansprechpartner = data.get(GIGABIT_TABELLE_TELEFON_ANSPRECHPARTNER);
+        this.Email_Ansprechpartner = data.get(GIGABIT_TABELLE_EMAIL_ANSPRECHPARTNER);
+        this.Name_der_Schule = hauptstandort.getName_der_Schule();
+        this.Strasse_Hsnr = data.get(GIGABIT_TABELLE_STRASSE_UND_HAUSNUMMER);
+        this.Ort = data.get(GIGABIT_TABELLE_ORT);
+        if(data.get(GIGABIT_TABELLE_PLZ).equals(""))
+            this.PLZ = hauptstandort.getPLZ();
+        else
+            this.PLZ = Integer.parseInt(data.get(GIGABIT_TABELLE_PLZ));
+        if(!data.get(GIGABIT_TABELLE_DOWNSTREAM).equals(""))
+            this.Anbindung_Kbit_DL = getNormalizedDataInKbitFromString(data.get(GIGABIT_TABELLE_DOWNSTREAM));
+        else
+            this.Anbindung_Kbit_DL = 0;
+        if(!data.get(GIGABIT_TABELLE_UPSTREAM).equals(""))
+            this.Anbindung_Kbit_UL = getNormalizedDataInKbitFromString(data.get(GIGABIT_TABELLE_UPSTREAM));
+        else
+            this.Anbindung_Kbit_UL = 0;
+        this.insertHauptstandortData(hauptstandort);
+    }
+
+    public void insertHauptstandortData(Schule hauptstandort)
+    {
+        this.Zustaendiges_Schulamt = hauptstandort.getZustaendiges_Schulamt();
+        this.SF = hauptstandort.getSF();
+        this.Schultyp = hauptstandort.getSchultyp();
+        this.SNR = hauptstandort.getSNR();
     }
 
     public void updateCSVData(ArrayList<String> data)
@@ -369,7 +480,7 @@ public class Schule {
         }
     }
 
-    private int getNormalizedDataInKbitFromString(String data)
+    public int getNormalizedDataInKbitFromString(String data)
     {
         if(data.contains(","))
         {
