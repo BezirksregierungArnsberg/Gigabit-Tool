@@ -22,9 +22,11 @@ public class DocumentWriter {
 
 
 
-    public void publishBericht()
+    public void publishBericht() throws Exception
     {
         SchuleRepository schuleRepository = new SchuleRepository();
+
+
         XWPFDocument document = new XWPFDocument();
 
         //Write the Document in file system
@@ -33,10 +35,11 @@ public class DocumentWriter {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy") ;
         SimpleDateFormat textDateFormat = new SimpleDateFormat("dd.MM.yyyy") ;
         try {
-            out = new FileOutputStream( new File("./output/Bericht-"+dateFormat.format(date)+".docx"));
+            out = new FileOutputStream( new File("output/Bericht-"+dateFormat.format(date)+".docx"));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+
         XWPFStyles styles = document.createStyles();
 
         String heading = "Überschrift";

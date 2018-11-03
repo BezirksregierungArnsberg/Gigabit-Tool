@@ -29,7 +29,7 @@ import static org.apache.commons.lang.StringUtils.trim;
 
 public class Interface implements DataUpdater{
 
-    public static final boolean RELEASE = false;
+    public static final boolean RELEASE = true;
     private JPanel mainView;
     private JButton geokoordinatenLaden;
     private JButton javascriptUndHTMLGigabitSchreiben;
@@ -44,6 +44,7 @@ public class Interface implements DataUpdater{
     private JButton goButton1;
     private JButton writeBerichtButton;
     private JButton toDoButton1;
+    private JButton internButton;
     private String filename = "";
     private GoogleGeoUtils geoUtils;
     private ImportBuilder builder;
@@ -568,7 +569,64 @@ public class Interface implements DataUpdater{
             @Override
             public void actionPerformed(ActionEvent e) {
                 DocumentWriter documentWriter = new DocumentWriter();
-                documentWriter.publishBericht();
+                try {
+                    documentWriter.publishBericht();
+                } catch (Exception e1) {
+                    e1.printStackTrace();
+                    ausgabeLabel.setText(e1.getMessage());
+                }
+            }
+        });
+        internButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (!RELEASE) {
+                    JFileChooser c = new JFileChooser();
+                    int rVal = c.showOpenDialog(mainView);
+                    if (rVal == JFileChooser.APPROVE_OPTION) {
+                        //Hier Änderung für Dateiauswahl ohne Dialog
+                        /*
+                        filename = "/Users/karl/ownCloud/ADV/temp.csv";
+                        */
+                        filename = c.getCurrentDirectory().toString() + File.separator + c.getSelectedFile().getName();
+                        ausgabeLabel.setText("done");
+                        if (!builder.ladeCSVSchuelerzahlen(filename)) {
+                            ausgabeLabel.setText("FEHLER");
+                            ausgabeLabel.setVisible(true);
+                        } else {
+                            ausgabeLabel.setText("GEFUNDEN");
+                            ausgabeLabel.setVisible(true);
+
+                            //String  col[] ={"Bezeichnung","Straße und Hausnummer","Ort","Postleitzahl","Auskunft erteilt (Ansprechpartner)","Telefonnummer Ansprechpartner","E-Mail-Adresse Ansprechpartner","Schulbezeichnung","Straße u. Hausnummer","Ort3","Postleitzahl4","Schul-ID(Schulnummer)"};
+
+                            ArrayList<ArrayList<String>> eingeleseneDaten = builder.gibArrayListsAusTabellen();
+
+
+                            int found = 0;
+                            for (ArrayList<String> data : eingeleseneDaten) {
+                                System.out.println(data.get(0)+";"+data.get(1));
+
+                                if (data.size() > 1) {
+                                    if (StringUtils.isNumeric(data.get(0)) && data.get(0).length() == 6) {
+                                        if (schuleRepository.schoolWithSNRExists(Integer.parseInt(data.get(0)))) {
+                                            Schule toUpdate = schuleRepository.getSchoolhauptstandortWithSNR(data.get(0));
+                                            if (toUpdate != null) {
+                                                System.out.println("Updating Schule:" + toUpdate.getSNR()+ " setze Schülerzahl auf:"+data.get(1));
+                                                toUpdate.setSchuelerzahl(Integer.parseInt(data.get(1)));
+                                                schuleRepository.save(toUpdate);
+                                                found++;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            System.out.println(("Schülerzahlen bei "+found+" Schulen aktualisiert"));
+                        }
+
+                    } else if (rVal == JFileChooser.CANCEL_OPTION) {
+                        ausgabeLabel.setText("Bitte vor Abgleich auswählen");
+                    }
+                }
             }
         });
     }
@@ -616,7 +674,7 @@ public class Interface implements DataUpdater{
     }
 
     public static void main(String[] args) {
-        JFrame mainFrame = new JFrame("Manager V1.0 22.10.2018");
+        JFrame mainFrame = new JFrame("Manager V1.1 02.11.2018");
         mainFrame.setContentPane(new Interface().mainView);
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         mainFrame.pack();

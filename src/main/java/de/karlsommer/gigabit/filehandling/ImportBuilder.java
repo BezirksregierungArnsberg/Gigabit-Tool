@@ -98,6 +98,13 @@ public class ImportBuilder {
         return (daten.gibZeilenanzahl() > 0);
     }
 
+    public boolean ladeCSVSchuelerzahlen(String filename)
+    {
+        daten = new Tabelle(filename,';', true, false);
+
+        return (daten.gibZeilenanzahl() > 0);
+    }
+
     public boolean ladeBreitbandDaten(String filename)
     {
         daten = new Tabelle(filename,';', true, true);

@@ -214,7 +214,23 @@
           <grid row="4" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
-          <text value="Version 1.0"/>
+          <text value="Verson 1.1"/>
+        </properties>
+      </component>
+      <component id="334a3" class="javax.swing.JLabel">
+        <constraints>
+          <grid row="2" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Schülerzahlen einlesen"/>
+        </properties>
+      </component>
+      <component id="c5f6c" class="javax.swing.JButton" binding="internButton" default-binding="true">
+        <constraints>
+          <grid row="2" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Intern"/>
         </properties>
       </component>
     </children>
