@@ -1,6 +1,8 @@
 package de.karlsommer.gigabit.filehandling;
 
 import de.karlsommer.gigabit.database.repositories.SchuleRepository;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.poi.xwpf.usermodel.*;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.*;
 
@@ -20,9 +22,220 @@ import static de.karlsommer.gigabit.helper.MathHelper.round;
 
 public class DocumentWriter {
 
+    private static String[] columns = {"Standorte gesamt", "Grundschulen", "Förderschulen", "Sek I", "Sek II", "Berufskollegs", "Sonstige Schulen","BO","DO","EN","HA","HAM","HER","HSK","MK","OE","SI","SO","UN"};
+    private static String[] rows = {"In der Datenbank", "Anschluss erfasst", "ohne Gigabit-Anschluss", "AVG-Download (KBit/s)", "AVG-Upload (KBit/s)", "Bandbreite pro Schüler DL (KBit/s)", "Bandbreite pro Schüler UL (KBit/s)"};
+    private static String[] schuleaemter = {"BO","DO","EN","HA","HAM","HER","HSK","MK","OE","SI","SO","UN"};
+
+    public void publishXLSXBericht() throws Exception
+    {
+        SchuleRepository schuleRepository = new SchuleRepository();
+
+        String[] formenQuery = {"SF='G'", "SF='SO' OR SF='SOBK'", "SF='HS' OR SF='SEK' OR SF='RS' OR SF='PR' OR SF='GMS'", "SF='GE' OR SF='GY'", "SF='BK' OR SF='KO'", "SF='KR' OR SF='WS' OR SF='null'"};
+
+        ArrayList<Integer> gesamt = new ArrayList<>();
+        gesamt.add(schuleRepository.getIntQueryValue("SELECT COUNT(*) FROM Schulen"));
+        for(String query:formenQuery)
+        {
+            gesamt.add(schuleRepository.getIntQueryValue("SELECT COUNT(*) FROM Schulen WHERE "+query));
+        }
+        for(String query: schuleaemter)
+        {
+            gesamt.add(schuleRepository.getIntQueryValue("SELECT COUNT(*) FROM Schulen WHERE [Zuständiges Schulamt]='"+query+"'"));
+        }
+
+        ArrayList<Integer> anschluesse = new ArrayList<>();
+        anschluesse.add(schuleRepository.getIntQueryValue("SELECT COUNT(*) FROM Schulen  WHERE [Anbindung Kbit DL] > 0 AND [Anbindung Kbit UL] > 0"));
+        for(String query:formenQuery)
+        {
+            anschluesse.add(schuleRepository.getIntQueryValue("SELECT COUNT(*) FROM Schulen  WHERE [Anbindung Kbit DL] > 0 AND [Anbindung Kbit UL] > 0 AND "+query));
+        }
+        for(String query: schuleaemter)
+        {
+            anschluesse.add(schuleRepository.getIntQueryValue("SELECT COUNT(*) FROM Schulen  WHERE [Anbindung Kbit DL] > 0 AND [Anbindung Kbit UL] > 0 AND [Zuständiges Schulamt]='"+query+"'"));
+        }
+
+        ArrayList<Integer> ohneGigabit = new ArrayList<>();
+        ohneGigabit.add(schuleRepository.getIntQueryValue("SELECT COUNT(*) FROM Schulen  WHERE [Anbindung Kbit DL] > 0 AND [Anbindung Kbit UL] > 0 AND [Anbindung Kbit UL] < 1000000"));
+        for(String query:formenQuery)
+        {
+            ohneGigabit.add(schuleRepository.getIntQueryValue("SELECT COUNT(*) FROM Schulen  WHERE [Anbindung Kbit DL] > 0 AND [Anbindung Kbit UL] > 0 AND [Anbindung Kbit UL] < 1000000 AND "+query));
+        }
+        for(String query: schuleaemter)
+        {
+            ohneGigabit.add(schuleRepository.getIntQueryValue("SELECT COUNT(*) FROM Schulen  WHERE [Anbindung Kbit DL] > 0 AND [Anbindung Kbit UL] > 0 AND [Anbindung Kbit UL] < 1000000 AND [Zuständiges Schulamt]='"+query+"'"));
+        }
+
+        ArrayList<Integer> durchschnittDownload = new ArrayList<>();
+        durchschnittDownload.add(((int)(schuleRepository.getDoubleQueryValue("SELECT AVG([Anbindung Kbit DL]) FROM Schulen WHERE [Anbindung Kbit DL] > 0",1))));
+        for(String query:formenQuery)
+        {
+            durchschnittDownload.add(((int)(schuleRepository.getDoubleQueryValue("SELECT AVG([Anbindung Kbit DL]) FROM Schulen WHERE [Anbindung Kbit DL] > 0 AND "+query,1))));
+        }
+        for(String query: schuleaemter)
+        {
+            durchschnittDownload.add(((int)(schuleRepository.getDoubleQueryValue("SELECT AVG([Anbindung Kbit DL]) FROM Schulen WHERE [Anbindung Kbit DL] > 0 AND [Zuständiges Schulamt]='"+query+"'",1))));
+        }
+
+        ArrayList<Integer> durchschnittUpload = new ArrayList<>();
+        durchschnittUpload.add(((int)(schuleRepository.getDoubleQueryValue("SELECT AVG([Anbindung Kbit UL]) FROM Schulen WHERE [Anbindung Kbit UL] > 0",1))));
+        for(String query:formenQuery)
+        {
+            durchschnittUpload.add(((int)(schuleRepository.getDoubleQueryValue("SELECT AVG([Anbindung Kbit UL]) FROM Schulen WHERE [Anbindung Kbit UL] > 0 AND "+query,1))));
+        }
+        for(String query: schuleaemter)
+        {
+            durchschnittUpload.add(((int)(schuleRepository.getDoubleQueryValue("SELECT AVG([Anbindung Kbit UL]) FROM Schulen WHERE [Anbindung Kbit UL] > 0 AND [Zuständiges Schulamt]='"+query+"'",1))));
+        }
 
 
-    public void publishBericht() throws Exception
+
+        ArrayList<Integer> bandbreiteProSchuelerDownload = new ArrayList<>();
+        bandbreiteProSchuelerDownload.add(((int)(schuleRepository.getDoubleQueryValue("SELECT SUM([Anbindung Kbit DL])/SUM(Schuelerzahl) FROM Schulen WHERE [Anbindung Kbit DL] > 0",1))));
+        for(String query:formenQuery)
+        {
+            bandbreiteProSchuelerDownload.add(((int)(schuleRepository.getDoubleQueryValue("SELECT SUM([Anbindung Kbit DL])/SUM(Schuelerzahl) FROM Schulen WHERE [Anbindung Kbit DL] > 0 AND "+query,1))));
+        }
+        for(String query: schuleaemter)
+        {
+            bandbreiteProSchuelerDownload.add(((int)(schuleRepository.getDoubleQueryValue("SELECT SUM([Anbindung Kbit DL])/SUM(Schuelerzahl) FROM Schulen WHERE [Anbindung Kbit DL] > 0 AND [Zuständiges Schulamt]='"+query+"'",1))));
+        }
+
+        ArrayList<Integer> bandbreiteProSchuelerUpload = new ArrayList<>();
+        bandbreiteProSchuelerUpload.add(((int)(schuleRepository.getDoubleQueryValue("SELECT SUM([Anbindung Kbit UL])/SUM(Schuelerzahl) FROM Schulen WHERE [Anbindung Kbit UL] > 0",1))));
+        for(String query:formenQuery)
+        {
+            bandbreiteProSchuelerUpload.add(((int)(schuleRepository.getDoubleQueryValue("SELECT SUM([Anbindung Kbit UL])/SUM(Schuelerzahl) FROM Schulen WHERE [Anbindung Kbit UL] > 0 AND "+query,1))));
+        }
+        for(String query: schuleaemter)
+        {
+            bandbreiteProSchuelerUpload.add(((int)(schuleRepository.getDoubleQueryValue("SELECT SUM([Anbindung Kbit UL])/SUM(Schuelerzahl) FROM Schulen WHERE [Anbindung Kbit UL] > 0 AND [Zuständiges Schulamt]='"+query+"'",1))));
+        }
+
+        Workbook workbook = new XSSFWorkbook(); // new HSSFWorkbook() for generating `.xls` file
+
+        /* CreationHelper helps us create instances of various things like DataFormat,
+           Hyperlink, RichTextString etc, in a format (HSSF, XSSF) independent way */
+        CreationHelper createHelper = workbook.getCreationHelper();
+
+        // Create a Sheet
+        Sheet sheet = workbook.createSheet("Daten");
+
+        Font headerFont = workbook.createFont();
+        headerFont.setBold(true);
+        headerFont.setFontHeightInPoints((short) 14);
+        headerFont.setColor(IndexedColors.RED.getIndex());
+
+        CellStyle headerCellStyle = workbook.createCellStyle();
+        headerCellStyle.setFont(headerFont);
+
+        // Create a Row
+        Row headerRow = sheet.createRow(0);
+
+
+        // Create cells
+        for(int i = 0; i < columns.length; i++) {
+            Cell cell = headerRow.createCell((i*2)+1);
+            cell.setCellValue(columns[i]);
+            cell.setCellStyle(headerCellStyle);
+        }
+
+        Row nextRow = sheet.createRow(1);
+        for(int i = 0; i < columns.length; i++) {
+            Cell cell2 = nextRow.createCell((i*2)+1);
+            cell2.setCellValue("Anzahl");
+            cell2.setCellStyle(headerCellStyle);
+            Cell cell3 = nextRow.createCell((i*2)+2);
+            cell3.setCellValue("Prozent");
+            cell3.setCellStyle(headerCellStyle);
+        }
+
+
+
+        int rowNum = 2;
+        ArrayList<Row> tableRows = new ArrayList<>();
+        for (String rowString: rows) {
+            tableRows.add(sheet.createRow(rowNum++));
+
+            Cell temp = tableRows.get(tableRows.size()-1).createCell(0);
+            temp.setCellValue(rowString);
+            temp.setCellStyle(headerCellStyle);
+        }
+
+        for(int i = 0; i < columns.length*2; i++) {
+            sheet.autoSizeColumn(i);
+        }
+
+
+        int cellcount = 1;
+        for(int number: gesamt)
+        {
+            tableRows.get(0).createCell(cellcount++).setCellValue(number);
+            tableRows.get(0).createCell(cellcount++).setCellValue(round((double)(number*100)/(double)gesamt.get(0),1));
+        }
+        tableRows.get(0).createCell(1).setCellValue(gesamt.get(0));
+        tableRows.get(0).createCell(2).setCellValue("");
+
+        cellcount = 1;
+        int num = 0;
+        for(int number: anschluesse)
+        {
+            tableRows.get(1).createCell(cellcount++).setCellValue(number);
+            tableRows.get(1).createCell(cellcount++).setCellValue(round((double)(number*100)/(double)gesamt.get(num++),1));
+        }
+
+        cellcount = 1;
+        num = 0;
+        for(int number: ohneGigabit)
+        {
+            tableRows.get(2).createCell(cellcount++).setCellValue(number);
+            tableRows.get(2).createCell(cellcount++).setCellValue(round((double)(number*100)/(double)anschluesse.get(num++),1));
+        }
+
+        cellcount = 1;
+        num = 0;
+        for(int number: durchschnittDownload)
+        {
+            tableRows.get(3).createCell(cellcount++).setCellValue(number);
+            tableRows.get(3).createCell(cellcount++).setCellValue("");
+        }
+
+        cellcount = 1;
+        num = 0;
+        for(int number: durchschnittUpload)
+        {
+            tableRows.get(4).createCell(cellcount++).setCellValue(number);
+            tableRows.get(4).createCell(cellcount++).setCellValue("");
+        }
+
+        cellcount = 1;
+        num = 0;
+        for(int number: bandbreiteProSchuelerDownload)
+        {
+            tableRows.get(5).createCell(cellcount++).setCellValue(number);
+            tableRows.get(5).createCell(cellcount++).setCellValue("");
+        }
+
+        cellcount = 1;
+        num = 0;
+        for(int number: bandbreiteProSchuelerUpload)
+        {
+            tableRows.get(6).createCell(cellcount++).setCellValue(number);
+            tableRows.get(6).createCell(cellcount++).setCellValue("");
+        }
+
+        Date date = new Date() ;
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy") ;
+        SimpleDateFormat textDateFormat = new SimpleDateFormat("dd.MM.yyyy") ;
+
+        FileOutputStream fileOut = new FileOutputStream("output/Bericht-"+dateFormat.format(date)+".xlsx");
+        workbook.write(fileOut);
+        fileOut.close();
+
+        // Closing the workbook
+        workbook.close();
+    }
+
+    public void publishDocumentBericht() throws Exception
     {
         SchuleRepository schuleRepository = new SchuleRepository();
 

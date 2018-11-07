@@ -570,7 +570,7 @@ public class Interface implements DataUpdater{
             public void actionPerformed(ActionEvent e) {
                 DocumentWriter documentWriter = new DocumentWriter();
                 try {
-                    documentWriter.publishBericht();
+                    documentWriter.publishXLSXBericht();
                 } catch (Exception e1) {
                     e1.printStackTrace();
                     ausgabeLabel.setText(e1.getMessage());
@@ -674,7 +674,7 @@ public class Interface implements DataUpdater{
     }
 
     public static void main(String[] args) {
-        JFrame mainFrame = new JFrame("Manager V1.1 02.11.2018");
+        JFrame mainFrame = new JFrame("Manager V1.2 02.11.2018");
         mainFrame.setContentPane(new Interface().mainView);
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         mainFrame.pack();

@@ -113,6 +113,8 @@ public class SchuleRepository {
     {
         DatabaseConnector.getInstance().executeStatement(query);
         QueryResult result = DatabaseConnector.getInstance().getCurrentQueryResult();
+        if(result == null || result.getData() == null || result.getData()[0] == null || result.getData()[0][0] == null)
+            return 0;
         return Integer.parseInt(result.getData()[0][0]);
     }
 
@@ -120,7 +122,7 @@ public class SchuleRepository {
     {
         DatabaseConnector.getInstance().executeStatement(query);
         QueryResult result = DatabaseConnector.getInstance().getCurrentQueryResult();
-        if(result.getData()[0][0] == null)
+        if(result == null || result.getData() == null || result.getData()[0][0] == null)
             return 0d;
         return round(Double.parseDouble(result.getData()[0][0]),places);
     }
