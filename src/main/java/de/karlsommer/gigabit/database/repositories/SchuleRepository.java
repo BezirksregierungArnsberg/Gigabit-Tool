@@ -66,6 +66,39 @@ public class SchuleRepository {
         return result.getColumnCount()>0;
     }
 
+    public boolean schuleWithPLZExisits(int PLZ)
+    {
+        DatabaseConnector.getInstance().executeStatement("SELECT * FROM Schulen WHERE PLZ="+PLZ+";");
+        QueryResult result = DatabaseConnector.getInstance().getCurrentQueryResult();
+        if(result == null)
+            return false;
+        return result.getColumnCount()>0;
+    }
+
+    public ArrayList<Schule> getSchoolsOrderedByPLZ()
+    {
+        DatabaseConnector.getInstance().executeStatement("SELECT * FROM Schulen ORDER BY PLZ;");
+        QueryResult result = DatabaseConnector.getInstance().getCurrentQueryResult();
+        ArrayList<Schule> schulen = new ArrayList<>();
+        for(int i = 0; i < result.getRowCount(); i++)
+        {
+            schulen.add(new Schule(new ArrayList<String>(Arrays.asList(result.getData()[i])),true));
+        }
+        return schulen;
+    }
+
+    public ArrayList<Schule> getSchoolsWithoutAusbau()
+    {
+        DatabaseConnector.getInstance().executeStatement("SELECT * FROM Schulen WHERE Ausbau IS NULL;");
+        QueryResult result = DatabaseConnector.getInstance().getCurrentQueryResult();
+        ArrayList<Schule> schulen = new ArrayList<>();
+        for(int i = 0; i < result.getRowCount(); i++)
+        {
+            schulen.add(new Schule(new ArrayList<String>(Arrays.asList(result.getData()[i])),true));
+        }
+        return schulen;
+    }
+
     public ArrayList<Schule> getSchulenMitGleichenGeolocations()
     {
         DatabaseConnector.getInstance().executeStatement("SELECT Schulen1.* FROM Schulen AS Schulen1 JOIN (SELECT SNR,lat,lng FROM Schulen) AS Schulen2 ON (Schulen1.lat=Schulen2.lat) WHERE Schulen1.SNR <> Schulen2.SNR AND Schulen1.lng=Schulen2.lng AND Schulen1.SNR < Schulen2.SNR ORDER BY Schulen1.SNR;");
@@ -81,6 +114,42 @@ public class SchuleRepository {
     public ArrayList<Schule> getSchoolsWithoutGeodata()
     {
         DatabaseConnector.getInstance().executeStatement("SELECT * FROM Schulen WHERE lat=0;");
+        QueryResult result = DatabaseConnector.getInstance().getCurrentQueryResult();
+        ArrayList<Schule> schulen = new ArrayList<>();
+        for(int i = 0; i < result.getRowCount(); i++)
+        {
+            schulen.add(new Schule(new ArrayList<String>(Arrays.asList(result.getData()[i])),true));
+        }
+        return schulen;
+    }
+
+    public String[] getAllSschulaemter()
+    {
+        DatabaseConnector.getInstance().executeStatement("SELECT DISTINCT [Zuständiges Schulamt] FROM Schulen ORDER BY [Zuständiges Schulamt] ASC;");
+        QueryResult result = DatabaseConnector.getInstance().getCurrentQueryResult();
+        String[] staedte = new String[result.getRowCount()];
+        for(int i = 0; i < result.getRowCount(); i++)
+        {
+            staedte[i] = result.getData()[i][0];
+        }
+        return staedte;
+    }
+
+    public String[] getAllStaedte()
+    {
+        DatabaseConnector.getInstance().executeStatement("SELECT DISTINCT Ort FROM Schulen ORDER BY Ort ASC;");
+        QueryResult result = DatabaseConnector.getInstance().getCurrentQueryResult();
+        String[] staedte = new String[result.getRowCount()];
+        for(int i = 0; i < result.getRowCount(); i++)
+        {
+            staedte[i] = result.getData()[i][0];
+        }
+        return staedte;
+    }
+
+    public ArrayList<Schule> getSchoolsWithAusbau(String status)
+    {
+        DatabaseConnector.getInstance().executeStatement("SELECT * FROM Schulen WHERE Ausbau LIKE '%"+status+"%';");
         QueryResult result = DatabaseConnector.getInstance().getCurrentQueryResult();
         ArrayList<Schule> schulen = new ArrayList<>();
         for(int i = 0; i < result.getRowCount(); i++)
@@ -136,12 +205,13 @@ public class SchuleRepository {
                     schule.getName_der_Schule()+"',[Art der Schule]='"+schule.getArt_der_Schule()+"',PLZ="+schule.getPLZ()+",Ort='"+schule.getOrt()+"',[Straße + Hsnr.]='"+schule.getStrasse_Hsnr()+"',[Zuständiges Schulamt]='"+schule.getZustaendiges_Schulamt()+"',Vorwahl ='"+
                     schule.getVorwahl()+"',Rufnummer ='"+schule.getRufnummer()+"',SF ='"+schule.getSF()+"',Schultyp ='"+schule.getSchultyp()+"',Mailadresse ='"+schule.getMailadresse()+"',Bemerkungen='"+
                     schule.getBemerkungen()+"',flag="+schule.isFlag()+",[Status GB]='"+schule.getStatus_GB()+"',[Anbindung Kbit DL]='"+schule.getAnbindung_Kbit_DL()+"',[Anbindung Kbit UL]='"+schule.getAnbindung_Kbit_UL()+"',[Status MK]='"+schule.getStatus_MK()+"',[Status Inhouse]='"+schule.getStatus_Inhouse()+"',lat="+schule.getLat()+",lng="+
-                    schule.getLng()+", Standort='"+schule.getStandort()+"', Ansprechpartner='"+schule.getAnsprechpartner()+"', [Telefon Ansprechpartner]='"+schule.getTelefon_Ansprechpartner()+"', [Email Ansprechpartner]='"+schule.getEmail_Ansprechpartner()+"', Schuelerzahl="+schule.getSchuelerzahl()+" WHERE id="+schule.getId()+";";
+                    schule.getLng()+", Standort='"+schule.getStandort()+"', Ansprechpartner='"+schule.getAnsprechpartner()+"', [Telefon Ansprechpartner]='"+schule.getTelefon_Ansprechpartner()+"', [Email Ansprechpartner]='"+schule.getEmail_Ansprechpartner()+"', Schuelerzahl="+schule.getSchuelerzahl()+", Ausbau='"+schule.getAusbau(false)+"' WHERE id="+schule.getId()+";";
             else
                 query = "UPDATE Schulen SET SNR="+schule.getSNR()+",[Name der Schule]='"+
                     schule.getName_der_Schule()+"',[Art der Schule]='"+schule.getArt_der_Schule()+"',PLZ="+schule.getPLZ()+",Ort='"+schule.getOrt()+"',[Straße + Hsnr.]='"+schule.getStrasse_Hsnr()+"',[Zuständiges Schulamt]='"+schule.getZustaendiges_Schulamt()+"',Vorwahl ='"+
                     schule.getVorwahl()+"',Rufnummer ='"+schule.getRufnummer()+"',SF ='"+schule.getSF()+"',Schultyp ='"+schule.getSchultyp()+"',Mailadresse ='"+schule.getMailadresse()+"',Bemerkungen='"+
-                    schule.getBemerkungen()+"',flag="+schule.isFlag()+",[Status GB]='"+schule.getStatus_GB()+"',[Anbindung Kbit DL]='"+schule.getAnbindung_Kbit_DL()+"',[Anbindung Kbit UL]='"+schule.getAnbindung_Kbit_UL()+"',[Status MK]='"+schule.getStatus_MK()+"',[Status Inhouse]='"+schule.getStatus_Inhouse()+"', Standort='"+schule.getStandort()+"', Ansprechpartner='"+schule.getAnsprechpartner()+"', [Telefon Ansprechpartner]='"+schule.getTelefon_Ansprechpartner()+"', [Email Ansprechpartner]='"+schule.getEmail_Ansprechpartner()+"', Schuelerzahl="+schule.getSchuelerzahl()+" WHERE id="+schule.getId()+";";
+                    schule.getBemerkungen()+"',flag="+schule.isFlag()+",[Status GB]='"+schule.getStatus_GB()+"',[Anbindung Kbit DL]='"+schule.getAnbindung_Kbit_DL()+"',[Anbindung Kbit UL]='"+schule.getAnbindung_Kbit_UL()+"',[Status MK]='"+schule.getStatus_MK()+"',[Status Inhouse]='"+
+                        schule.getStatus_Inhouse()+"', Standort='"+schule.getStandort()+"', Ansprechpartner='"+schule.getAnsprechpartner()+"', [Telefon Ansprechpartner]='"+schule.getTelefon_Ansprechpartner()+"', [Email Ansprechpartner]='"+schule.getEmail_Ansprechpartner()+"', Schuelerzahl="+schule.getSchuelerzahl()+", Ausbau='"+schule.getAusbau(false)+"' WHERE id="+schule.getId()+";";
 
             //System.out.println(query);
             
@@ -149,7 +219,7 @@ public class SchuleRepository {
         }
         else
         {
-            String query = "INSERT INTO Schulen VALUES(null,'"+schule.getSNR()+"','"+schule.getName_der_Schule()+"','"+schule.getArt_der_Schule()+"','"+schule.getPLZ()+"','"+schule.getOrt()+"','"+schule.getStrasse_Hsnr()+"','"+schule.getZustaendiges_Schulamt()+"','"+schule.getVorwahl()+"','"+schule.getRufnummer()+"','"+schule.getSF()+"','"+schule.getSchultyp()+"','"+schule.getMailadresse()+"','"+schule.getBemerkungen()+"','"+schule.isFlag()+"','"+schule.getStatus_GB()+"','"+schule.getAnbindung_Kbit_DL()+"','"+schule.getAnbindung_Kbit_UL()+"','"+schule.getStatus_MK()+"','"+schule.getStatus_Inhouse()+"','"+schule.getLat()+"','"+schule.getLng()+"','"+schule.getStandort()+"','"+schule.getAnsprechpartner()+"','"+schule.getTelefon_Ansprechpartner()+"','"+schule.getEmail_Ansprechpartner()+"', "+schule.getSchuelerzahl()+");";
+            String query = "INSERT INTO Schulen VALUES(null,'"+schule.getSNR()+"','"+schule.getName_der_Schule()+"','"+schule.getArt_der_Schule()+"','"+schule.getPLZ()+"','"+schule.getOrt()+"','"+schule.getStrasse_Hsnr()+"','"+schule.getZustaendiges_Schulamt()+"','"+schule.getVorwahl()+"','"+schule.getRufnummer()+"','"+schule.getSF()+"','"+schule.getSchultyp()+"','"+schule.getMailadresse()+"','"+schule.getBemerkungen()+"','"+schule.isFlag()+"','"+schule.getStatus_GB()+"','"+schule.getAnbindung_Kbit_DL()+"','"+schule.getAnbindung_Kbit_UL()+"','"+schule.getStatus_MK()+"','"+schule.getStatus_Inhouse()+"','"+schule.getLat()+"','"+schule.getLng()+"','"+schule.getStandort()+"','"+schule.getAnsprechpartner()+"','"+schule.getTelefon_Ansprechpartner()+"','"+schule.getEmail_Ansprechpartner()+"', "+schule.getSchuelerzahl()+",'"+schule.getAusbau(false)+"');";
             //System.out.println(query);
             DatabaseConnector.getInstance().executeStatement(query);
         }
@@ -205,7 +275,7 @@ public class SchuleRepository {
         if(schulname != null && !schulname.equals(""))
             schulname = schulname.substring(0,5);
         String query = "SELECT * FROM Schulen WHERE PLZ="+PLZ+" AND [Straße + Hsnr.] LIKE \""+strasse+"%\" AND [Name der Schule] LIKE \""+schulname+"%\";";
-        System.out.println(query);
+        //System.out.println(query);
         DatabaseConnector.getInstance().executeStatement(query);
         QueryResult result = DatabaseConnector.getInstance().getCurrentQueryResult();
         if (checkValidity(result)) return null;
@@ -274,6 +344,18 @@ public class SchuleRepository {
         DatabaseConnector.getInstance().executeStatement("DELETE FROM Schulen WHERE id="+_id+";");
     }
 
+    public ArrayList<Schule> getStandorteZu(String _snr)
+    {
+        DatabaseConnector.getInstance().executeStatement("SELECT * FROM Schulen WHERE SNR="+_snr+";");
+        QueryResult result = DatabaseConnector.getInstance().getCurrentQueryResult();
+        ArrayList<Schule> schulen = new ArrayList<>();
+        for(int i = 0; i < result.getRowCount(); i++)
+        {
+            schulen.add(new Schule(new ArrayList<String>(Arrays.asList(result.getData()[i])),true));
+        }
+        return schulen;
+    }
+
     public ArrayList<Schule> getTeilstandorteZu(String _snr)
     {
         DatabaseConnector.getInstance().executeStatement("SELECT * FROM Schulen WHERE SNR="+_snr+" AND Standort='T';");
@@ -314,6 +396,38 @@ public class SchuleRepository {
         if(result == null || result.getData()[0] == null || result.getData()[0].length < 10)
             return null;
         return new Schule(new ArrayList<String>(Arrays.asList(result.getData()[0])),true);
+    }
+
+    public ArrayList<Schule> getAllSchools(String filterSNR,String filterOrt,String filterSchulamt)
+    {
+        String query = "SELECT * FROM Schulen";
+        if(!filterOrt.equals("-") || !filterSchulamt.equals("-") || !filterSNR.equals(""))
+            query+=" WHERE ";
+        if(!filterSNR.equals(""))
+        {
+            query+= "SNR LIKE '%"+filterSNR+"%'";
+            if(!filterSchulamt.equals("-") || !filterOrt.equals("-"))
+                query+= " AND ";
+        }
+        if(!filterSchulamt.equals("-"))
+        {
+            query+= "[Zuständiges Schulamt] LIKE '"+filterSchulamt+"'";
+            if(!filterOrt.equals("-"))
+                query+= " AND ";
+        }
+        if(!filterOrt.equals("-"))
+        {
+            query+= "Ort LIKE '"+filterOrt+"'";
+        }
+        query += ";";
+        DatabaseConnector.getInstance().executeStatement(query);
+        QueryResult result = DatabaseConnector.getInstance().getCurrentQueryResult();
+        ArrayList<Schule> schulen = new ArrayList<>();
+        for(int i = 0; i < result.getRowCount(); i++)
+        {
+            schulen.add(new Schule(new ArrayList<String>(Arrays.asList(result.getData()[i])),true));
+        }
+        return schulen;
     }
 
     public ArrayList<Schule> getAllFlagedSchools(boolean flaged)

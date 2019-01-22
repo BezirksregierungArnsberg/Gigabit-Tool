@@ -2,6 +2,7 @@ package de.karlsommer.gigabit;
 
 import de.karlsommer.gigabit.database.model.Schule;
 import de.karlsommer.gigabit.database.repositories.SchuleRepository;
+import de.karlsommer.gigabit.helper.SpinnerCircularListModel;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -13,9 +14,10 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
-import static de.karlsommer.gigabit.database.model.Schule.HAUPTSTANDORT;
-import static de.karlsommer.gigabit.database.model.Schule.ausgabeSpalten;
+import static de.karlsommer.gigabit.database.model.Schule.*;
 
 public class EditSchoolFrame implements DataUpdater {
     public JPanel mainView;
@@ -48,12 +50,21 @@ public class EditSchoolFrame implements DataUpdater {
     private JTextField textFieldTelefonAnsprechpartner;
     private JTextField textFieldEmailAnsprechpartner;
     private JTextField textFieldSchuelerzahl;
+    private JSpinner ausbauSpinner;
     private Schule schule;
     private AddTeilstandortFrame addTeilstandortFrame;
     private JFrame teilstandortBearbeitenFrame;
     private SchuleRepository schuleRepository;
     private JFrame frame;
     private DataUpdater dataUpdater;
+    public static final String[] ausbauArray = new String[] { AUSBAU_AUSGEBAUT, AUSBAU_IM_AUSBAU, AUSBAU_EIGENWIRTSCHAFTLICH,AUSBAU_BUND,AUSBAU_LAND,AUSBAU_UNGEKLAERT };
+
+    private void createUIComponents() {
+
+        SpinnerCircularListModel listModel = new SpinnerCircularListModel(
+                ausbauArray);
+        ausbauSpinner = new JSpinner(listModel);
+    }
 
     public EditSchoolFrame(JFrame frame, DataUpdater dataUpdater) {
         this.frame = frame;
@@ -105,6 +116,9 @@ public class EditSchoolFrame implements DataUpdater {
                 schule.setAnsprechpartner(textFieldAnsprechpartner.getText());
                 schule.setEmail_Ansprechpartner(textFieldEmailAnsprechpartner.getText());
                 schule.setTelefon_Ansprechpartner(textFieldTelefonAnsprechpartner.getText());
+
+                if(Arrays.asList(ausbauArray).contains((String)ausbauSpinner.getValue()))
+                schule.setAusbau((String)ausbauSpinner.getValue());
                 schuleRepository.save(schule);
 
                 EditSchoolFrame.this.dataUpdater.updateData();
@@ -158,6 +172,10 @@ public class EditSchoolFrame implements DataUpdater {
         textFieldTelefonAnsprechpartner.setText(schule.getTelefon_Ansprechpartner());
         textFieldEmailAnsprechpartner.setText(schule.getEmail_Ansprechpartner());
         textFieldSchuelerzahl.setText(String.valueOf(schule.getSchuelerzahl()));
+
+        ausbauSpinner.setValue(schule.getAusbau(false));
+
+
         if(schuleRepository.getTeilstandorteZu(String.valueOf(schule.getSNR())).size() > 0)
             showTeilstandorteInTable();
         else {

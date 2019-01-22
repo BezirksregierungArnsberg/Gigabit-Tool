@@ -42,6 +42,17 @@ public class Schule {
 
     public static final String HAUPTSTANDORT = "H";
     public static final String TEILSTANDORT = "T";
+
+    public static final String AUSBAU_AUSGEBAUT = "Ausgebaut";
+    public static final String AUSBAU_IM_AUSBAU = "Im Ausbau";
+    public static final String AUSBAU_EIGENWIRTSCHAFTLICH = "Eigenwirtschaftlich";
+    public static final String AUSBAU_BUND = "Bund";
+    public static final String AUSBAU_LAND = "Land";
+    public static final String AUSBAU_GUTE_SCHULE = "Gute Schule";
+    public static final String AUSBAU_UNGEKLAERT = "Ungeklärt";
+    public static final String AUSBAU_TRAEGERENTSCHEIDUNG = "Trägerentscheidung";
+    public static final String AUSBAU_E_BUND = "Berechnet Bund";
+    public static final String AUSBAU_E_LAND = "Berechnet Land";
     
     private int id;
     private int SNR;
@@ -66,6 +77,62 @@ public class Schule {
     private double lat;
     private double lng;
     private int Schuelerzahl;
+    private String Ausbau;
+
+    public String getAusbau(boolean html)
+    {
+
+        if(Ausbau.equals(AUSBAU_AUSGEBAUT) || Ausbau.equals(AUSBAU_EIGENWIRTSCHAFTLICH) ||Ausbau.equals(AUSBAU_BUND) ||Ausbau.equals(AUSBAU_LAND))
+            return Ausbau;
+        else if(html)
+            return "ungekl&auml;rt";
+        else
+            return "Ungeklärt";
+    }
+
+    public void setAusbau(String pAusbau)
+    {
+        if(pAusbau != null) {
+            switch (pAusbau) {
+                case "Kein Bedarf - bereits Glas":
+                    pAusbau=AUSBAU_AUSGEBAUT;
+                    Ausbau = pAusbau;
+                    break;
+                case "noch unbekannt":
+                    pAusbau=AUSBAU_UNGEKLAERT;
+                    Ausbau = pAusbau;
+                    break;
+                case "ungekl&auml;rt":
+                    pAusbau=AUSBAU_UNGEKLAERT;
+                    Ausbau = pAusbau;
+                    break;
+                case AUSBAU_AUSGEBAUT:
+                    ;
+                case AUSBAU_UNGEKLAERT:
+                    ;
+                case AUSBAU_IM_AUSBAU:
+                    ;
+                case AUSBAU_EIGENWIRTSCHAFTLICH:
+                    ;
+                case AUSBAU_BUND:
+                    ;
+                case AUSBAU_LAND:
+                    ;
+                case AUSBAU_GUTE_SCHULE:
+                    ;
+                case AUSBAU_TRAEGERENTSCHEIDUNG:
+                    ;
+                case AUSBAU_E_BUND:
+                    ;
+                case AUSBAU_E_LAND:
+                    Ausbau = pAusbau;
+                    break;
+                default:
+                    System.out.println("Ausbau Fehlerhaft. " + pAusbau + " nicht in Datenbank");
+            }
+        }
+
+    }
 
     public int getSchuelerzahl()
     {
@@ -151,13 +218,20 @@ public class Schule {
             i++;
             this.Status_MK = daten.get(i++);
             this.Status_Inhouse = daten.get(i++);
-            this.lat = Double.parseDouble(daten.get(i++));
-            this.lng = Double.parseDouble(daten.get(i++));
+            if(daten.get(i) != null)
+                this.lat = Double.parseDouble(daten.get(i++));
+            else
+                i++;
+            if(daten.get(i) != null)
+                this.lng = Double.parseDouble(daten.get(i++));
+            else
+                i++;
             this.standort = daten.get(i++);
             this.Ansprechpartner = daten.get(i++);
             this.Telefon_Ansprechpartner = daten.get(i++);
             this.Email_Ansprechpartner = daten.get(i++);
-            this.Schuelerzahl = Integer.parseInt(daten.get(i));
+            this.Schuelerzahl = Integer.parseInt(daten.get(i++));
+            setAusbau(daten.get(i));
         }
         else
         {
@@ -399,21 +473,8 @@ public class Schule {
     }
 
 
-   public static final String ausgabeSpalten[] = {"id","SNR","Name der Schule","Art der Schule","PLZ","Ort", "Upload", "Download"};
-    
-    public Vector<String> getVector()
-    {
-        Vector<String> v =  new Vector<>();
-        v.add(String.valueOf(id));
-        v.add(String.valueOf(SNR));
-        v.add(Name_der_Schule);
-        v.add(Art_der_Schule);
-        v.add(String.valueOf(PLZ));
-        v.add(Ort);
-        v.add(String.valueOf(Anbindung_Kbit_DL));
-        v.add(String.valueOf(Anbindung_Kbit_UL));
-        return v;
-    }
+   public static final String ausgabeSpalten[] = {"id","SNR","Name der Schule", "PLZ","Ort", "Strasse und HsNr","Download", "Upload", "Schüleranzahl", "Ausbau", "Schulamt"};
+
 
 
     public void updateBreitbandData(ArrayList<String> data)
@@ -513,6 +574,24 @@ public class Schule {
         v.add(Ort);
         return v;
     }
+
+    public Vector<String> getVector()
+    {
+        Vector<String> v =  new Vector<>();
+        v.add(String.valueOf(id));
+        v.add(String.valueOf(SNR));
+        v.add(Name_der_Schule);
+        v.add(String.valueOf(PLZ));
+        v.add(Ort);
+        v.add(Strasse_Hsnr);
+        v.add(String.valueOf(Anbindung_Kbit_DL));
+        v.add(String.valueOf(Anbindung_Kbit_UL));
+        v.add(String.valueOf(Schuelerzahl));
+        v.add(String.valueOf(Ausbau));
+        v.add(String.valueOf(Zustaendiges_Schulamt));
+        return v;
+    }
+
     public String getFehlendSting()
     {
         String v = String.valueOf(String.valueOf(SNR)).concat(";").concat(Name_der_Schule).concat(";").concat(Art_der_Schule).concat(";").concat(String.valueOf(PLZ)).concat(";").concat(Ort).concat(";");
