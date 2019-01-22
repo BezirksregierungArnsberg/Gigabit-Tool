@@ -2,20 +2,16 @@ package de.karlsommer.gigabit;
 
 import de.karlsommer.gigabit.database.model.Schule;
 import de.karlsommer.gigabit.database.repositories.SchuleRepository;
-import de.karlsommer.gigabit.helper.SpinnerCircularListModel;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 import static de.karlsommer.gigabit.database.model.Schule.*;
 
@@ -50,7 +46,7 @@ public class EditSchoolFrame implements DataUpdater {
     private JTextField textFieldTelefonAnsprechpartner;
     private JTextField textFieldEmailAnsprechpartner;
     private JTextField textFieldSchuelerzahl;
-    private JSpinner ausbauSpinner;
+    private JComboBox comboBoxAusbaustatus;
     private Schule schule;
     private AddTeilstandortFrame addTeilstandortFrame;
     private JFrame teilstandortBearbeitenFrame;
@@ -60,10 +56,7 @@ public class EditSchoolFrame implements DataUpdater {
     public static final String[] ausbauArray = new String[] { AUSBAU_AUSGEBAUT, AUSBAU_IM_AUSBAU, AUSBAU_EIGENWIRTSCHAFTLICH,AUSBAU_BUND,AUSBAU_LAND,AUSBAU_UNGEKLAERT };
 
     private void createUIComponents() {
-
-        SpinnerCircularListModel listModel = new SpinnerCircularListModel(
-                ausbauArray);
-        ausbauSpinner = new JSpinner(listModel);
+        comboBoxAusbaustatus = new JComboBox<>(ausbauArray);
     }
 
     public EditSchoolFrame(JFrame frame, DataUpdater dataUpdater) {
@@ -117,8 +110,7 @@ public class EditSchoolFrame implements DataUpdater {
                 schule.setEmail_Ansprechpartner(textFieldEmailAnsprechpartner.getText());
                 schule.setTelefon_Ansprechpartner(textFieldTelefonAnsprechpartner.getText());
 
-                if(Arrays.asList(ausbauArray).contains((String)ausbauSpinner.getValue()))
-                schule.setAusbau((String)ausbauSpinner.getValue());
+                schule.setAusbau((String) comboBoxAusbaustatus.getSelectedItem());
                 schuleRepository.save(schule);
 
                 EditSchoolFrame.this.dataUpdater.updateData();
@@ -173,7 +165,10 @@ public class EditSchoolFrame implements DataUpdater {
         textFieldEmailAnsprechpartner.setText(schule.getEmail_Ansprechpartner());
         textFieldSchuelerzahl.setText(String.valueOf(schule.getSchuelerzahl()));
 
-        ausbauSpinner.setValue(schule.getAusbau(false));
+        if((Arrays.asList(ausbauArray)).contains(schule.getAusbau(false)))
+            comboBoxAusbaustatus.setSelectedIndex((Arrays.asList(ausbauArray)).indexOf(schule.getAusbau(false)));
+        else
+            comboBoxAusbaustatus.setSelectedIndex((Arrays.asList(ausbauArray)).indexOf(AUSBAU_UNGEKLAERT));
 
 
         if(schuleRepository.getTeilstandorteZu(String.valueOf(schule.getSNR())).size() > 0)

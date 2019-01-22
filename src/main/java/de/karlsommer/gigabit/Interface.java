@@ -9,6 +9,11 @@ import de.karlsommer.gigabit.geocoding.GoogleGeoUtils;
 import de.karlsommer.gigabit.database.model.Schule;
 import de.karlsommer.gigabit.helper.SpinnerCircularListModel;
 import org.apache.commons.lang.StringUtils;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 
 import javax.swing.*;
@@ -57,6 +62,10 @@ public class Interface implements DataUpdater{
     private JButton alleSchulenAnzeigenButton;
     private JComboBox comboBoxSchulaemter;
     private JComboBox comboBoxOrte;
+    private JComboBox comboBoxAusbaustatus;
+    private JButton exportButton;
+    private JButton importButton;
+    private JButton changeHistoryButton;
     private String filename = "";
     private GoogleGeoUtils geoUtils;
     private ImportBuilder builder;
@@ -805,7 +814,62 @@ public class Interface implements DataUpdater{
                     filterSNR = textFieldSchulnummern.getText();
                 filterSchulamt = ((String)comboBoxSchulaemter.getSelectedItem());
                 filterOrt = ((String)comboBoxOrte.getSelectedItem());
+                filterAusbau = ((String)comboBoxAusbaustatus.getSelectedItem());
                 updateData();
+            }
+        });
+        exportButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                ArrayList<Schule> schulen = schuleRepository.getAllSchools(filterSNR,filterOrt,filterSchulamt,filterAusbau);
+                DocumentWriter documentWriter = new DocumentWriter();
+                documentWriter.writeSchulenInExcel(schulen);
+
+            }
+        });
+        importButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFileChooser c = new JFileChooser();
+                int rVal = c.showOpenDialog(mainView);
+                if (rVal == JFileChooser.APPROVE_OPTION) {
+                    //Hier Änderung für Dateiauswahl ohne Dialog
+                    /*
+                    filename = "/Users/karl/ownCloud/ADV/temp.csv";
+                    */
+                    filename = c.getCurrentDirectory().toString() + File.separator + c.getSelectedFile().getName();
+
+                    FileInputStream file = null;
+                    try {
+                        file = new FileInputStream(new File(filename));
+                    } catch (FileNotFoundException e1) {
+                        e1.printStackTrace();
+                    }
+                    XSSFWorkbook workbook = null;
+                    try {
+                        workbook = new XSSFWorkbook(file);
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
+                    }
+                    XSSFSheet sheet = workbook.getSheetAt(0);
+                    for(int i = 1; i <= sheet.getLastRowNum() && sheet.getRow(i).getCell(0) != null;i++){
+
+                        XSSFRow row = sheet.getRow(i);
+                        if(schuleRepository.schoolWithIDExists(Integer.parseInt((row.getCell(0) + " ").split("\\.")[0]))) {
+                            Schule toUpdate = schuleRepository.getSchoolWithID((row.getCell(0) + " ").split("\\.")[0]);
+                            toUpdate.updateData(row);
+                            schuleRepository.save(toUpdate);
+                        }
+
+
+                        updateData();
+                        ausgabeLabel.setText("Importiert!");
+                        ausgabeLabel.setVisible(true);
+                    }
+
+                } else if (rVal == JFileChooser.CANCEL_OPTION) {
+                    ausgabeLabel.setText("Bitte vor Abgleich auswählen");
+                }
             }
         });
     }
@@ -824,30 +888,37 @@ public class Interface implements DataUpdater{
     private String filterSNR = "";
     private String filterOrt = "-";
     private String filterSchulamt = "-";
+    private String filterAusbau = "alle";
 
     public void updateData()
     {
-        ArrayList<Schule> schulen = schuleRepository.getAllSchools(filterSNR,filterOrt,filterSchulamt);
+        ArrayList<Schule> schulen = schuleRepository.getAllSchools(filterSNR,filterOrt,filterSchulamt,filterAusbau);
         String ausgabe = "Alle Schulen";
-        if(!filterOrt.equals("-") || !filterSchulamt.equals("-") || !filterSNR.equals(""))
+        if(!filterOrt.equals("-") || !filterSchulamt.equals("-") || !filterSNR.equals("") || !filterAusbau.equals("alle"))
             ausgabe+=" mit ";
         if(!filterSNR.equals(""))
         {
             ausgabe+="Schulnummer beinhaltet "+filterSNR+"";
-            if(!filterSchulamt.equals("-") || !filterOrt.equals("-"))
+            if(!filterSchulamt.equals("-") || !filterOrt.equals("-") || !filterAusbau.equals("alle"))
                 ausgabe+= " und ";
         }
         if(!filterSchulamt.equals("-"))
         {
             ausgabe+= "Zuständiges Schulamt ist "+filterSchulamt+"";
-            if(!filterOrt.equals("-"))
+            if(!filterOrt.equals("-") || !filterAusbau.equals("alle"))
                 ausgabe+= " und ";
         }
         if(!filterOrt.equals("-"))
         {
             ausgabe+= "Ort ist "+filterOrt+"";
+            if(!filterAusbau.equals("alle"))
+                ausgabe+= " und ";
         }
-        ausgabe+=".";
+        if(!filterAusbau.equals("alle"))
+        {
+            ausgabe+= "Ausbaustatus ist "+filterAusbau+"";
+        }
+        ausgabe+=". Anzahl: "+schulen.size()+".";
         showSchooldataInTable(ausgabeSpalten,schulen,ausgabe, false);
     }
 
@@ -889,18 +960,24 @@ public class Interface implements DataUpdater{
         SchuleRepository schuleRepository = new SchuleRepository();
         String[] staedteArray = schuleRepository.getAllStaedte();
         String[] allSschulaemterArray = schuleRepository.getAllSschulaemter();
+        String[] allAusbaustatusArray = schuleRepository.getAllAusbaustatus();
 
         String[] finalStaedteArray = new String[staedteArray.length +1];
         String[] finalSchulaemterArray = new String[allSschulaemterArray.length +1];
+        String[] finalAusbaustatusArray = new String[allAusbaustatusArray.length +1];
         for(int i=0;i < staedteArray.length;i++)
             finalStaedteArray[i+1] = staedteArray[i];
         for(int i=0;i < allSschulaemterArray.length;i++)
             finalSchulaemterArray[i+1] = allSschulaemterArray[i];
+        for(int i=0;i < allAusbaustatusArray.length;i++)
+            finalAusbaustatusArray[i+1] = allAusbaustatusArray[i];
         finalSchulaemterArray[0] = "-";
         finalStaedteArray[0] = "-";
+        finalAusbaustatusArray[0] = "alle";
 
 
         comboBoxSchulaemter = new JComboBox<>(finalSchulaemterArray);
         comboBoxOrte = new JComboBox<>(finalStaedteArray);
+        comboBoxAusbaustatus = new JComboBox<>(finalAusbaustatusArray);
     }
 }

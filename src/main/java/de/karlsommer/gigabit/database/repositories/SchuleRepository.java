@@ -123,6 +123,18 @@ public class SchuleRepository {
         return schulen;
     }
 
+    public String[] getAllAusbaustatus()
+    {
+        DatabaseConnector.getInstance().executeStatement("SELECT DISTINCT Ausbau FROM Schulen ORDER BY Ausbau ASC;");
+        QueryResult result = DatabaseConnector.getInstance().getCurrentQueryResult();
+        String[] ausbau = new String[result.getRowCount()];
+        for(int i = 0; i < result.getRowCount(); i++)
+        {
+            ausbau[i] = result.getData()[i][0];
+        }
+        return ausbau;
+    }
+
     public String[] getAllSschulaemter()
     {
         DatabaseConnector.getInstance().executeStatement("SELECT DISTINCT [Zuständiges Schulamt] FROM Schulen ORDER BY [Zuständiges Schulamt] ASC;");
@@ -398,26 +410,32 @@ public class SchuleRepository {
         return new Schule(new ArrayList<String>(Arrays.asList(result.getData()[0])),true);
     }
 
-    public ArrayList<Schule> getAllSchools(String filterSNR,String filterOrt,String filterSchulamt)
+    public ArrayList<Schule> getAllSchools(String filterSNR,String filterOrt,String filterSchulamt, String filterAusbau)
     {
         String query = "SELECT * FROM Schulen";
-        if(!filterOrt.equals("-") || !filterSchulamt.equals("-") || !filterSNR.equals(""))
+        if(!filterOrt.equals("-") || !filterSchulamt.equals("-") || !filterSNR.equals("") || !filterAusbau.equals("alle"))
             query+=" WHERE ";
         if(!filterSNR.equals(""))
         {
             query+= "SNR LIKE '%"+filterSNR+"%'";
-            if(!filterSchulamt.equals("-") || !filterOrt.equals("-"))
+            if(!filterSchulamt.equals("-") || !filterOrt.equals("-") || !filterAusbau.equals("alle"))
                 query+= " AND ";
         }
         if(!filterSchulamt.equals("-"))
         {
             query+= "[Zuständiges Schulamt] LIKE '"+filterSchulamt+"'";
-            if(!filterOrt.equals("-"))
+            if(!filterOrt.equals("-") || !filterAusbau.equals("alle"))
                 query+= " AND ";
         }
         if(!filterOrt.equals("-"))
         {
             query+= "Ort LIKE '"+filterOrt+"'";
+            if(!filterAusbau.equals("alle"))
+                query+= " AND ";
+        }
+        if(!filterAusbau.equals("alle"))
+        {
+            query+= "Ausbau LIKE '"+filterAusbau+"'";
         }
         query += ";";
         DatabaseConnector.getInstance().executeStatement(query);

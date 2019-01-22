@@ -6,6 +6,9 @@
 package de.karlsommer.gigabit.database.model;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFRow;
 
 import java.util.ArrayList;
 import java.util.Vector;
@@ -477,6 +480,35 @@ public class Schule {
 
 
 
+    public void updateData(Row row)
+    {
+        //"Id", "Schulnummer", ,"Rufnummer","Schulform","Schultyp","Mailadresse", "Bemerkungen",
+        //        "Status GB" , ,"Ansprechpartner","Telefon Ansprechpartner","Email Ansprechpartner", "Schüleranzahl", "Ausbau"};
+        int i = 1;
+        this.setSNR(getIntValue(row.getCell(i++)));
+        this.setName_der_Schule(getStringValue(row.getCell(i++)));
+        this.setPLZ(getIntValue(row.getCell(i++)));
+        this.setOrt(getStringValue(row.getCell(i++)));
+        this.setStrasse_Hsnr(getStringValue(row.getCell(i++)));
+        this.setZustaendiges_Schulamt(getStringValue(row.getCell(i++)));
+        this.setVorwahl(String.valueOf(getIntValue(row.getCell(i++))));
+        this.setRufnummer(String.valueOf(getIntValue(row.getCell(i++))));
+        this.setSF(getStringValue(row.getCell(i++)));
+        this.setSchultyp(getStringValue(row.getCell(i++)));
+        this.setMailadresse(getStringValue(row.getCell(i++)));
+        this.setBemerkungen(getStringValue(row.getCell(i++)));
+        this.setStatus_GB(getStringValue(row.getCell(i++)));
+        this.setAnbindung_Kbit_DL(getIntValue(row.getCell(i++)));
+        this.setAnbindung_Kbit_UL(getIntValue(row.getCell(i++)));
+        this.setStatus_MK(getStringValue(row.getCell(i++)));
+        this.setStatus_Inhouse(getStringValue(row.getCell(i++)));
+        this.setStandort(getStringValue(row.getCell(i++)));
+        this.setAnsprechpartner(getStringValue(row.getCell(i++)));
+        this.setTelefon_Ansprechpartner(getStringValue(row.getCell(i++)));
+        this.setEmail_Ansprechpartner(getStringValue(row.getCell(i++)));
+        this.setSchuelerzahl(getIntValue(row.getCell(i++)));
+        this.setAusbau(getStringValue(row.getCell(i++)));
+    }
     public void updateBreitbandData(ArrayList<String> data)
     { //13 ist Download 14 Upload
         if(this.getSNR() == Integer.parseInt(data.get(GIGABIT_TABELLE_SNR)))
@@ -490,6 +522,37 @@ public class Schule {
             }
             else
                 System.out.println("-----"+data+"----");
+        }
+    }
+
+    private int getIntValue(Cell cell)
+    {
+        switch(cell.getCellType()) {
+            case Cell.CELL_TYPE_NUMERIC:
+                return (int)(cell.getNumericCellValue());
+            case Cell.CELL_TYPE_STRING:
+                if(cell.getStringCellValue().equals("null"))
+                    return 0;
+                else
+                    return Integer.parseInt(cell.getStringCellValue());
+            case Cell.CELL_TYPE_BLANK:
+                return 0;
+            default:
+                return 0;
+        }
+    }
+
+    private String getStringValue(Cell cell)
+    {
+        switch(cell.getCellType()) {
+            case Cell.CELL_TYPE_NUMERIC:
+                return String.valueOf(cell.getNumericCellValue());
+            case Cell.CELL_TYPE_STRING:
+                return cell.getStringCellValue();
+            case Cell.CELL_TYPE_BLANK:
+                return "";
+            default:
+                return "";
         }
     }
 
@@ -597,5 +660,5 @@ public class Schule {
         String v = String.valueOf(String.valueOf(SNR)).concat(";").concat(Name_der_Schule).concat(";").concat(Art_der_Schule).concat(";").concat(String.valueOf(PLZ)).concat(";").concat(Ort).concat(";");
         return v;
     }
-    
+
 }

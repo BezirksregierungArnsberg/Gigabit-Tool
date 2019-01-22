@@ -777,6 +777,110 @@ public class DocumentWriter {
         }
     }
 
+    public void writeSchulenInExcel(ArrayList<Schule> schulen)
+    {
+        Workbook workbook = new XSSFWorkbook(); // new HSSFWorkbook() for generating `.xls` file
+
+        /* CreationHelper helps us create instances of various things like DataFormat,
+           Hyperlink, RichTextString etc, in a format (HSSF, XSSF) independent way */
+        CreationHelper createHelper = workbook.getCreationHelper();
+
+        // Create a Sheet
+        Sheet sheet = workbook.createSheet("Schulen");
+
+        // Create a Font for styling header cells
+        Font headerFont = workbook.createFont();
+        headerFont.setBold(true);
+        headerFont.setFontHeightInPoints((short) 14);
+        headerFont.setColor(IndexedColors.RED.getIndex());
+
+        // Create a CellStyle with the font
+        CellStyle headerCellStyle = workbook.createCellStyle();
+        headerCellStyle.setFont(headerFont);
+
+        // Create a Row
+        Row headerRow = sheet.createRow(0);
+        String[] columns = {"Id", "Schulnummer", "Name der Schule", "PLZ", "Ort", "Strasse und Hausnummer","Zuständiges Schulamt","Vorwahl","Rufnummer","Schulform","Schultyp","Mailadresse", "Bemerkungen",
+                "Status GB" , "Anbindung Download", "Anbindung Upload","Status MK", "Status Inhouse","Standort","Ansprechpartner","Telefon Ansprechpartner","Email Ansprechpartner", "Schüleranzahl", "Ausbau"};
+
+        // Create cells
+        for(int i = 0; i < columns.length; i++) {
+            Cell cell = headerRow.createCell(i);
+            cell.setCellValue(columns[i]);
+            cell.setCellStyle(headerCellStyle);
+        }
+
+        // Create Cell Style for formatting Date
+        CellStyle dateCellStyle = workbook.createCellStyle();
+        dateCellStyle.setDataFormat(createHelper.createDataFormat().getFormat("dd-MM-yyyy"));
+
+        // Create Other rows and cells with employees data
+        int rowNum = 1;
+        for(Schule schule: schulen) {
+            Row row = sheet.createRow(rowNum++);
+            int i = 0;
+            row.createCell(i++)
+                    .setCellValue(schule.getId());
+            row.createCell(i++)
+                    .setCellValue(schule.getSNR());
+
+            row.createCell(i++)
+                    .setCellValue(schule.getName_der_Schule());
+
+            //Cell dateOfBirthCell = row.createCell(2);
+            //dateOfBirthCell.setCellValue(employee.getDateOfBirth());
+            //dateOfBirthCell.setCellStyle(dateCellStyle);
+
+            row.createCell(i++)
+                    .setCellValue(schule.getPLZ());
+
+            row.createCell(i++)
+                    .setCellValue(schule.getOrt());
+            row.createCell(i++)
+                    .setCellValue(schule.getStrasse_Hsnr());
+            row.createCell(i++).setCellValue(schule.getZustaendiges_Schulamt());
+            row.createCell(i++).setCellValue(schule.getVorwahl());
+            row.createCell(i++).setCellValue(schule.getRufnummer());
+            row.createCell(i++).setCellValue(schule.getSF());
+            row.createCell(i++).setCellValue(schule.getSchultyp());
+            row.createCell(i++).setCellValue(schule.getMailadresse());
+            row.createCell(i++).setCellValue(schule.getBemerkungen());
+            row.createCell(i++).setCellValue(schule.getStatus_GB());
+            row.createCell(i++)
+                    .setCellValue(schule.getAnbindung_Kbit_DL());
+            row.createCell(i++)
+                    .setCellValue(schule.getAnbindung_Kbit_UL());
+            row.createCell(i++).setCellValue(schule.getStatus_MK());
+            row.createCell(i++).setCellValue(schule.getStatus_Inhouse());
+            row.createCell(i++).setCellValue(schule.getStandort());
+            row.createCell(i++).setCellValue(schule.getAnsprechpartner());
+            row.createCell(i++).setCellValue(schule.getTelefon_Ansprechpartner());
+            row.createCell(i++).setCellValue(schule.getEmail_Ansprechpartner());
+            row.createCell(i++)
+                    .setCellValue(schule.getSchuelerzahl());
+            row.createCell(i++)
+                    .setCellValue(schule.getAusbau(false));
+        }
+
+        // Resize all columns to fit the content size
+        for(int i = 0; i < columns.length; i++) {
+            sheet.autoSizeColumn(i);
+        }
+
+        // Write the output to a file
+        FileOutputStream fileOut = null;
+        try {
+            fileOut = new FileOutputStream("output/exportierte_schulliste.xlsx");
+            workbook.write(fileOut);
+            fileOut.close();
+
+            // Closing the workbook
+            workbook.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public void writeSchulenInTabelle(ArrayList<Schule> schulen)
     {
         Workbook workbook = new XSSFWorkbook(); // new HSSFWorkbook() for generating `.xls` file

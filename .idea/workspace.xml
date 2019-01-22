@@ -7,13 +7,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="63e6fac1-6218-4d38-b9f1-41f5f911475e" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/de/karlsommer/gigabit/helper/SpinnerCircularListModel.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/databases/gigabit.db" beforeDir="false" afterPath="$PROJECT_DIR$/databases/gigabit.db" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/artifacts/Gigabit_DB_Tool_jar/Gigabit-DB-Tool.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/output/index.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/de/karlsommer/gigabit/AddTeilstandortFrame.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/de/karlsommer/gigabit/AddTeilstandortFrame.form" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/de/karlsommer/gigabit/AddTeilstandortFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/de/karlsommer/gigabit/AddTeilstandortFrame.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/de/karlsommer/gigabit/EditSchoolFrame.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/de/karlsommer/gigabit/EditSchoolFrame.form" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/de/karlsommer/gigabit/EditSchoolFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/de/karlsommer/gigabit/EditSchoolFrame.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/de/karlsommer/gigabit/Interface.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/de/karlsommer/gigabit/Interface.form" afterDir="false" />
@@ -21,10 +16,6 @@
       <change beforePath="$PROJECT_DIR$/src/main/java/de/karlsommer/gigabit/database/model/Schule.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/de/karlsommer/gigabit/database/model/Schule.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/de/karlsommer/gigabit/database/repositories/SchuleRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/de/karlsommer/gigabit/database/repositories/SchuleRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/de/karlsommer/gigabit/filehandling/DocumentWriter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/de/karlsommer/gigabit/filehandling/DocumentWriter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/de/karlsommer/gigabit/filehandling/JavascriptWriter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/de/karlsommer/gigabit/filehandling/JavascriptWriter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/de/karlsommer/gigabit/AddTeilstandortFrame$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/de/karlsommer/gigabit/AddTeilstandortFrame$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/de/karlsommer/gigabit/AddTeilstandortFrame$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/de/karlsommer/gigabit/AddTeilstandortFrame$2.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/de/karlsommer/gigabit/AddTeilstandortFrame.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/de/karlsommer/gigabit/AddTeilstandortFrame.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/de/karlsommer/gigabit/EditSchoolFrame$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/de/karlsommer/gigabit/EditSchoolFrame$1.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/de/karlsommer/gigabit/EditSchoolFrame$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/de/karlsommer/gigabit/EditSchoolFrame$2.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/de/karlsommer/gigabit/EditSchoolFrame$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/de/karlsommer/gigabit/EditSchoolFrame$3.class" afterDir="false" />
@@ -35,6 +26,12 @@
       <change beforePath="$PROJECT_DIR$/target/classes/de/karlsommer/gigabit/Interface$11.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/de/karlsommer/gigabit/Interface$11.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/de/karlsommer/gigabit/Interface$12.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/de/karlsommer/gigabit/Interface$12.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/de/karlsommer/gigabit/Interface$13.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/de/karlsommer/gigabit/Interface$13.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/de/karlsommer/gigabit/Interface$14.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/de/karlsommer/gigabit/Interface$14.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/de/karlsommer/gigabit/Interface$15.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/de/karlsommer/gigabit/Interface$15.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/de/karlsommer/gigabit/Interface$16.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/de/karlsommer/gigabit/Interface$16.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/de/karlsommer/gigabit/Interface$17.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/de/karlsommer/gigabit/Interface$17.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/de/karlsommer/gigabit/Interface$18.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/de/karlsommer/gigabit/Interface$18.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/de/karlsommer/gigabit/Interface$19.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/de/karlsommer/gigabit/Interface$19.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/de/karlsommer/gigabit/Interface$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/de/karlsommer/gigabit/Interface$2.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/de/karlsommer/gigabit/Interface$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/de/karlsommer/gigabit/Interface$3.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/de/karlsommer/gigabit/Interface$4.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/de/karlsommer/gigabit/Interface$4.class" afterDir="false" />
@@ -47,7 +44,6 @@
       <change beforePath="$PROJECT_DIR$/target/classes/de/karlsommer/gigabit/database/model/Schule.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/de/karlsommer/gigabit/database/model/Schule.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/de/karlsommer/gigabit/database/repositories/SchuleRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/de/karlsommer/gigabit/database/repositories/SchuleRepository.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/de/karlsommer/gigabit/filehandling/DocumentWriter.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/de/karlsommer/gigabit/filehandling/DocumentWriter.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/de/karlsommer/gigabit/filehandling/JavascriptWriter.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/de/karlsommer/gigabit/filehandling/JavascriptWriter.class" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/target/" />
@@ -61,7 +57,7 @@
     <session id="-1643892525">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="5" />
+          <entry key="project.closed" value="6" />
           <entry key="project.open.time.13" value="1" />
           <entry key="project.open.time.15" value="1" />
           <entry key="project.open.time.16" value="1" />
@@ -70,9 +66,10 @@
           <entry key="project.open.time.21" value="1" />
           <entry key="project.open.time.25" value="1" />
           <entry key="project.open.time.28" value="1" />
-          <entry key="project.open.time.3" value="1" />
+          <entry key="project.open.time.3" value="2" />
           <entry key="project.open.time.8" value="2" />
-          <entry key="project.opened" value="11" />
+          <entry key="project.open.time.9" value="1" />
+          <entry key="project.opened" value="13" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
@@ -86,8 +83,9 @@
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
-          <entry key="GUI_DESIGNER_FORM" value="12" />
-          <entry key="JAVA" value="34" />
+          <entry key="CLASS" value="1" />
+          <entry key="GUI_DESIGNER_FORM" value="13" />
+          <entry key="JAVA" value="36" />
           <entry key="Manifest" value="1" />
           <entry key="PLAIN_TEXT" value="4" />
           <entry key="XML" value="4" />
@@ -103,7 +101,7 @@
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="JAVA" value="22624" />
+          <entry key="JAVA" value="23948" />
           <entry key="PLAIN_TEXT" value="13" />
           <entry key="XML" value="2" />
         </counts>
@@ -112,11 +110,32 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/de/karlsommer/gigabit/Interface.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="88">
-              <caret line="359" column="25" selection-start-line="359" selection-start-column="25" selection-end-line="359" selection-end-column="25" />
+            <state relative-caret-position="839">
+              <caret line="864" column="37" selection-start-line="864" selection-start-column="37" selection-end-line="864" selection-end-column="37" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="jar://$MAVEN_REPOSITORY$/org/apache/poi/poi-ooxml/3.17/poi-ooxml-3.17.jar!/org/apache/poi/xssf/usermodel/XSSFSheet.class">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="190">
+              <caret line="913" column="18" selection-start-line="913" selection-start-column="11" selection-end-line="913" selection-end-column="18" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/de/karlsommer/gigabit/filehandling/DocumentWriter.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="173">
+              <caret line="73" column="15" selection-start-line="73" selection-start-column="12" selection-end-line="73" selection-end-column="15" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -129,106 +148,15 @@
           <provider selected="true" editor-type-id="ui-designer" />
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/de/karlsommer/gigabit/database/model/Schule.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="473">
-              <caret line="480" column="33" selection-start-line="480" selection-start-column="33" selection-end-line="480" selection-end-column="33" />
+            <state relative-caret-position="228">
+              <caret line="536" column="20" selection-start-line="536" selection-start-column="20" selection-end-line="536" selection-end-column="20" />
               <folding>
-                <element signature="e#4098#4099#0" expanded="true" />
-                <element signature="e#4133#4134#0" expanded="true" />
-                <element signature="e#4190#4191#0" expanded="true" />
-                <element signature="e#4233#4234#0" expanded="true" />
-                <element signature="e#4275#4276#0" expanded="true" />
-                <element signature="e#4313#4314#0" expanded="true" />
-                <element signature="e#4375#4376#0" expanded="true" />
-                <element signature="e#4424#4425#0" expanded="true" />
-                <element signature="e#4474#4475#0" expanded="true" />
-                <element signature="e#4520#4521#0" expanded="true" />
-                <element signature="e#4711#4712#0" expanded="true" />
-                <element signature="e#4755#4756#0" expanded="true" />
-                <element signature="e#5048#5049#0" expanded="true" />
-                <element signature="e#5079#5080#0" expanded="true" />
-                <element signature="e#5127#5128#0" expanded="true" />
-                <element signature="e#5167#5168#0" expanded="true" />
-                <element signature="e#9156#9157#0" expanded="true" />
-                <element signature="e#9181#9182#0" expanded="true" />
-                <element signature="e#9214#9215#0" expanded="true" />
-                <element signature="e#9242#9243#0" expanded="true" />
-                <element signature="e#9269#9270#0" expanded="true" />
-                <element signature="e#9295#9296#0" expanded="true" />
-                <element signature="e#9330#9331#0" expanded="true" />
-                <element signature="e#9360#9361#0" expanded="true" />
-                <element signature="e#9402#9403#0" expanded="true" />
-                <element signature="e#9440#9441#0" expanded="true" />
-                <element signature="e#9502#9503#0" expanded="true" />
-                <element signature="e#9556#9557#0" expanded="true" />
-                <element signature="e#9597#9598#0" expanded="true" />
-                <element signature="e#9634#9635#0" expanded="true" />
-                <element signature="e#9694#9695#0" expanded="true" />
-                <element signature="e#9746#9747#0" expanded="true" />
-                <element signature="e#9773#9774#0" expanded="true" />
-                <element signature="e#9799#9800#0" expanded="true" />
-                <element signature="e#9834#9835#0" expanded="true" />
-                <element signature="e#9864#9865#0" expanded="true" />
-                <element signature="e#9894#9895#0" expanded="true" />
-                <element signature="e#9920#9921#0" expanded="true" />
-                <element signature="e#9958#9959#0" expanded="true" />
-                <element signature="e#9988#9989#0" expanded="true" />
-                <element signature="e#10027#10028#0" expanded="true" />
-                <element signature="e#10062#10063#0" expanded="true" />
-                <element signature="e#10117#10118#0" expanded="true" />
-                <element signature="e#10164#10165#0" expanded="true" />
-                <element signature="e#10212#10213#0" expanded="true" />
-                <element signature="e#10256#10257#0" expanded="true" />
-                <element signature="e#10428#10429#0" expanded="true" />
-                <element signature="e#10458#10459#0" expanded="true" />
-                <element signature="e#10504#10505#0" expanded="true" />
-                <element signature="e#10542#10543#0" expanded="true" />
-                <element signature="e#10578#10579#0" expanded="true" />
-                <element signature="e#10610#10611#0" expanded="true" />
-                <element signature="e#10660#10661#0" expanded="true" />
-                <element signature="e#10702#10703#0" expanded="true" />
-                <element signature="e#10731#10732#0" expanded="true" />
-                <element signature="e#10756#10757#0" expanded="true" />
-                <element signature="e#10792#10793#0" expanded="true" />
-                <element signature="e#10820#10821#0" expanded="true" />
-                <element signature="e#10855#10856#0" expanded="true" />
-                <element signature="e#10886#10887#0" expanded="true" />
-                <element signature="e#10934#10935#0" expanded="true" />
-                <element signature="e#10974#10975#0" expanded="true" />
-                <element signature="e#11012#11013#0" expanded="true" />
-                <element signature="e#11046#11047#0" expanded="true" />
-                <element signature="e#11100#11101#0" expanded="true" />
+                <element signature="imports" expanded="true" />
+                <element signature="e#11102#11103#0" expanded="true" />
                 <element signature="e#11146#11147#0" expanded="true" />
-                <element signature="e#11399#11400#0" expanded="true" />
-                <element signature="e#11445#11446#0" expanded="true" />
-                <element signature="e#11476#11477#0" expanded="true" />
-                <element signature="e#11503#11504#0" expanded="true" />
-                <element signature="e#11544#11545#0" expanded="true" />
-                <element signature="e#11576#11577#0" expanded="true" />
-                <element signature="e#11817#11818#0" expanded="true" />
-                <element signature="e#11859#11860#0" expanded="true" />
-                <element signature="e#11900#11901#0" expanded="true" />
-                <element signature="e#11940#11941#0" expanded="true" />
-                <element signature="e#12003#12004#0" expanded="true" />
-                <element signature="e#12061#12062#0" expanded="true" />
-                <element signature="e#12102#12103#0" expanded="true" />
-                <element signature="e#12142#12143#0" expanded="true" />
-                <element signature="e#12205#12206#0" expanded="true" />
-                <element signature="e#12263#12264#0" expanded="true" />
-                <element signature="e#12504#12505#0" expanded="true" />
-                <element signature="e#12546#12547#0" expanded="true" />
-                <element signature="e#12817#12818#0" expanded="true" />
-                <element signature="e#12869#12870#0" expanded="true" />
-                <element signature="e#12899#12900#0" expanded="true" />
-                <element signature="e#12925#12926#0" expanded="true" />
-                <element signature="e#12963#12964#0" expanded="true" />
-                <element signature="e#12993#12994#0" expanded="true" />
-                <element signature="e#13023#13024#0" expanded="true" />
-                <element signature="e#13049#13050#0" expanded="true" />
-                <element signature="e#13087#13088#0" expanded="true" />
-                <element signature="e#13117#13118#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -237,7 +165,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/de/karlsommer/gigabit/filehandling/JavascriptWriter.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="499">
+            <state relative-caret-position="519">
               <caret line="834" column="73" selection-start-line="834" selection-start-column="73" selection-end-line="834" selection-end-column="73" />
               <folding>
                 <element signature="imports" expanded="true" />
@@ -252,38 +180,10 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/de/karlsommer/gigabit/AddTeilstandortFrame.form">
-          <provider selected="true" editor-type-id="ui-designer" />
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/de/karlsommer/gigabit/AddTeilstandortFrame.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="608">
-              <caret line="78" column="107" selection-start-line="78" selection-start-column="20" selection-end-line="78" selection-end-column="107" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/de/karlsommer/gigabit/EditSchoolFrame.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="630">
-              <caret line="59" column="78" selection-start-line="59" selection-start-column="47" selection-end-line="59" selection-end-column="78" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/de/karlsommer/gigabit/helper/SpinnerCircularListModel.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="375">
-              <caret line="25" column="1" selection-start-line="25" selection-start-column="1" selection-end-line="25" selection-end-column="1" />
-              <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="e#160#161#0" expanded="true" />
-                <element signature="e#196#197#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="1744">
+              <caret line="176" column="72" selection-start-line="176" selection-start-column="58" selection-end-line="176" selection-end-column="72" />
             </state>
           </provider>
         </entry>
@@ -291,8 +191,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/de/karlsommer/gigabit/database/repositories/SchuleRepository.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="679">
-              <caret line="420" column="9" selection-start-line="403" selection-start-column="8" selection-end-line="420" selection-end-column="9" />
+            <state relative-caret-position="183">
+              <caret line="59" column="19" selection-start-line="59" selection-start-column="19" selection-end-line="59" selection-end-column="19" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -312,7 +212,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>Flaper Str. 23</find>
       <find>Flaper Str</find>
       <find>An der Hauptschule</find>
       <find>An der Falkschule 9</find>
@@ -339,7 +238,16 @@
       <find>ausbauSpinner</find>
       <find>getAu</find>
       <find>Nicht verarbeitbar</find>
+      <find>comboBoxOrte</find>
+      <find>schuleBearbeitenFrame</find>
+      <find>row</find>
+      <find>row.getCell(i++).getStringCellValue()</find>
     </findStrings>
+    <replaceStrings>
+      <replace>getIntValue</replace>
+      <replace>getIntValue(row.getCell(i++))</replace>
+      <replace>getStringValue(row.getCell(i++))</replace>
+    </replaceStrings>
     <dirStrings>
       <dir>$PROJECT_DIR$/out/artifacts/Gigabit_DB_Tool_jar</dir>
       <dir>$PROJECT_DIR$/databases</dir>
@@ -363,17 +271,18 @@
         <option value="$PROJECT_DIR$/pom.xml" />
         <option value="$PROJECT_DIR$/src/main/java/de/karlsommer/gigabit/filehandling/ImportBuilder.java" />
         <option value="$PROJECT_DIR$/src/main/java/de/karlsommer/gigabit/helper/MathHelper.java" />
-        <option value="$PROJECT_DIR$/src/main/java/de/karlsommer/gigabit/filehandling/DocumentWriter.java" />
         <option value="$PROJECT_DIR$/src/main/java/de/karlsommer/gigabit/filehandling/JavascriptWriter.java" />
         <option value="$PROJECT_DIR$/src/main/java/de/karlsommer/gigabit/AddTeilstandortFrame.form" />
         <option value="$PROJECT_DIR$/src/main/java/de/karlsommer/gigabit/helper/SpinnerCircularListModel.java" />
-        <option value="$PROJECT_DIR$/src/main/java/de/karlsommer/gigabit/EditSchoolFrame.java" />
         <option value="$PROJECT_DIR$/src/main/java/de/karlsommer/gigabit/AddTeilstandortFrame.java" />
         <option value="$PROJECT_DIR$/src/main/java/de/karlsommer/gigabit/database/repositories/SchuleRepository.java" />
         <option value="$PROJECT_DIR$/src/main/java/de/karlsommer/gigabit/Interface.form" />
-        <option value="$PROJECT_DIR$/src/main/java/de/karlsommer/gigabit/database/model/Schule.java" />
-        <option value="$PROJECT_DIR$/src/main/java/de/karlsommer/gigabit/Interface.java" />
+        <option value="$PROJECT_DIR$/src/main/java/de/karlsommer/gigabit/SchulDetailFrame.form" />
+        <option value="$PROJECT_DIR$/src/main/java/de/karlsommer/gigabit/EditSchoolFrame.java" />
         <option value="$PROJECT_DIR$/src/main/java/de/karlsommer/gigabit/EditSchoolFrame.form" />
+        <option value="$PROJECT_DIR$/src/main/java/de/karlsommer/gigabit/filehandling/DocumentWriter.java" />
+        <option value="$PROJECT_DIR$/src/main/java/de/karlsommer/gigabit/Interface.java" />
+        <option value="$PROJECT_DIR$/src/main/java/de/karlsommer/gigabit/database/model/Schule.java" />
       </list>
     </option>
   </component>
@@ -390,11 +299,10 @@
       </MavenImportingSettings>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="317" />
+  <component name="ProjectFrameBounds">
     <option name="y" value="23" />
-    <option name="width" value="3523" />
-    <option name="height" value="2073" />
+    <option name="width" value="1440" />
+    <option name="height" value="813" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
@@ -419,17 +327,6 @@
               <item name="Gigabit-DB-Tool" type="462c0819:PsiDirectoryNode" />
               <item name="out" type="462c0819:PsiDirectoryNode" />
               <item name="artifacts" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Gigabit-DB-Tool" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Gigabit-DB-Tool" type="462c0819:PsiDirectoryNode" />
-              <item name="output" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Gigabit-DB-Tool" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Gigabit-DB-Tool" type="462c0819:PsiDirectoryNode" />
-              <item name="output" type="462c0819:PsiDirectoryNode" />
-              <item name="img" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="Gigabit-DB-Tool" type="b2602c69:ProjectViewProjectNode" />
@@ -527,33 +424,6 @@
               <item name="Gigabit-DB-Tool" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="gigabit" type="462c0819:PsiDirectoryNode" />
-              <item name="AddTeilstandortFrame" type="e9f4de52:FormNode" />
-            </path>
-            <path>
-              <item name="Gigabit-DB-Tool" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Gigabit-DB-Tool" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="gigabit" type="462c0819:PsiDirectoryNode" />
-              <item name="EditSchoolFrame" type="e9f4de52:FormNode" />
-            </path>
-            <path>
-              <item name="Gigabit-DB-Tool" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Gigabit-DB-Tool" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="gigabit" type="462c0819:PsiDirectoryNode" />
-              <item name="Interface" type="e9f4de52:FormNode" />
-            </path>
-            <path>
-              <item name="Gigabit-DB-Tool" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Gigabit-DB-Tool" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
               <item name="resources" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -566,8 +436,8 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
       <pane id="PackagesPane" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -575,10 +445,10 @@
     <property name="GenerateAntBuildDialog.enableUiFormCompile" value="true" />
     <property name="GenerateAntBuildDialog.forceTargetJdk" value="true" />
     <property name="GenerateAntBuildDialog.outputFileNameProperty" value="gigabit-db-tool" />
-    <property name="UI_DESIGNER_EDITOR_MODE.UIDesignerToolWindowManager.WIDTH" value="719" />
+    <property name="UI_DESIGNER_EDITOR_MODE.UIDesignerToolWindowManager.WIDTH" value="184" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1547833144529" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1548153019059" />
     <property name="extract.method.default.visibility" value="private" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
@@ -649,12 +519,14 @@
       <workItem from="1543411954869" duration="3602000" />
       <workItem from="1544679052262" duration="109000" />
       <workItem from="1544679263297" duration="14108000" />
-      <workItem from="1545109383090" duration="25054000" />
+      <workItem from="1545109383090" duration="26213000" />
+      <workItem from="1548141102105" duration="2958000" />
+      <workItem from="1548149522263" duration="3222000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="174915000" />
+    <option name="totallyTimeSpent" value="182254000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -666,11 +538,11 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="23" width="3840" height="2073" extended-state="6" />
+    <frame x="0" y="23" width="1440" height="813" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.48104265" visible="true" weight="0.18325435" />
-      <window_info id="Structure" order="1" sideWeight="0.5189573" side_tool="true" visible="true" weight="0.18325435" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.6375839" visible="true" weight="0.18526466" />
+      <window_info id="Structure" order="1" sideWeight="0.36241612" side_tool="true" visible="true" weight="0.18526466" />
       <window_info id="Designer" order="2" />
       <window_info id="Image Layers" order="3" />
       <window_info id="Capture Tool" order="4" />
@@ -679,16 +551,16 @@
       <window_info id="Favorites" order="7" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32828283" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.36092883" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.17337032" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.3997253" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.3286219" />
       <window_info anchor="bottom" id="Version Control" order="7" weight="0.32912672" />
       <window_info anchor="bottom" id="Database Changes" order="8" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Terminal" order="9" weight="0.12115093" />
+      <window_info anchor="bottom" id="Terminal" order="9" weight="0.120665744" />
       <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
-      <window_info anchor="bottom" id="Messages" order="11" weight="0.32105" />
+      <window_info anchor="bottom" id="Messages" order="11" weight="0.32038835" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -797,167 +669,24 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/de/karlsommer/gigabit/filehandling/DocumentWriter.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/de/karlsommer/gigabit/AddTeilstandortFrame.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="432">
-          <caret line="846" column="56" selection-start-line="846" selection-start-column="56" selection-end-line="846" selection-end-column="56" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/de/karlsommer/gigabit/filehandling/JavascriptWriter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="499">
-          <caret line="834" column="73" selection-start-line="834" selection-start-column="73" selection-end-line="834" selection-end-column="73" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
+        <state relative-caret-position="373">
+          <caret line="172" column="20" selection-start-line="172" selection-start-column="20" selection-end-line="172" selection-end-column="20" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/de/karlsommer/gigabit/AddTeilstandortFrame.form">
       <provider selected="true" editor-type-id="ui-designer" />
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/de/karlsommer/gigabit/SchulDetailFrame.form" />
+    <entry file="file://$PROJECT_DIR$/src/main/java/de/karlsommer/gigabit/SchulDetailFrame.java" />
     <entry file="file://$PROJECT_DIR$/src/main/java/de/karlsommer/gigabit/helper/SpinnerCircularListModel.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="375">
+        <state relative-caret-position="330">
           <caret line="25" column="1" selection-start-line="25" selection-start-column="1" selection-end-line="25" selection-end-column="1" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#160#161#0" expanded="true" />
-            <element signature="e#196#197#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/de/karlsommer/gigabit/EditSchoolFrame.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="630">
-          <caret line="59" column="78" selection-start-line="59" selection-start-column="47" selection-end-line="59" selection-end-column="78" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/de/karlsommer/gigabit/AddTeilstandortFrame.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="608">
-          <caret line="78" column="107" selection-start-line="78" selection-start-column="20" selection-end-line="78" selection-end-column="107" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/de/karlsommer/gigabit/database/repositories/SchuleRepository.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="679">
-          <caret line="420" column="9" selection-start-line="403" selection-start-column="8" selection-end-line="420" selection-end-column="9" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/de/karlsommer/gigabit/Interface.form">
-      <provider selected="true" editor-type-id="ui-designer" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/de/karlsommer/gigabit/database/model/Schule.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="473">
-          <caret line="480" column="33" selection-start-line="480" selection-start-column="33" selection-end-line="480" selection-end-column="33" />
-          <folding>
-            <element signature="e#4098#4099#0" expanded="true" />
-            <element signature="e#4133#4134#0" expanded="true" />
-            <element signature="e#4190#4191#0" expanded="true" />
-            <element signature="e#4233#4234#0" expanded="true" />
-            <element signature="e#4275#4276#0" expanded="true" />
-            <element signature="e#4313#4314#0" expanded="true" />
-            <element signature="e#4375#4376#0" expanded="true" />
-            <element signature="e#4424#4425#0" expanded="true" />
-            <element signature="e#4474#4475#0" expanded="true" />
-            <element signature="e#4520#4521#0" expanded="true" />
-            <element signature="e#4711#4712#0" expanded="true" />
-            <element signature="e#4755#4756#0" expanded="true" />
-            <element signature="e#5048#5049#0" expanded="true" />
-            <element signature="e#5079#5080#0" expanded="true" />
-            <element signature="e#5127#5128#0" expanded="true" />
-            <element signature="e#5167#5168#0" expanded="true" />
-            <element signature="e#9156#9157#0" expanded="true" />
-            <element signature="e#9181#9182#0" expanded="true" />
-            <element signature="e#9214#9215#0" expanded="true" />
-            <element signature="e#9242#9243#0" expanded="true" />
-            <element signature="e#9269#9270#0" expanded="true" />
-            <element signature="e#9295#9296#0" expanded="true" />
-            <element signature="e#9330#9331#0" expanded="true" />
-            <element signature="e#9360#9361#0" expanded="true" />
-            <element signature="e#9402#9403#0" expanded="true" />
-            <element signature="e#9440#9441#0" expanded="true" />
-            <element signature="e#9502#9503#0" expanded="true" />
-            <element signature="e#9556#9557#0" expanded="true" />
-            <element signature="e#9597#9598#0" expanded="true" />
-            <element signature="e#9634#9635#0" expanded="true" />
-            <element signature="e#9694#9695#0" expanded="true" />
-            <element signature="e#9746#9747#0" expanded="true" />
-            <element signature="e#9773#9774#0" expanded="true" />
-            <element signature="e#9799#9800#0" expanded="true" />
-            <element signature="e#9834#9835#0" expanded="true" />
-            <element signature="e#9864#9865#0" expanded="true" />
-            <element signature="e#9894#9895#0" expanded="true" />
-            <element signature="e#9920#9921#0" expanded="true" />
-            <element signature="e#9958#9959#0" expanded="true" />
-            <element signature="e#9988#9989#0" expanded="true" />
-            <element signature="e#10027#10028#0" expanded="true" />
-            <element signature="e#10062#10063#0" expanded="true" />
-            <element signature="e#10117#10118#0" expanded="true" />
-            <element signature="e#10164#10165#0" expanded="true" />
-            <element signature="e#10212#10213#0" expanded="true" />
-            <element signature="e#10256#10257#0" expanded="true" />
-            <element signature="e#10428#10429#0" expanded="true" />
-            <element signature="e#10458#10459#0" expanded="true" />
-            <element signature="e#10504#10505#0" expanded="true" />
-            <element signature="e#10542#10543#0" expanded="true" />
-            <element signature="e#10578#10579#0" expanded="true" />
-            <element signature="e#10610#10611#0" expanded="true" />
-            <element signature="e#10660#10661#0" expanded="true" />
-            <element signature="e#10702#10703#0" expanded="true" />
-            <element signature="e#10731#10732#0" expanded="true" />
-            <element signature="e#10756#10757#0" expanded="true" />
-            <element signature="e#10792#10793#0" expanded="true" />
-            <element signature="e#10820#10821#0" expanded="true" />
-            <element signature="e#10855#10856#0" expanded="true" />
-            <element signature="e#10886#10887#0" expanded="true" />
-            <element signature="e#10934#10935#0" expanded="true" />
-            <element signature="e#10974#10975#0" expanded="true" />
-            <element signature="e#11012#11013#0" expanded="true" />
-            <element signature="e#11046#11047#0" expanded="true" />
-            <element signature="e#11100#11101#0" expanded="true" />
-            <element signature="e#11146#11147#0" expanded="true" />
-            <element signature="e#11399#11400#0" expanded="true" />
-            <element signature="e#11445#11446#0" expanded="true" />
-            <element signature="e#11476#11477#0" expanded="true" />
-            <element signature="e#11503#11504#0" expanded="true" />
-            <element signature="e#11544#11545#0" expanded="true" />
-            <element signature="e#11576#11577#0" expanded="true" />
-            <element signature="e#11817#11818#0" expanded="true" />
-            <element signature="e#11859#11860#0" expanded="true" />
-            <element signature="e#11900#11901#0" expanded="true" />
-            <element signature="e#11940#11941#0" expanded="true" />
-            <element signature="e#12003#12004#0" expanded="true" />
-            <element signature="e#12061#12062#0" expanded="true" />
-            <element signature="e#12102#12103#0" expanded="true" />
-            <element signature="e#12142#12143#0" expanded="true" />
-            <element signature="e#12205#12206#0" expanded="true" />
-            <element signature="e#12263#12264#0" expanded="true" />
-            <element signature="e#12504#12505#0" expanded="true" />
-            <element signature="e#12546#12547#0" expanded="true" />
-            <element signature="e#12817#12818#0" expanded="true" />
-            <element signature="e#12869#12870#0" expanded="true" />
-            <element signature="e#12899#12900#0" expanded="true" />
-            <element signature="e#12925#12926#0" expanded="true" />
-            <element signature="e#12963#12964#0" expanded="true" />
-            <element signature="e#12993#12994#0" expanded="true" />
-            <element signature="e#13023#13024#0" expanded="true" />
-            <element signature="e#13049#13050#0" expanded="true" />
-            <element signature="e#13087#13088#0" expanded="true" />
-            <element signature="e#13117#13118#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -965,12 +694,71 @@
     <entry file="file://$PROJECT_DIR$/src/main/java/de/karlsommer/gigabit/EditSchoolFrame.form">
       <provider selected="true" editor-type-id="ui-designer" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/de/karlsommer/gigabit/Interface.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/de/karlsommer/gigabit/Interface.form">
+      <provider selected="true" editor-type-id="ui-designer" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/de/karlsommer/gigabit/database/repositories/SchuleRepository.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="88">
-          <caret line="359" column="25" selection-start-line="359" selection-start-column="25" selection-end-line="359" selection-end-column="25" />
+        <state relative-caret-position="183">
+          <caret line="59" column="19" selection-start-line="59" selection-start-column="19" selection-end-line="59" selection-end-column="19" />
           <folding>
             <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$MAVEN_REPOSITORY$/org/apache/poi/poi-ooxml/3.17/poi-ooxml-3.17.jar!/org/apache/poi/xssf/usermodel/XSSFSheet.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="190">
+          <caret line="913" column="18" selection-start-line="913" selection-start-column="11" selection-end-line="913" selection-end-column="18" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/de/karlsommer/gigabit/filehandling/JavascriptWriter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="519">
+          <caret line="834" column="73" selection-start-line="834" selection-start-column="73" selection-end-line="834" selection-end-column="73" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/de/karlsommer/gigabit/EditSchoolFrame.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1744">
+          <caret line="176" column="72" selection-start-line="176" selection-start-column="58" selection-end-line="176" selection-end-column="72" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/de/karlsommer/gigabit/filehandling/DocumentWriter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="173">
+          <caret line="73" column="15" selection-start-line="73" selection-start-column="12" selection-end-line="73" selection-end-column="15" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/de/karlsommer/gigabit/Interface.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="839">
+          <caret line="864" column="37" selection-start-line="864" selection-start-column="37" selection-end-line="864" selection-end-column="37" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/de/karlsommer/gigabit/database/model/Schule.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="228">
+          <caret line="536" column="20" selection-start-line="536" selection-start-column="20" selection-end-line="536" selection-end-column="20" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#11102#11103#0" expanded="true" />
+            <element signature="e#11146#11147#0" expanded="true" />
           </folding>
         </state>
       </provider>
