@@ -81,6 +81,10 @@ public class Schule {
     private double lng;
     private int Schuelerzahl;
     private String Ausbau;
+    private String Ansprechpartner;
+    private String Telefon_Ansprechpartner;
+    private String Email_Ansprechpartner;
+    private String standort;
 
     public String getAusbau(boolean html)
     {
@@ -171,10 +175,6 @@ public class Schule {
         Email_Ansprechpartner = email_Ansprechpartner;
     }
 
-    private String Ansprechpartner;
-    private String Telefon_Ansprechpartner;
-    private String Email_Ansprechpartner;
-
     public String getStandort() {
         return standort;
     }
@@ -183,7 +183,7 @@ public class Schule {
         this.standort = standort;
     }
 
-    private String standort;
+
 
     public Schule(ArrayList<String> daten, boolean fromDatabase)
     {
@@ -525,6 +525,129 @@ public class Schule {
         }
     }
 
+    public String getChangedValues(Schule schule)
+    {
+        String returnString = "";
+
+        if(!(this.SNR == (schule.getSNR())))
+        {
+            returnString += "SNR von "+this.SNR+" zu "+schule.getSNR()+" ";
+        }
+        if(!this.Name_der_Schule.equals(schule.getName_der_Schule()))
+        {
+            returnString += "Name_der_Schule von "+this.Name_der_Schule+" zu "+schule.getName_der_Schule()+" ";
+        }
+        if(!this.Art_der_Schule.equals(schule.getArt_der_Schule()))
+        {
+            returnString += "Art_der_Schule von "+this.Art_der_Schule+" zu "+schule.getArt_der_Schule()+" ";
+        }
+        if(!(this.PLZ == (schule.getPLZ())))
+        {
+            returnString += "PLZ von "+this.PLZ+" zu "+schule.getPLZ()+" ";
+        }
+        if(!this.Ort.equals(schule.getOrt()))
+        {
+            returnString += "Ort von "+this.Ort+" zu "+schule.getOrt()+" ";
+        }
+        if(!this.Strasse_Hsnr.equals(schule.getStrasse_Hsnr()))
+        {
+            returnString += "Strasse_Hsnr von "+this.Strasse_Hsnr+" zu "+schule.getStrasse_Hsnr()+" ";
+        }
+        if(!this.Zustaendiges_Schulamt.equals(schule.getZustaendiges_Schulamt()))
+        {
+            returnString += "Zustaendiges_Schulamt von "+this.Zustaendiges_Schulamt+" zu "+schule.getZustaendiges_Schulamt()+" ";
+        }
+        if(!this.Vorwahl.equals(schule.getVorwahl()))
+        {
+            returnString += "Vorwahl von "+this.Vorwahl+" zu "+schule.getVorwahl()+" ";
+        }
+        if(!this.Rufnummer.equals(schule.getRufnummer()))
+        {
+            returnString += "Rufnummer von "+this.Rufnummer+" zu "+schule.getRufnummer()+" ";
+        }
+        if(!this.SF.equals(schule.getSF()))
+        {
+            returnString += "SF von "+this.SF+" zu "+schule.getSF()+" ";
+        }
+        if(!this.Schultyp.equals(schule.getSchultyp()))
+        {
+            returnString += "Schultyp von "+this.Schultyp+" zu "+schule.getSchultyp()+" ";
+        }
+        if(!this.Mailadresse.equals(schule.getMailadresse()))
+        {
+            returnString += "Mailadresse von "+this.Mailadresse+" zu "+schule.getMailadresse()+" ";
+        }
+        if(!this.Bemerkungen.equals(schule.getBemerkungen()))
+        {
+            returnString += "Bemerkungen von "+this.Bemerkungen+" zu "+schule.getBemerkungen()+" ";
+        }
+        if(!(this.flag == (schule.isFlag())))
+        {
+            returnString += "flag von "+this.flag+" zu "+schule.isFlag()+" ";
+        }
+        if(!this.Status_GB.equals(schule.getStatus_GB()))
+        {
+            returnString += "Status_GB von "+this.Status_GB+" zu "+schule.getStatus_GB()+" ";
+        }
+        if(!(this.Anbindung_Kbit_DL == (schule.getAnbindung_Kbit_DL())))
+        {
+            returnString += "Anbindung_Kbit_DL von "+this.Anbindung_Kbit_DL+" zu "+schule.getAnbindung_Kbit_DL()+" ";
+        }
+        if(!(this.Anbindung_Kbit_UL == (schule.getAnbindung_Kbit_UL())))
+        {
+            returnString += "Anbindung_Kbit_UL von "+this.Anbindung_Kbit_UL+" zu "+schule.getAnbindung_Kbit_UL()+" ";
+        }
+        if(!this.Status_MK.equals(schule.getStatus_MK()))
+        {
+            returnString += "Status_MK von "+this.Status_MK+" zu "+schule.getStatus_MK()+" ";
+        }
+        if(!this.Status_Inhouse.equals(schule.getStatus_Inhouse()))
+        {
+            returnString += "Status_Inhouse von "+this.Status_Inhouse+" zu "+schule.getStatus_Inhouse()+" ";
+        }
+        if(!(this.lat == (schule.getLat())))
+        {
+            returnString += "lat von "+this.lat+" zu "+schule.getLat()+" ";
+        }
+        if(!(this.lng == (schule.getLng())))
+        {
+            returnString += "lng von "+this.lng+" zu "+schule.getLng()+" ";
+        }
+        if(!(this.Schuelerzahl == (schule.getSchuelerzahl())))
+        {
+            returnString += "Schuelerzahl von "+this.Schuelerzahl+" zu "+schule.getSchuelerzahl()+" ";
+        }
+        if(!this.Ausbau.equals(schule.getAusbau(false)))
+        {
+            returnString += "Ausbau von "+this.Ausbau+" zu "+schule.getAusbau(false)+" ";
+        }
+        if(!this.Ansprechpartner.equals(schule.getAnsprechpartner()))
+        {
+            returnString += "Ansprechpartner von "+this.Ansprechpartner+" zu "+schule.getAnsprechpartner()+" ";
+        }
+        if(!this.Telefon_Ansprechpartner.equals(schule.getTelefon_Ansprechpartner()))
+        {
+            returnString += "Telefon_Ansprechpartner von "+this.Telefon_Ansprechpartner+" zu "+schule.getTelefon_Ansprechpartner()+" ";
+        }
+        if(!this.Email_Ansprechpartner.equals(schule.getEmail_Ansprechpartner()))
+        {
+            returnString += "Email_Ansprechpartner von "+this.Email_Ansprechpartner+" zu "+schule.getEmail_Ansprechpartner()+" ";
+        }
+        if(!this.standort.equals(schule.getStandort()))
+        {
+            returnString += "standort von "+this.standort+" zu "+schule.getStandort()+" ";
+        }
+        return returnString;
+    }
+
+    public boolean isEqualTo(Schule schule)
+    {
+        if(getChangedValues(schule).equals(""))
+            return true;
+        else
+            return false;
+    }
+
     private int getIntValue(Cell cell)
     {
         switch(cell.getCellType()) {
@@ -532,6 +655,8 @@ public class Schule {
                 return (int)(cell.getNumericCellValue());
             case Cell.CELL_TYPE_STRING:
                 if(cell.getStringCellValue().equals("null"))
+                    return 0;
+                else if(cell.getStringCellValue().equals(""))
                     return 0;
                 else
                     return Integer.parseInt(cell.getStringCellValue());
@@ -544,16 +669,19 @@ public class Schule {
 
     private String getStringValue(Cell cell)
     {
-        switch(cell.getCellType()) {
-            case Cell.CELL_TYPE_NUMERIC:
-                return String.valueOf(cell.getNumericCellValue());
-            case Cell.CELL_TYPE_STRING:
-                return cell.getStringCellValue();
-            case Cell.CELL_TYPE_BLANK:
-                return "";
-            default:
-                return "";
+        if(cell != null) {
+            switch (cell.getCellType()) {
+                case Cell.CELL_TYPE_NUMERIC:
+                    return String.valueOf(cell.getNumericCellValue());
+                case Cell.CELL_TYPE_STRING:
+                    return cell.getStringCellValue();
+                case Cell.CELL_TYPE_BLANK:
+                    return "";
+                default:
+                    return "";
+            }
         }
+        return "";
     }
 
     public void createTeilstandortWithCSV(Schule hauptstandort, ArrayList<String> data)

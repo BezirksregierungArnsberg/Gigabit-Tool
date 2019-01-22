@@ -35,8 +35,8 @@ import static org.apache.commons.lang.StringUtils.trim;
 public class Interface implements DataUpdater{
 
     public static final boolean RELEASE = true;
-    public static final String version = "1.4";
-    public static final String releaseDate = "18.01.2019";
+    public static final String version = "1.5";
+    public static final String releaseDate = "22.01.2019";
     private JPanel mainView;
     private JButton geokoordinatenLaden;
     private JButton javascriptUndHTMLGigabitSchreiben;
@@ -73,11 +73,32 @@ public class Interface implements DataUpdater{
     private ArrayList<Schule> schulenImZwischenspeicher;
     private JFrame schuleBearbeitenFrame;
     private EditSchoolFrame editSchoolFrame;
+    private JFrame loggerFrame;
+    private LogViewer logViewer;
 
     private Interface()
     {
         schuleRepository = new SchuleRepository();
         builder = new ImportBuilder();
+
+
+        loggerFrame = new JFrame("Schulen bearbeiten");
+        logViewer = new LogViewer(loggerFrame);
+        loggerFrame.setContentPane(logViewer.mainView);
+        loggerFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+
+        loggerFrame.addWindowListener(new WindowAdapter() {
+            //I skipped unused callbacks for readability
+
+            @Override
+            public void windowClosing(WindowEvent e) {
+                loggerFrame.setVisible(false);
+                loggerFrame.dispose();
+            }
+        });
+
+        loggerFrame.pack();
+
 
         schuleBearbeitenFrame = new JFrame("Schulen bearbeiten");
         editSchoolFrame = new EditSchoolFrame(schuleBearbeitenFrame, this);
@@ -870,6 +891,12 @@ public class Interface implements DataUpdater{
                 } else if (rVal == JFileChooser.CANCEL_OPTION) {
                     ausgabeLabel.setText("Bitte vor Abgleich auswählen");
                 }
+            }
+        });
+        changeHistoryButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                loggerFrame.setVisible(true);
             }
         });
     }

@@ -6,6 +6,7 @@
 package de.karlsommer.gigabit.database.repositories;
 
 import de.karlsommer.gigabit.database.DatabaseConnector;
+import de.karlsommer.gigabit.database.model.LogEntry;
 import de.karlsommer.gigabit.database.model.Schule;
 import de.karlsommer.gigabit.datastructures.QueryResult;
 
@@ -209,9 +210,12 @@ public class SchuleRepository {
     }
 
     public void save(Schule schule) {
+        LogEntryRepository logEntryRepository = new LogEntryRepository();
+        LogEntry logEntry;
         if(schoolWithIDExists(schule.getId()))
         {
             String query;
+            Schule oldSchule = getSchoolWithID(String.valueOf(schule.getId()));
             if(schule.getLng() != 0 && schule.getLat() != 0)
              query = "UPDATE Schulen SET SNR="+schule.getSNR()+",[Name der Schule]='"+
                     schule.getName_der_Schule()+"',[Art der Schule]='"+schule.getArt_der_Schule()+"',PLZ="+schule.getPLZ()+",Ort='"+schule.getOrt()+"',[Straße + Hsnr.]='"+schule.getStrasse_Hsnr()+"',[Zuständiges Schulamt]='"+schule.getZustaendiges_Schulamt()+"',Vorwahl ='"+
@@ -228,12 +232,19 @@ public class SchuleRepository {
             //System.out.println(query);
             
             DatabaseConnector.getInstance().executeStatement(query);
+            if(!oldSchule.isEqualTo(schule)) {
+                String logText = "Schule mit ID:" + schule.getId() + " geändert. Veränderte Werte: "+oldSchule.getChangedValues(schule);
+                logEntry = new LogEntry(logText);
+                logEntryRepository.save(logEntry);
+            }
         }
         else
         {
             String query = "INSERT INTO Schulen VALUES(null,'"+schule.getSNR()+"','"+schule.getName_der_Schule()+"','"+schule.getArt_der_Schule()+"','"+schule.getPLZ()+"','"+schule.getOrt()+"','"+schule.getStrasse_Hsnr()+"','"+schule.getZustaendiges_Schulamt()+"','"+schule.getVorwahl()+"','"+schule.getRufnummer()+"','"+schule.getSF()+"','"+schule.getSchultyp()+"','"+schule.getMailadresse()+"','"+schule.getBemerkungen()+"','"+schule.isFlag()+"','"+schule.getStatus_GB()+"','"+schule.getAnbindung_Kbit_DL()+"','"+schule.getAnbindung_Kbit_UL()+"','"+schule.getStatus_MK()+"','"+schule.getStatus_Inhouse()+"','"+schule.getLat()+"','"+schule.getLng()+"','"+schule.getStandort()+"','"+schule.getAnsprechpartner()+"','"+schule.getTelefon_Ansprechpartner()+"','"+schule.getEmail_Ansprechpartner()+"', "+schule.getSchuelerzahl()+",'"+schule.getAusbau(false)+"');";
             //System.out.println(query);
             DatabaseConnector.getInstance().executeStatement(query);
+            logEntry = new LogEntry("Neue Schule angelegt. Werte: '"+schule.getSNR()+"','"+schule.getName_der_Schule()+"','"+schule.getArt_der_Schule()+"','"+schule.getPLZ()+"','"+schule.getOrt()+"','"+schule.getStrasse_Hsnr()+"','"+schule.getZustaendiges_Schulamt()+"','"+schule.getVorwahl()+"','"+schule.getRufnummer()+"','"+schule.getSF()+"','"+schule.getSchultyp()+"','"+schule.getMailadresse()+"','"+schule.getBemerkungen()+"','"+schule.isFlag()+"','"+schule.getStatus_GB()+"','"+schule.getAnbindung_Kbit_DL()+"','"+schule.getAnbindung_Kbit_UL()+"','"+schule.getStatus_MK()+"','"+schule.getStatus_Inhouse()+"','"+schule.getLat()+"','"+schule.getLng()+"','"+schule.getStandort()+"','"+schule.getAnsprechpartner()+"','"+schule.getTelefon_Ansprechpartner()+"','"+schule.getEmail_Ansprechpartner()+"', "+schule.getSchuelerzahl()+",'"+schule.getAusbau(false)+"");
+            logEntryRepository.save(logEntry);
         }
         /*
         ContentValues values = new ContentValues();
