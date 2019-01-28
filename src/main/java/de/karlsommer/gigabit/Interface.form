@@ -28,251 +28,36 @@
         <properties/>
         <border type="none"/>
         <children>
-          <component id="47d75" class="javax.swing.JLabel">
+          <component id="b2d0" class="javax.swing.JComboBox" binding="comboBoxAdminImport" custom-create="true">
             <constraints>
-              <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
               <gridbag weightx="0.0" weighty="0.0"/>
             </constraints>
-            <properties>
-              <text value="&lt;html&gt;Javascript und HTML-Dateien&lt;br&gt; Gigabit schreiben"/>
-            </properties>
+            <properties/>
           </component>
-          <component id="4584f" class="javax.swing.JButton" binding="javascriptUndHTMLGigabitSchreiben">
-            <constraints>
-              <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-              <gridbag weightx="0.0" weighty="0.0"/>
-            </constraints>
-            <properties>
-              <text value="Go!"/>
-            </properties>
-          </component>
-          <component id="62149" class="javax.swing.JLabel">
-            <constraints>
-              <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-              <gridbag weightx="0.0" weighty="0.0"/>
-            </constraints>
-            <properties>
-              <text value="Alle Schulen anzeigen"/>
-            </properties>
-          </component>
-          <component id="90abf" class="javax.swing.JButton" binding="testButton" default-binding="true">
-            <constraints>
-              <grid row="4" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-              <gridbag weightx="0.0" weighty="0.0"/>
-            </constraints>
-            <properties>
-              <text value="Go!"/>
-            </properties>
-          </component>
-          <component id="b16c7" class="javax.swing.JLabel">
-            <constraints>
-              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-              <gridbag weightx="0.0" weighty="0.0"/>
-            </constraints>
-            <properties>
-              <text value="Tabelle von IT-NRW einlesen"/>
-            </properties>
-          </component>
-          <component id="d3564" class="javax.swing.JLabel">
-            <constraints>
-              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-              <gridbag weightx="0.0" weighty="0.0"/>
-            </constraints>
-            <properties>
-              <text value="&lt;html&gt;Schulen mit fehlenden&lt;br&gt;Geocoordinaten zeigen"/>
-            </properties>
-          </component>
-          <component id="aaea2" class="javax.swing.JButton" binding="tabelleMitITNRWAbgleichenButton" default-binding="true">
+          <component id="30d23" class="javax.swing.JButton" binding="adminImportButton">
             <constraints>
               <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
               <gridbag weightx="0.0" weighty="0.0"/>
             </constraints>
             <properties>
-              <text value="Intern"/>
+              <text value="Import"/>
             </properties>
           </component>
-          <component id="20b72" class="javax.swing.JButton" binding="showAndLoadSchoolsWithoutGeodata" default-binding="true">
+          <component id="305eb" class="javax.swing.JComboBox" binding="comboBoxAdminExport" custom-create="true">
             <constraints>
-              <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+              <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
               <gridbag weightx="0.0" weighty="0.0"/>
             </constraints>
-            <properties>
-              <text value="Go!"/>
-            </properties>
+            <properties/>
           </component>
-          <component id="37f63" class="javax.swing.JLabel">
-            <constraints>
-              <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-              <gridbag weightx="0.0" weighty="0.0"/>
-            </constraints>
-            <properties>
-              <text value="Geokoordinaten in DB laden"/>
-            </properties>
-          </component>
-          <component id="c078c" class="javax.swing.JButton" binding="geokoordinatenLaden">
-            <constraints>
-              <grid row="1" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
-                <preferred-size width="41" height="30"/>
-              </grid>
-              <gridbag weightx="0.0" weighty="0.0"/>
-            </constraints>
-            <properties>
-              <text value="Go!"/>
-            </properties>
-          </component>
-          <component id="4425f" class="javax.swing.JButton" binding="breitbandCSVDateiEinlesen" default-binding="true">
-            <constraints>
-              <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
-                <preferred-size width="78" height="34"/>
-              </grid>
-              <gridbag weightx="0.0" weighty="0.0"/>
-            </constraints>
-            <properties>
-              <text value="Intern"/>
-            </properties>
-          </component>
-          <component id="19f40" class="javax.swing.JLabel">
-            <constraints>
-              <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-              <gridbag weightx="0.0" weighty="0.0"/>
-            </constraints>
-            <properties>
-              <text value="&lt;html&gt;Gigabit Tabelle einlesen und&lt;br&gt; fehlende Schulen ausgeben"/>
-            </properties>
-          </component>
-          <component id="754b0" class="javax.swing.JLabel">
-            <constraints>
-              <grid row="2" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-              <gridbag weightx="0.0" weighty="0.0"/>
-            </constraints>
-            <properties>
-              <text value="&lt;html&gt;Gigabit Tabelle einlesen&lt;br&gt; und Daten aktualisieren"/>
-            </properties>
-          </component>
-          <component id="24788" class="javax.swing.JButton" binding="gigabitTabelleabgleichen" default-binding="true">
-            <constraints>
-              <grid row="2" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-              <gridbag weightx="0.0" weighty="0.0"/>
-            </constraints>
-            <properties>
-              <text value="Intern"/>
-            </properties>
-          </component>
-          <component id="8f1f0" class="javax.swing.JLabel">
-            <constraints>
-              <grid row="1" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-              <gridbag weightx="0.0" weighty="0.0"/>
-            </constraints>
-            <properties>
-              <text value="&lt;html&gt;Doppelte Geocoordinaten&lt;br&gt;durch verschieben lösen"/>
-            </properties>
-          </component>
-          <component id="951b2" class="javax.swing.JButton" binding="goButton1" default-binding="true">
-            <constraints>
-              <grid row="1" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-              <gridbag weightx="0.0" weighty="0.0"/>
-            </constraints>
-            <properties>
-              <text value="Go!"/>
-            </properties>
-          </component>
-          <component id="cf91b" class="javax.swing.JLabel">
-            <constraints>
-              <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-              <gridbag weightx="0.0" weighty="0.0"/>
-            </constraints>
-            <properties>
-              <text value="Daten aus CSV abgleichen"/>
-            </properties>
-          </component>
-          <component id="129bc" class="javax.swing.JButton" binding="csvDataEinlesenButton" default-binding="true">
+          <component id="142a8" class="javax.swing.JButton" binding="adminExportButton">
             <constraints>
               <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
               <gridbag weightx="0.0" weighty="0.0"/>
             </constraints>
             <properties>
-              <text value="Intern"/>
-            </properties>
-          </component>
-          <component id="27996" class="javax.swing.JLabel">
-            <constraints>
-              <grid row="3" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-              <gridbag weightx="0.0" weighty="0.0"/>
-            </constraints>
-            <properties>
-              <text value="Bericht schreiben"/>
-            </properties>
-          </component>
-          <component id="285f0" class="javax.swing.JButton" binding="writeBerichtButton" default-binding="true">
-            <constraints>
-              <grid row="3" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-              <gridbag weightx="0.0" weighty="0.0"/>
-            </constraints>
-            <properties>
-              <text value="Go!"/>
-            </properties>
-          </component>
-          <component id="95b46" class="javax.swing.JLabel">
-            <constraints>
-              <grid row="0" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-              <gridbag weightx="0.0" weighty="0.0"/>
-            </constraints>
-            <properties>
-              <text value="Schule manuell hinzufügen"/>
-            </properties>
-          </component>
-          <component id="b37b0" class="javax.swing.JButton" binding="toDoButton1" default-binding="true">
-            <constraints>
-              <grid row="0" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-              <gridbag weightx="0.0" weighty="0.0"/>
-            </constraints>
-            <properties>
-              <text value="toDo"/>
-            </properties>
-          </component>
-          <component id="c64f9" class="javax.swing.JLabel">
-            <constraints>
-              <grid row="2" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-              <gridbag weightx="0.0" weighty="0.0"/>
-            </constraints>
-            <properties>
-              <text value="Schülerzahlen einlesen"/>
-            </properties>
-          </component>
-          <component id="1daa9" class="javax.swing.JButton" binding="internButton" default-binding="true">
-            <constraints>
-              <grid row="2" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-              <gridbag weightx="0.0" weighty="0.0"/>
-            </constraints>
-            <properties>
-              <text value="Intern"/>
-            </properties>
-          </component>
-          <component id="2e48" class="javax.swing.JButton" binding="customButton" default-binding="true">
-            <constraints>
-              <grid row="4" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-              <gridbag weightx="0.0" weighty="0.0"/>
-            </constraints>
-            <properties>
-              <text value="Special Maps"/>
-            </properties>
-          </component>
-          <component id="777f5" class="javax.swing.JButton" binding="specialButton" default-binding="true">
-            <constraints>
-              <grid row="4" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-              <gridbag weightx="0.0" weighty="0.0"/>
-            </constraints>
-            <properties>
-              <text value="Special"/>
-            </properties>
-          </component>
-          <component id="ec1a5" class="javax.swing.JButton" binding="exportSpecialButton" default-binding="true">
-            <constraints>
-              <grid row="4" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-              <gridbag weightx="0.0" weighty="0.0"/>
-            </constraints>
-            <properties>
-              <text value="Export Special"/>
+              <text value="Export"/>
             </properties>
           </component>
         </children>

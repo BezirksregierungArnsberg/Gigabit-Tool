@@ -40,10 +40,10 @@ public class AddTeilstandortFrame {
     private JLabel jLabelTelefonAnsprechpartner;
     private JLabel jLabelEmailAnsprechpartner;
     private JLabel jLabelSchuelerzahl;
-    private JSpinner ausbauSpinner;
     private JTextField textFieldStatusGB;
     private JTextField textFieldStatusMK;
     private JTextField textFieldStatusInhouse;
+    private JComboBox comboBoxAusbaustatus;
     private Schule schule;
     private Schule hauptstandort;
     private SchuleRepository schuleRepository;
@@ -98,9 +98,8 @@ public class AddTeilstandortFrame {
                 schule.setSF(AddTeilstandortFrame.this.hauptstandort.getSF());
                 schule.setSchultyp(AddTeilstandortFrame.this.hauptstandort.getSchultyp());
                 schule.setStandort(TEILSTANDORT);
+                schule.setAusbau((String) comboBoxAusbaustatus.getSelectedItem());
 
-                if(Arrays.asList(ausbauArray).contains((String)ausbauSpinner.getValue()))
-                    schule.setAusbau((String)ausbauSpinner.getValue());
                 schuleRepository.save(schule);
 
                 AddTeilstandortFrame.this.dataUpdater.updateData();
@@ -147,7 +146,11 @@ public class AddTeilstandortFrame {
             textFieldMailadresse.setText(schule.getMailadresse());
             textFieldVorwahl.setText("0" + schule.getVorwahl());
             textFieldRufnummer.setText(schule.getRufnummer());
-            ausbauSpinner.setValue(schule.getAusbau(false));
+
+            if((Arrays.asList(ausbauArray)).contains(schule.getAusbau(false)))
+                comboBoxAusbaustatus.setSelectedIndex((Arrays.asList(ausbauArray)).indexOf(schule.getAusbau(false)));
+            else
+                comboBoxAusbaustatus.setSelectedIndex((Arrays.asList(ausbauArray)).indexOf(AUSBAU_UNGEKLAERT));
         }else
         {
             jLabelID.setText(String.valueOf(schuleRepository.getMaxID()+1));
@@ -164,13 +167,11 @@ public class AddTeilstandortFrame {
             textFieldMailadresse.setText("");
             textFieldVorwahl.setText("");
             textFieldRufnummer.setText("");
-            ausbauSpinner.setValue(AUSBAU_UNGEKLAERT);
+            comboBoxAusbaustatus.setSelectedIndex((Arrays.asList(ausbauArray)).indexOf(AUSBAU_UNGEKLAERT));
         }
     }
 
     private void createUIComponents() {
-        SpinnerCircularListModel listModel = new SpinnerCircularListModel(
-                ausbauArray);
-        ausbauSpinner = new JSpinner(listModel);
+        comboBoxAusbaustatus = new JComboBox<>(ausbauArray);
     }
 }

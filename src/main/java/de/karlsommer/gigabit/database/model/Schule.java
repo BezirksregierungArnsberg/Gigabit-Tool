@@ -492,7 +492,7 @@ public class Schule {
         this.setStrasse_Hsnr(getStringValue(row.getCell(i++)));
         this.setZustaendiges_Schulamt(getStringValue(row.getCell(i++)));
         this.setVorwahl(String.valueOf(getIntValue(row.getCell(i++))));
-        this.setRufnummer(String.valueOf(getIntValue(row.getCell(i++))));
+        this.setRufnummer(getStringValue(row.getCell(i++)));
         this.setSF(getStringValue(row.getCell(i++)));
         this.setSchultyp(getStringValue(row.getCell(i++)));
         this.setMailadresse(getStringValue(row.getCell(i++)));

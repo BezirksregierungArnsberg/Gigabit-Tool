@@ -12,7 +12,7 @@ import java.util.Arrays;
 public class LogEntryRepository {
     public ArrayList<LogEntry> getAll()
     {
-        String query = "SELECT * FROM LogEntry;";
+        String query = "SELECT * FROM LogEntry ORDER BY id DESC;";
         DatabaseConnector.getInstance().executeStatement(query);
         QueryResult result = DatabaseConnector.getInstance().getCurrentQueryResult();
         ArrayList<LogEntry> logEntries = new ArrayList<>();
