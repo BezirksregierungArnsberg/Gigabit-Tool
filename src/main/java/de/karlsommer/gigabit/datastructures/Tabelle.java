@@ -44,11 +44,6 @@ public class Tabelle{
             System.err.println(e);
         }
     }
-
-    public Tabelle (ArrayList<String> pSpaltenbezeichner, ArrayList<ArrayList<String>> pData) {
-        spaltenbezeichner = pSpaltenbezeichner;
-        daten = pData;
-    }
     
     public ArrayList<Schule> getSchulen()
     {
@@ -63,105 +58,24 @@ public class Tabelle{
                 Schule schule = new Schule(date, false);
                 
                 schulen.add(schule);
-                
-                //tableModel.addRow(schule.getVector());
                 }
                 }
             }
             return schulen;
     }
 
-    public ArrayList<ArrayList<String>>getStrings()
+    public ArrayList<ArrayList<String>> getDaten()
     {
         return daten;
-    }
-
-    public Tabelle erstelleProjektion(String... pSpaltenbezeichner){
-        String[][] neueDaten = new String[daten.size()][pSpaltenbezeichner.length];
-
-        for (int aktS = 0; aktS < pSpaltenbezeichner.length; aktS++){
-            for (int s = 0; s < spaltenbezeichner.size(); s++){
-                if (pSpaltenbezeichner[aktS].equals(spaltenbezeichner.get(s))) {
-                    for (int z = 0; z < daten.size(); z++){
-                        neueDaten[z][aktS] = daten.get(z).get(s);
-                    }
-                }
-            }   
-        }
-        ArrayList<ArrayList<String>> neueArrayList = new ArrayList<>();
-        for(int i = 0; i < neueDaten.length; i++)
-            neueArrayList.add(new ArrayList<>(Arrays.asList(neueDaten[i])));
-            
-        return new Tabelle(new ArrayList<>(Arrays.asList(pSpaltenbezeichner)), neueArrayList);
     }
 
     public ArrayList<String> gibSpaltenbezeichner(){
         return spaltenbezeichner;
     }
 
-    public ArrayList<ArrayList<String>> gibDaten() {
-        return daten;
-    }
-
     public int gibZeilenanzahl(){
         return daten.size();
     }
 
-    public int gibSpaltenanzahl(){
-        return spaltenbezeichner.size();
-    }
-
-    public void speichere (String pDateiname, char pTrenner, boolean pDoppelte){
-        //Ausgabezeilen erstellen
-        String[] zeilen = new String[gibZeilenanzahl()];
-
-        for (int j = 0; j < gibZeilenanzahl(); j++) {
-            String zeile = "";
-            for (int i = 0; i < gibSpaltenanzahl(); i++) {
-                zeile = zeile.concat(daten.get(j).get(i));
-                if (i != gibSpaltenanzahl()-1) {
-                    zeile = zeile + pTrenner;
-                }
-            }
-            zeilen[j] = zeile;
-        }
-
-        //Doppelte Zeilen entfernen wenn verlangt
-        if (pDoppelte!=true){
-            for (int j = 0; j < gibZeilenanzahl()-1; j++) {
-                for (int i = j+1; i < gibZeilenanzahl(); i++) {
-                    if (zeilen[i].equals(zeilen[j])){
-                        zeilen[j] = null;
-                    }
-                }
-            }
-        }
-
-        //Ausgabe in Datei schreiben
-        try {
-            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(pDateiname), "ISO-8859-1"));
-
-            //Spaltenbezeichner
-            for (int i = 0; i < gibSpaltenanzahl(); i++) {
-                writer.write(spaltenbezeichner.get(i));
-                if (i != gibSpaltenanzahl()-1) {
-                    writer.write(pTrenner);
-                }
-            }
-            writer.newLine();
-
-            //Daten
-            for (int j = 0; j < gibZeilenanzahl(); j++) {
-                if (zeilen[j] != null){
-                    writer.write(zeilen[j]);
-                    writer.newLine();
-                }
-            }
-
-            writer.close();
-        } catch (Exception e) {
-            System.err.println(e);
-        }
-    }
 
 }

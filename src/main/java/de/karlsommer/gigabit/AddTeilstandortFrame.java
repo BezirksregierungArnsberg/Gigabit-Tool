@@ -2,7 +2,7 @@ package de.karlsommer.gigabit;
 
 import de.karlsommer.gigabit.database.model.Schule;
 import de.karlsommer.gigabit.database.repositories.SchuleRepository;
-import de.karlsommer.gigabit.helper.SpinnerCircularListModel;
+import de.karlsommer.gigabit.helper.DataUpdater;
 import org.apache.commons.lang.StringUtils;
 
 import javax.swing.*;
@@ -39,11 +39,15 @@ public class AddTeilstandortFrame {
     private JLabel jLabelAnsprechpartner;
     private JLabel jLabelTelefonAnsprechpartner;
     private JLabel jLabelEmailAnsprechpartner;
-    private JLabel jLabelSchuelerzahl;
     private JTextField textFieldStatusGB;
     private JTextField textFieldStatusMK;
     private JTextField textFieldStatusInhouse;
     private JComboBox comboBoxAusbaustatus;
+    private JTextField textFieldPWCUpload;
+    private JTextField textFieldPWCDownload;
+    private JTextField textFieldKlassenanzahl;
+    private JTextField textFieldSchuelerzahl;
+    private JTextField textFieldSchuelerzahlIT;
     private Schule schule;
     private Schule hauptstandort;
     private SchuleRepository schuleRepository;
@@ -92,6 +96,26 @@ public class AddTeilstandortFrame {
                     schule.setLng(Double.parseDouble(textFieldLongitude.getText()));
                 else
                     schule.setLng(0);
+                if(!textFieldPWCUpload.getText().equals("") && StringUtils.isNumeric(textFieldPWCUpload.getText()))
+                    schule.setPWCUpload(Integer.parseInt(textFieldPWCUpload.getText()));
+                else
+                    schule.setPWCUpload(0);
+                if(!textFieldPWCDownload.getText().equals("") && StringUtils.isNumeric(textFieldPWCDownload.getText()))
+                    schule.setPWCDownload(Integer.parseInt(textFieldPWCDownload.getText()));
+                else
+                    schule.setPWCDownload(0);
+                if(!textFieldKlassenanzahl.getText().equals("") && StringUtils.isNumeric(textFieldKlassenanzahl.getText()))
+                    schule.setKlassenanzahl(Integer.parseInt(textFieldKlassenanzahl.getText()));
+                else
+                    schule.setKlassenanzahl(0);
+                if(!textFieldSchuelerzahl.getText().equals("") && StringUtils.isNumeric(textFieldSchuelerzahl.getText()))
+                    schule.setSchuelerzahl(Integer.parseInt(textFieldSchuelerzahl.getText()));
+                else
+                    schule.setSchuelerzahl(0);
+                if(!textFieldSchuelerzahlIT.getText().equals("") && StringUtils.isNumeric(textFieldSchuelerzahlIT.getText()))
+                    schule.setSchuelerzahlIT(Integer.parseInt(textFieldSchuelerzahlIT.getText()));
+                else
+                    schule.setSchuelerzahlIT(0);
 
                 schule.setSNR(AddTeilstandortFrame.this.hauptstandort.getSNR());
                 schule.setZustaendiges_Schulamt(AddTeilstandortFrame.this.hauptstandort.getZustaendiges_Schulamt());
@@ -130,7 +154,6 @@ public class AddTeilstandortFrame {
         jLabelAnsprechpartner.setText(this.hauptstandort.getAnsprechpartner());
         jLabelEmailAnsprechpartner.setText(this.hauptstandort.getEmail_Ansprechpartner());
         jLabelTelefonAnsprechpartner.setText(this.hauptstandort.getTelefon_Ansprechpartner());
-        jLabelSchuelerzahl.setText(String.valueOf(this.hauptstandort.getSchuelerzahl()));
         if(schule != null) {
             jLabelID.setText(String.valueOf(schule.getId()));
             textFieldNameDerSchule.setText(schule.getName_der_Schule());
@@ -146,6 +169,11 @@ public class AddTeilstandortFrame {
             textFieldMailadresse.setText(schule.getMailadresse());
             textFieldVorwahl.setText("0" + schule.getVorwahl());
             textFieldRufnummer.setText(schule.getRufnummer());
+            textFieldPWCUpload.setText(String.valueOf(schule.getPWCUpload()));
+            textFieldPWCDownload.setText(String.valueOf(schule.getPWCDownload()));
+            textFieldSchuelerzahl.setText(String.valueOf(schule.getSchuelerzahl()));
+            textFieldKlassenanzahl.setText(String.valueOf(schule.getKlassenanzahl()));
+            textFieldSchuelerzahlIT.setText(String.valueOf(schule.getSchuelerzahlIT()));
 
             if((Arrays.asList(ausbauArray)).contains(schule.getAusbau(false)))
                 comboBoxAusbaustatus.setSelectedIndex((Arrays.asList(ausbauArray)).indexOf(schule.getAusbau(false)));
@@ -167,6 +195,11 @@ public class AddTeilstandortFrame {
             textFieldMailadresse.setText("");
             textFieldVorwahl.setText("");
             textFieldRufnummer.setText("");
+            textFieldPWCUpload.setText("");
+            textFieldPWCDownload.setText("");
+            textFieldKlassenanzahl.setText("");
+            textFieldSchuelerzahl.setText("");
+            textFieldSchuelerzahlIT.setText("");
             comboBoxAusbaustatus.setSelectedIndex((Arrays.asList(ausbauArray)).indexOf(AUSBAU_UNGEKLAERT));
         }
     }

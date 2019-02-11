@@ -10,18 +10,13 @@ import de.karlsommer.gigabit.database.model.LogEntry;
 import de.karlsommer.gigabit.database.model.Schule;
 import de.karlsommer.gigabit.datastructures.QueryResult;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Arrays;
 
 import static de.karlsommer.gigabit.database.model.Schule.HAUPTSTANDORT;
 import static de.karlsommer.gigabit.helper.MathHelper.round;
 
-/**
- *
- * @author karl
- */
+
 public class SchuleRepository {
     
 
@@ -221,16 +216,16 @@ public class SchuleRepository {
                     schule.getName_der_Schule()+"',[Art der Schule]='"+schule.getArt_der_Schule()+"',PLZ="+schule.getPLZ()+",Ort='"+schule.getOrt()+"',[Straße + Hsnr.]='"+schule.getStrasse_Hsnr()+"',[Zuständiges Schulamt]='"+schule.getZustaendiges_Schulamt()+"',Vorwahl ='"+
                     schule.getVorwahl()+"',Rufnummer ='"+schule.getRufnummer()+"',SF ='"+schule.getSF()+"',Schultyp ='"+schule.getSchultyp()+"',Mailadresse ='"+schule.getMailadresse()+"',Bemerkungen='"+
                     schule.getBemerkungen()+"',flag="+schule.isFlag()+",[Status GB]='"+schule.getStatus_GB()+"',[Anbindung Kbit DL]='"+schule.getAnbindung_Kbit_DL()+"',[Anbindung Kbit UL]='"+schule.getAnbindung_Kbit_UL()+"',[Status MK]='"+schule.getStatus_MK()+"',[Status Inhouse]='"+schule.getStatus_Inhouse()+"',lat="+schule.getLat()+",lng="+
-                    schule.getLng()+", Standort='"+schule.getStandort()+"', Ansprechpartner='"+schule.getAnsprechpartner()+"', [Telefon Ansprechpartner]='"+schule.getTelefon_Ansprechpartner()+"', [Email Ansprechpartner]='"+schule.getEmail_Ansprechpartner()+"', Schuelerzahl="+schule.getSchuelerzahl()+", Ausbau='"+schule.getAusbau(false)+"' WHERE id="+schule.getId()+";";
+                    schule.getLng()+", Standort='"+schule.getStandort()+"', Ansprechpartner='"+schule.getAnsprechpartner()+"', [Telefon Ansprechpartner]='"+schule.getTelefon_Ansprechpartner()+"', [Email Ansprechpartner]='"+schule.getEmail_Ansprechpartner()+"', Schuelerzahl="+schule.getSchuelerzahl()+", Ausbau='"+schule.getAusbau(false)+"'," +
+                    "Klassenanzahl="+schule.getKlassenanzahl()+",[PWC Download]="+schule.getPWCDownload()+",[PWC Upload]="+schule.getPWCUpload()+", schuelerzahlIT="+schule.getSchuelerzahlIT()+" WHERE id="+schule.getId()+";";
             else
                 query = "UPDATE Schulen SET SNR="+schule.getSNR()+",[Name der Schule]='"+
                     schule.getName_der_Schule()+"',[Art der Schule]='"+schule.getArt_der_Schule()+"',PLZ="+schule.getPLZ()+",Ort='"+schule.getOrt()+"',[Straße + Hsnr.]='"+schule.getStrasse_Hsnr()+"',[Zuständiges Schulamt]='"+schule.getZustaendiges_Schulamt()+"',Vorwahl ='"+
                     schule.getVorwahl()+"',Rufnummer ='"+schule.getRufnummer()+"',SF ='"+schule.getSF()+"',Schultyp ='"+schule.getSchultyp()+"',Mailadresse ='"+schule.getMailadresse()+"',Bemerkungen='"+
                     schule.getBemerkungen()+"',flag="+schule.isFlag()+",[Status GB]='"+schule.getStatus_GB()+"',[Anbindung Kbit DL]='"+schule.getAnbindung_Kbit_DL()+"',[Anbindung Kbit UL]='"+schule.getAnbindung_Kbit_UL()+"',[Status MK]='"+schule.getStatus_MK()+"',[Status Inhouse]='"+
-                        schule.getStatus_Inhouse()+"', Standort='"+schule.getStandort()+"', Ansprechpartner='"+schule.getAnsprechpartner()+"', [Telefon Ansprechpartner]='"+schule.getTelefon_Ansprechpartner()+"', [Email Ansprechpartner]='"+schule.getEmail_Ansprechpartner()+"', Schuelerzahl="+schule.getSchuelerzahl()+", Ausbau='"+schule.getAusbau(false)+"' WHERE id="+schule.getId()+";";
+                    schule.getStatus_Inhouse()+"', Standort='"+schule.getStandort()+"', Ansprechpartner='"+schule.getAnsprechpartner()+"', [Telefon Ansprechpartner]='"+schule.getTelefon_Ansprechpartner()+"', [Email Ansprechpartner]='"+schule.getEmail_Ansprechpartner()+"', Schuelerzahl="+schule.getSchuelerzahl()+", Ausbau='"+schule.getAusbau(false)+"'," +
+                    "Klassenanzahl="+schule.getKlassenanzahl()+",[PWC Download]="+schule.getPWCDownload()+",[PWC Upload]="+schule.getPWCUpload()+", schuelerzahlIT="+schule.getSchuelerzahlIT()+" WHERE id="+schule.getId()+";";
 
-            //System.out.println(query);
-            
             DatabaseConnector.getInstance().executeStatement(query);
             if(!oldSchule.isEqualTo(schule)) {
                 String logText = "Schule mit ID:" + schule.getId() + " geändert. Veränderte Werte: "+oldSchule.getChangedValues(schule);
@@ -240,10 +235,9 @@ public class SchuleRepository {
         }
         else
         {
-            String query = "INSERT INTO Schulen VALUES(null,'"+schule.getSNR()+"','"+schule.getName_der_Schule()+"','"+schule.getArt_der_Schule()+"','"+schule.getPLZ()+"','"+schule.getOrt()+"','"+schule.getStrasse_Hsnr()+"','"+schule.getZustaendiges_Schulamt()+"','"+schule.getVorwahl()+"','"+schule.getRufnummer()+"','"+schule.getSF()+"','"+schule.getSchultyp()+"','"+schule.getMailadresse()+"','"+schule.getBemerkungen()+"','"+schule.isFlag()+"','"+schule.getStatus_GB()+"','"+schule.getAnbindung_Kbit_DL()+"','"+schule.getAnbindung_Kbit_UL()+"','"+schule.getStatus_MK()+"','"+schule.getStatus_Inhouse()+"','"+schule.getLat()+"','"+schule.getLng()+"','"+schule.getStandort()+"','"+schule.getAnsprechpartner()+"','"+schule.getTelefon_Ansprechpartner()+"','"+schule.getEmail_Ansprechpartner()+"', "+schule.getSchuelerzahl()+",'"+schule.getAusbau(false)+"');";
-            //System.out.println(query);
+            String query = "INSERT INTO Schulen VALUES(null,'"+schule.getSNR()+"','"+schule.getName_der_Schule()+"','"+schule.getArt_der_Schule()+"','"+schule.getPLZ()+"','"+schule.getOrt()+"','"+schule.getStrasse_Hsnr()+"','"+schule.getZustaendiges_Schulamt()+"','"+schule.getVorwahl()+"','"+schule.getRufnummer()+"','"+schule.getSF()+"','"+schule.getSchultyp()+"','"+schule.getMailadresse()+"','"+schule.getBemerkungen()+"','"+schule.isFlag()+"','"+schule.getStatus_GB()+"','"+schule.getAnbindung_Kbit_DL()+"','"+schule.getAnbindung_Kbit_UL()+"','"+schule.getStatus_MK()+"','"+schule.getStatus_Inhouse()+"','"+schule.getLat()+"','"+schule.getLng()+"','"+schule.getStandort()+"','"+schule.getAnsprechpartner()+"','"+schule.getTelefon_Ansprechpartner()+"','"+schule.getEmail_Ansprechpartner()+"', "+schule.getSchuelerzahl()+",'"+schule.getAusbau(false)+"',"+schule.getKlassenanzahl()+","+schule.getPWCDownload()+","+schule.getPWCUpload()+", "+schule.getSchuelerzahlIT()+");";
             DatabaseConnector.getInstance().executeStatement(query);
-            logEntry = new LogEntry("Neue Schule angelegt. Werte: '"+schule.getSNR()+"','"+schule.getName_der_Schule()+"','"+schule.getArt_der_Schule()+"','"+schule.getPLZ()+"','"+schule.getOrt()+"','"+schule.getStrasse_Hsnr()+"','"+schule.getZustaendiges_Schulamt()+"','"+schule.getVorwahl()+"','"+schule.getRufnummer()+"','"+schule.getSF()+"','"+schule.getSchultyp()+"','"+schule.getMailadresse()+"','"+schule.getBemerkungen()+"','"+schule.isFlag()+"','"+schule.getStatus_GB()+"','"+schule.getAnbindung_Kbit_DL()+"','"+schule.getAnbindung_Kbit_UL()+"','"+schule.getStatus_MK()+"','"+schule.getStatus_Inhouse()+"','"+schule.getLat()+"','"+schule.getLng()+"','"+schule.getStandort()+"','"+schule.getAnsprechpartner()+"','"+schule.getTelefon_Ansprechpartner()+"','"+schule.getEmail_Ansprechpartner()+"', "+schule.getSchuelerzahl()+",'"+schule.getAusbau(false)+"");
+            logEntry = new LogEntry("Neue Schule angelegt. Werte: '"+schule.getSNR()+"','"+schule.getName_der_Schule()+"','"+schule.getArt_der_Schule()+"','"+schule.getPLZ()+"','"+schule.getOrt()+"','"+schule.getStrasse_Hsnr()+"','"+schule.getZustaendiges_Schulamt()+"','"+schule.getVorwahl()+"','"+schule.getRufnummer()+"','"+schule.getSF()+"','"+schule.getSchultyp()+"','"+schule.getMailadresse()+"','"+schule.getBemerkungen()+"','"+schule.isFlag()+"','"+schule.getStatus_GB()+"','"+schule.getAnbindung_Kbit_DL()+"','"+schule.getAnbindung_Kbit_UL()+"','"+schule.getStatus_MK()+"','"+schule.getStatus_Inhouse()+"','"+schule.getLat()+"','"+schule.getLng()+"','"+schule.getStandort()+"','"+schule.getAnsprechpartner()+"','"+schule.getTelefon_Ansprechpartner()+"','"+schule.getEmail_Ansprechpartner()+"', "+schule.getSchuelerzahl()+",'"+schule.getAusbau(false)+"', "+schule.getKlassenanzahl()+","+schule.getPWCDownload()+","+schule.getPWCUpload()+", "+schule.getSchuelerzahlIT()+"");
             logEntryRepository.save(logEntry);
         }
         /*
@@ -280,6 +274,18 @@ public class SchuleRepository {
     public void flagSchool(String SNR) {
         String query = "UPDATE Schulen SET flag=1 WHERE SNR="+SNR+";";
         DatabaseConnector.getInstance().executeStatement(query);
+    }
+
+    public ArrayList<Schule> getSchools(String condition)
+    {
+        DatabaseConnector.getInstance().executeStatement("SELECT * FROM Schulen "+condition+";");
+        QueryResult result = DatabaseConnector.getInstance().getCurrentQueryResult();
+        ArrayList<Schule> schulen = new ArrayList<>();
+        for(int i = 0; i < result.getRowCount(); i++)
+        {
+            schulen.add(new Schule(new ArrayList<String>(Arrays.asList(result.getData()[i])),true));
+        }
+        return schulen;
     }
 
     public Schule findSchuleWithValues(String schulname, String PLZ, String strasse)
@@ -346,14 +352,6 @@ public class SchuleRepository {
         return false;
     }
 
-    public Schule getSchoolhauptstandortWithSNR(String SNR) {
-        String query = "SELECT * FROM Schulen WHERE SNR="+SNR+" AND Standort='H';";
-        DatabaseConnector.getInstance().executeStatement(query);
-        QueryResult result = DatabaseConnector.getInstance().getCurrentQueryResult();
-        if (checkValidity(result)) return null;
-        return new Schule(new ArrayList<String>(Arrays.asList(result.getData()[0])),true);
-    }
-
     public Schule getSchoolWithSNR(String SNR) {
         String query = "SELECT * FROM Schulen WHERE SNR="+SNR+";";
         DatabaseConnector.getInstance().executeStatement(query);
@@ -369,26 +367,12 @@ public class SchuleRepository {
 
     public ArrayList<Schule> getStandorteZu(String _snr)
     {
-        DatabaseConnector.getInstance().executeStatement("SELECT * FROM Schulen WHERE SNR="+_snr+";");
-        QueryResult result = DatabaseConnector.getInstance().getCurrentQueryResult();
-        ArrayList<Schule> schulen = new ArrayList<>();
-        for(int i = 0; i < result.getRowCount(); i++)
-        {
-            schulen.add(new Schule(new ArrayList<String>(Arrays.asList(result.getData()[i])),true));
-        }
-        return schulen;
+        return this.getSchools("WHERE SNR="+_snr+";");
     }
 
     public ArrayList<Schule> getTeilstandorteZu(String _snr)
     {
-        DatabaseConnector.getInstance().executeStatement("SELECT * FROM Schulen WHERE SNR="+_snr+" AND Standort='T';");
-        QueryResult result = DatabaseConnector.getInstance().getCurrentQueryResult();
-        ArrayList<Schule> schulen = new ArrayList<>();
-        for(int i = 0; i < result.getRowCount(); i++)
-        {
-            schulen.add(new Schule(new ArrayList<String>(Arrays.asList(result.getData()[i])),true));
-        }
-        return schulen;
+        return this.getSchools("WHERE SNR="+_snr+" AND Standort='T';");
     }
 
     public Schule getHauptstandortWithID(String id)
@@ -397,10 +381,10 @@ public class SchuleRepository {
         if (standort.getStandort().equals(HAUPTSTANDORT))
             return standort;
         else
-            return getHauptstandortWithSNR(String.valueOf(standort.getSNR()));
+            return getHauptstandorteZu(String.valueOf(standort.getSNR()));
     }
 
-    public Schule getHauptstandortWithSNR(String _snr)
+    public Schule getHauptstandorteZu(String _snr)
     {
         String query = "SELECT * FROM Schulen WHERE SNR="+_snr+" AND Standort='H';";
         DatabaseConnector.getInstance().executeStatement(query);
@@ -446,7 +430,10 @@ public class SchuleRepository {
         }
         if(!filterAusbau.equals("alle"))
         {
-            query+= "Ausbau LIKE '"+filterAusbau+"'";
+            if(filterAusbau.equals("Bund (alle)"))
+                query+= "Ausbau LIKE 'Bund%'";
+            else
+                query+= "Ausbau LIKE '"+filterAusbau+"'";
         }
         query += ";";
         DatabaseConnector.getInstance().executeStatement(query);

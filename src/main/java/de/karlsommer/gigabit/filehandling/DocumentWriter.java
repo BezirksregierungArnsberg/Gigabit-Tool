@@ -1,16 +1,15 @@
 package de.karlsommer.gigabit.filehandling;
 
-import de.karlsommer.gigabit.database.DatabaseConnector;
 import de.karlsommer.gigabit.database.model.Schule;
 import de.karlsommer.gigabit.database.repositories.SchuleRepository;
 import de.karlsommer.gigabit.geocoding.GoogleGeoUtils;
+import de.karlsommer.gigabit.helper.Settings;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.poi.xwpf.usermodel.*;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.*;
 
-import javax.xml.bind.annotation.XmlAccessOrder;
 import javax.xml.bind.annotation.adapters.HexBinaryAdapter;
 import java.io.*;
 import java.math.BigInteger;
@@ -295,7 +294,7 @@ public class DocumentWriter {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy") ;
         SimpleDateFormat textDateFormat = new SimpleDateFormat("dd.MM.yyyy") ;
 
-        FileOutputStream fileOut = new FileOutputStream("output/Bericht-"+dateFormat.format(date)+".xlsx");
+        FileOutputStream fileOut = new FileOutputStream(Settings.getInstance().getOutputFolderPath()+"Bericht-"+dateFormat.format(date)+".xlsx");
         workbook.write(fileOut);
         fileOut.close();
 
@@ -316,7 +315,7 @@ public class DocumentWriter {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy") ;
         SimpleDateFormat textDateFormat = new SimpleDateFormat("dd.MM.yyyy") ;
         try {
-            out = new FileOutputStream( new File("output/Anschlusstext_Schulen-"+dateFormat.format(date)+".docx"));
+            out = new FileOutputStream( new File(Settings.getInstance().getOutputFolderPath()+"Anschlusstext_Schulen-"+dateFormat.format(date)+".docx"));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -351,32 +350,24 @@ public class DocumentWriter {
                 case AUSBAU_AUSGEBAUT:
                     createParagraph(document, text,"Die Schule "+schule.getName_der_Schule()+", in "+schule.getPLZ()+" "+schule.getOrt()+", "+schule.getStrasse_Hsnr()+", ist bereits mit Glasfaser angeschlossen.");
                     break;
-                case AUSBAU_IM_AUSBAU:
-                    createParagraph(document, text,"Die Schule "+schule.getName_der_Schule()+", in "+schule.getPLZ()+" "+schule.getOrt()+", "+schule.getStrasse_Hsnr()+", befindet sich im Ausbau und wird kurzfristig einen Glasfaseranschluss erhalten. ");
-                    break;
                 case AUSBAU_EIGENWIRTSCHAFTLICH:
                     createParagraph(document, text,"Die Schule "+schule.getName_der_Schule()+", in "+schule.getPLZ()+" "+schule.getOrt()+", "+schule.getStrasse_Hsnr()+", wird eigenwirtschaftlich von einem Telekommunikationsunternehmen in naher Zukunft ausgebaut.");
                     break;
                 case AUSBAU_BUND:
+                case AUSBAU_BUND_1:
+                case AUSBAU_BUND_2:
+                case AUSBAU_BUND_3:
+                case AUSBAU_BUND_4:
+                case AUSBAU_BUND_5:
+                case AUSBAU_BUND_6:
+                case AUSBAU_BUND_SONDER:
                     createParagraph(document, text,"Die Schule "+schule.getName_der_Schule()+", in "+schule.getPLZ()+" "+schule.getOrt()+", "+schule.getStrasse_Hsnr()+", kann bei Vorliegen eines Antrags in das Förderprogramm des Bundes aufgenommen werden.");
                     break;
                 case AUSBAU_LAND:
                     createParagraph(document, text,"Die Schule "+schule.getName_der_Schule()+", in "+schule.getPLZ()+" "+schule.getOrt()+", "+schule.getStrasse_Hsnr()+", kann bei Vorliegen eines Antrags in das Landesförderprogramm aufgenommen werden.");
                     break;
-                case AUSBAU_GUTE_SCHULE:
-                    createParagraph(document, text,"Die Schule "+schule.getName_der_Schule()+", in "+schule.getPLZ()+" "+schule.getOrt()+", "+schule.getStrasse_Hsnr()+", wird über das Programm Gute Schule 2020 mit Glasfaser angeschlossen. Der Anschluss sollte zeitnah erfolgen.");
-                    break;
                 case AUSBAU_UNGEKLAERT:
                     createParagraph(document, text,"Von der Schule "+schule.getName_der_Schule()+", in "+schule.getPLZ()+" "+schule.getOrt()+", "+schule.getStrasse_Hsnr()+", sind nicht ausreichend Daten vorhanden, um einen Ausbau oder eine Förderfähikgeit zu ermittlen.");
-                    break;
-                case AUSBAU_TRAEGERENTSCHEIDUNG:
-                    createParagraph(document, text,"Für die Schule "+schule.getName_der_Schule()+", in "+schule.getPLZ()+" "+schule.getOrt()+", "+schule.getStrasse_Hsnr()+", muss der Schulträger entscheiden, wie ein Anschluss erfolgen soll.");
-                    break;
-                case AUSBAU_E_BUND:
-                    createParagraph(document, text,"Die Schule "+schule.getName_der_Schule()+", in "+schule.getPLZ()+" "+schule.getOrt()+", "+schule.getStrasse_Hsnr()+", kann auf der Basis der uns gemeldeten Daten und nach unseren Berechnungen über das Förderprogramm des Bundes gefördert angeschlossen werden, sobald ein entsprechender Antrag vorliegt.");
-                    break;
-                case AUSBAU_E_LAND:
-                    createParagraph(document, text,"Die Schule "+schule.getName_der_Schule()+", in "+schule.getPLZ()+" "+schule.getOrt()+", "+schule.getStrasse_Hsnr()+", kann auf der Basis der uns gemeldeten Daten und nach unseren Berechnungen über das Landesförderprogramm gefördert angeschlossen werden, sobald ein entsprechender Antrag vorliegt.");
                     break;
             }
         }
@@ -402,7 +393,7 @@ public class DocumentWriter {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy") ;
         SimpleDateFormat textDateFormat = new SimpleDateFormat("dd.MM.yyyy") ;
         try {
-            out = new FileOutputStream( new File("output/Bericht-"+dateFormat.format(date)+".docx"));
+            out = new FileOutputStream( new File(Settings.getInstance().getOutputFolderPath()+"Bericht-"+dateFormat.format(date)+".docx"));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -801,7 +792,7 @@ public class DocumentWriter {
         // Create a Row
         Row headerRow = sheet.createRow(0);
         String[] columns = {"Id", "Schulnummer", "Name der Schule", "PLZ", "Ort", "Strasse und Hausnummer","Zuständiges Schulamt","Vorwahl","Rufnummer","Schulform","Schultyp","Mailadresse", "Bemerkungen",
-                "Status GB" , "Anbindung Download", "Anbindung Upload","Status MK", "Status Inhouse","Standort","Ansprechpartner","Telefon Ansprechpartner","Email Ansprechpartner", "Schüleranzahl", "Ausbau"};
+                "Status GB" , "Anbindung Download", "Anbindung Upload","Status MK", "Status Inhouse","Standort","Ansprechpartner","Telefon Ansprechpartner","Email Ansprechpartner", "Schüleranzahl", "Ausbau", "Klassenanzahl", "PWC-Download", "PWC-Upload","Schülerzahl IT-NRW"};
 
         // Create cells
         for(int i = 0; i < columns.length; i++) {
@@ -860,6 +851,14 @@ public class DocumentWriter {
                     .setCellValue(schule.getSchuelerzahl());
             row.createCell(i++)
                     .setCellValue(schule.getAusbau(false));
+            row.createCell(i++)
+                    .setCellValue(schule.getKlassenanzahl());
+            row.createCell(i++)
+                    .setCellValue(schule.getPWCDownload());
+            row.createCell(i++)
+                    .setCellValue(schule.getPWCUpload());
+            row.createCell(i++)
+                    .setCellValue(schule.getSchuelerzahlIT());
         }
 
         // Resize all columns to fit the content size
@@ -870,96 +869,7 @@ public class DocumentWriter {
         // Write the output to a file
         FileOutputStream fileOut = null;
         try {
-            fileOut = new FileOutputStream("output/exportierte_schulliste.xlsx");
-            workbook.write(fileOut);
-            fileOut.close();
-
-            // Closing the workbook
-            workbook.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void writeSchulenInTabelle(ArrayList<Schule> schulen)
-    {
-        Workbook workbook = new XSSFWorkbook(); // new HSSFWorkbook() for generating `.xls` file
-
-        /* CreationHelper helps us create instances of various things like DataFormat,
-           Hyperlink, RichTextString etc, in a format (HSSF, XSSF) independent way */
-        CreationHelper createHelper = workbook.getCreationHelper();
-
-        // Create a Sheet
-        Sheet sheet = workbook.createSheet("Schulen");
-
-        // Create a Font for styling header cells
-        Font headerFont = workbook.createFont();
-        headerFont.setBold(true);
-        headerFont.setFontHeightInPoints((short) 14);
-        headerFont.setColor(IndexedColors.RED.getIndex());
-
-        // Create a CellStyle with the font
-        CellStyle headerCellStyle = workbook.createCellStyle();
-        headerCellStyle.setFont(headerFont);
-
-        // Create a Row
-        Row headerRow = sheet.createRow(0);
-        String[] columns = {"Id", "Schulnummer", "Name der Schule", "PLZ", "Ort", "Strasse und Hausnummer", "Anbindung Download", "Anbindung Upload", "Schüleranzahl", "Ausbau"};
-
-        // Create cells
-        for(int i = 0; i < columns.length; i++) {
-            Cell cell = headerRow.createCell(i);
-            cell.setCellValue(columns[i]);
-            cell.setCellStyle(headerCellStyle);
-        }
-
-        // Create Cell Style for formatting Date
-        CellStyle dateCellStyle = workbook.createCellStyle();
-        dateCellStyle.setDataFormat(createHelper.createDataFormat().getFormat("dd-MM-yyyy"));
-
-        // Create Other rows and cells with employees data
-        int rowNum = 1;
-        for(Schule schule: schulen) {
-            Row row = sheet.createRow(rowNum++);
-
-            row.createCell(0)
-                    .setCellValue(schule.getId());
-            row.createCell(1)
-                    .setCellValue(schule.getSNR());
-
-            row.createCell(2)
-                    .setCellValue(schule.getName_der_Schule());
-
-            //Cell dateOfBirthCell = row.createCell(2);
-            //dateOfBirthCell.setCellValue(employee.getDateOfBirth());
-            //dateOfBirthCell.setCellStyle(dateCellStyle);
-
-            row.createCell(3)
-                    .setCellValue(schule.getPLZ());
-
-            row.createCell(4)
-                    .setCellValue(schule.getOrt());
-            row.createCell(5)
-                    .setCellValue(schule.getStrasse_Hsnr());
-            row.createCell(6)
-                    .setCellValue(schule.getAnbindung_Kbit_DL());
-            row.createCell(7)
-                    .setCellValue(schule.getAnbindung_Kbit_UL());
-            row.createCell(8)
-                    .setCellValue(schule.getSchuelerzahl());
-            row.createCell(9)
-                    .setCellValue(schule.getAusbau(false));
-        }
-
-        // Resize all columns to fit the content size
-        for(int i = 0; i < columns.length; i++) {
-            sheet.autoSizeColumn(i);
-        }
-
-        // Write the output to a file
-        FileOutputStream fileOut = null;
-        try {
-            fileOut = new FileOutputStream("output/schulliste.xlsx");
+            fileOut = new FileOutputStream(Settings.getInstance().getOutputFolderPath()+"exportierte_schulliste.xlsx");
             workbook.write(fileOut);
             fileOut.close();
 

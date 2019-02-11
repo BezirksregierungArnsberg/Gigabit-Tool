@@ -1,7 +1,9 @@
 package de.karlsommer.gigabit.database;
 
+import de.karlsommer.gigabit.Interface;
 import de.karlsommer.gigabit.datastructures.QueryResult;
 import de.karlsommer.gigabit.datastructures.Queue;
+import de.karlsommer.gigabit.helper.Settings;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -66,8 +68,8 @@ public class DatabaseConnector{
       if(_this == null) {
         Date date = new Date();
         Format formatter = new SimpleDateFormat("YYYY-MM-dd");
-        File src = new File("./databases/gigabit.db");
-        File target = new File("./databases/gigabit-"+formatter.format(date)+".db");
+        File src = new File(Settings.getInstance().getDatabaseFolderPath()+"gigabit.db");
+        File target = new File(Settings.getInstance().getDatabaseFolderPath()+"gigabit-"+formatter.format(date)+".db");
 
         try {
           if(!target.exists() && !target.isDirectory()) {
@@ -77,7 +79,7 @@ public class DatabaseConnector{
           e.printStackTrace();
         }
 
-        _this = new DatabaseConnector("", "", "./databases/gigabit.db", "", "");
+        _this = new DatabaseConnector("", "", Settings.getInstance().getDatabaseFolderPath()+"gigabit.db", "", "");
       }
       return _this;
   }

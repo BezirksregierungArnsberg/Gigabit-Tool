@@ -11,8 +11,20 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URLEncoder;
 
+// https://halexv.blogspot.com/2015/07/java-geocoding-using-google-maps-api.html
 public class GoogleGeoUtils {
 
+    /**
+     * Given an address asks google for geocode
+     *
+     * If ssl is true API_KEY should be a valid developer key (given by google)
+     *
+     * @param address the address to find
+     * @param ssl defines if ssl should be used
+     * @return the GoogleGeoCode found
+     * @throws Exception in case of any error
+     *
+     */
     public GoogleGeoLatLng getGeoCode(String address, boolean ssl) throws Exception {
         // build url
         System.out.println("Adresse:"+address);

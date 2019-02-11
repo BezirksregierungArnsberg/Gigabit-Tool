@@ -2,6 +2,8 @@ package de.karlsommer.gigabit;
 
 import de.karlsommer.gigabit.database.model.Schule;
 import de.karlsommer.gigabit.database.repositories.SchuleRepository;
+import de.karlsommer.gigabit.helper.DataUpdater;
+import org.apache.commons.lang.StringUtils;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -47,13 +49,17 @@ public class EditSchoolFrame implements DataUpdater {
     private JTextField textFieldEmailAnsprechpartner;
     private JTextField textFieldSchuelerzahl;
     private JComboBox comboBoxAusbaustatus;
+    private JTextField textFieldKlassenanzahl;
+    private JTextField textFieldPWCUpload;
+    private JTextField textFieldPWCDownload;
+    private JTextField textFieldSchuelerzahlIT;
     private Schule schule;
     private AddTeilstandortFrame addTeilstandortFrame;
     private JFrame teilstandortBearbeitenFrame;
     private SchuleRepository schuleRepository;
     private JFrame frame;
     private DataUpdater dataUpdater;
-    public static final String[] ausbauArray = new String[] { AUSBAU_AUSGEBAUT, AUSBAU_IM_AUSBAU, AUSBAU_EIGENWIRTSCHAFTLICH,AUSBAU_BUND,AUSBAU_LAND,AUSBAU_UNGEKLAERT };
+    public static final String[] ausbauArray = new String[] { AUSBAU_AUSGEBAUT, AUSBAU_EIGENWIRTSCHAFTLICH,AUSBAU_BUND,AUSBAU_BUND_1,AUSBAU_BUND_2,AUSBAU_BUND_3,AUSBAU_BUND_4,AUSBAU_BUND_5,AUSBAU_BUND_6,AUSBAU_BUND_SONDER,AUSBAU_LAND,AUSBAU_UNGEKLAERT };
 
     private void createUIComponents() {
         comboBoxAusbaustatus = new JComboBox<>(ausbauArray);
@@ -103,12 +109,36 @@ public class EditSchoolFrame implements DataUpdater {
                 schule.setPLZ(Integer.parseInt(textFieldPLZ.getText()));
                 schule.setAnbindung_Kbit_UL(Integer.parseInt(textFieldUpload.getText()));
                 schule.setAnbindung_Kbit_DL(Integer.parseInt(textFieldDownload.getText()));
-                schule.setLat(Double.parseDouble(textFieldLatitude.getText()));
-                schule.setLng(Double.parseDouble(textFieldLongitude.getText()));
+
+                if(!textFieldLatitude.getText().equals(""))
+                    schule.setLat(Double.parseDouble(textFieldLatitude.getText()));
+                else
+                    schule.setLat(0);
+                if(!textFieldLongitude.getText().equals(""))
+                    schule.setLng(Double.parseDouble(textFieldLongitude.getText()));
+                else
+                    schule.setLng(0);
                 schule.setSchuelerzahl(Integer.parseInt(textFieldSchuelerzahl.getText()));
                 schule.setAnsprechpartner(textFieldAnsprechpartner.getText());
                 schule.setEmail_Ansprechpartner(textFieldEmailAnsprechpartner.getText());
                 schule.setTelefon_Ansprechpartner(textFieldTelefonAnsprechpartner.getText());
+
+                if(!textFieldPWCUpload.getText().equals("") && StringUtils.isNumeric(textFieldPWCUpload.getText()))
+                    schule.setPWCUpload(Integer.parseInt(textFieldPWCUpload.getText()));
+                else
+                    schule.setPWCUpload(0);
+                if(!textFieldPWCDownload.getText().equals("") && StringUtils.isNumeric(textFieldPWCDownload.getText()))
+                    schule.setPWCDownload(Integer.parseInt(textFieldPWCDownload.getText()));
+                else
+                    schule.setPWCDownload(0);
+                if(!textFieldKlassenanzahl.getText().equals("") && StringUtils.isNumeric(textFieldKlassenanzahl.getText()))
+                    schule.setKlassenanzahl(Integer.parseInt(textFieldKlassenanzahl.getText()));
+                else
+                    schule.setKlassenanzahl(0);
+                if(!textFieldSchuelerzahlIT.getText().equals("") && StringUtils.isNumeric(textFieldSchuelerzahlIT.getText()))
+                    schule.setSchuelerzahlIT(Integer.parseInt(textFieldSchuelerzahlIT.getText()));
+                else
+                    schule.setSchuelerzahlIT(0);
 
                 schule.setAusbau((String) comboBoxAusbaustatus.getSelectedItem());
                 schuleRepository.save(schule);
@@ -164,6 +194,10 @@ public class EditSchoolFrame implements DataUpdater {
         textFieldTelefonAnsprechpartner.setText(schule.getTelefon_Ansprechpartner());
         textFieldEmailAnsprechpartner.setText(schule.getEmail_Ansprechpartner());
         textFieldSchuelerzahl.setText(String.valueOf(schule.getSchuelerzahl()));
+        textFieldPWCUpload.setText(String.valueOf(schule.getPWCUpload()));
+        textFieldPWCDownload.setText(String.valueOf(schule.getPWCDownload()));
+        textFieldKlassenanzahl.setText(String.valueOf(schule.getKlassenanzahl()));
+        textFieldSchuelerzahlIT.setText(String.valueOf(schule.getSchuelerzahlIT()));
 
         if((Arrays.asList(ausbauArray)).contains(schule.getAusbau(false)))
             comboBoxAusbaustatus.setSelectedIndex((Arrays.asList(ausbauArray)).indexOf(schule.getAusbau(false)));

@@ -8,15 +8,10 @@ package de.karlsommer.gigabit.database.model;
 import org.apache.commons.lang.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.xssf.usermodel.XSSFRow;
 
 import java.util.ArrayList;
 import java.util.Vector;
 
-/**
- *
- * @author karl
- */
 public class Schule {
 
 
@@ -31,7 +26,6 @@ public class Schule {
     public static final int GIGABIT_TABELLE_DOWNSTREAM = 13;
     public static final int GIGABIT_TABELLE_UPSTREAM = 14;
 
-    // 1982,169298,Immanuel-Kant-Gymnasium,44319,Dortmund,"Grüningsweg 42",231,5012100,1000000,1000000
     public static final int CSV_INTERNE_ID = 0;
     public static final int CSV_DATA_SRN = 1;
     public static final int CSV_DATA_SCHULNAME = 2;
@@ -47,15 +41,17 @@ public class Schule {
     public static final String TEILSTANDORT = "T";
 
     public static final String AUSBAU_AUSGEBAUT = "Ausgebaut";
-    public static final String AUSBAU_IM_AUSBAU = "Im Ausbau";
     public static final String AUSBAU_EIGENWIRTSCHAFTLICH = "Eigenwirtschaftlich";
+    public static final String AUSBAU_BUND_1 = "Bund 1. Call";
+    public static final String AUSBAU_BUND_2 = "Bund 2. Call";
+    public static final String AUSBAU_BUND_3 = "Bund 3. Call";
+    public static final String AUSBAU_BUND_4 = "Bund 4. Call";
+    public static final String AUSBAU_BUND_5 = "Bund 5. Call";
+    public static final String AUSBAU_BUND_6 = "Bund 6. Call";
     public static final String AUSBAU_BUND = "Bund";
+    public static final String AUSBAU_BUND_SONDER = "Bund Sonderaufruf";
     public static final String AUSBAU_LAND = "Land";
-    public static final String AUSBAU_GUTE_SCHULE = "Gute Schule";
     public static final String AUSBAU_UNGEKLAERT = "Ungeklärt";
-    public static final String AUSBAU_TRAEGERENTSCHEIDUNG = "Trägerentscheidung";
-    public static final String AUSBAU_E_BUND = "Berechnet Bund";
-    public static final String AUSBAU_E_LAND = "Berechnet Land";
     
     private int id;
     private int SNR;
@@ -85,11 +81,15 @@ public class Schule {
     private String Telefon_Ansprechpartner;
     private String Email_Ansprechpartner;
     private String standort;
+    private int PWCUpload;
+    private int PWCDownload;
+    private int klassenanzahl;
+    private int schuelerzahlIT;
 
     public String getAusbau(boolean html)
     {
 
-        if(Ausbau.equals(AUSBAU_AUSGEBAUT) || Ausbau.equals(AUSBAU_EIGENWIRTSCHAFTLICH) ||Ausbau.equals(AUSBAU_BUND) ||Ausbau.equals(AUSBAU_LAND))
+        if(Ausbau.equals(AUSBAU_AUSGEBAUT) || Ausbau.equals(AUSBAU_EIGENWIRTSCHAFTLICH) ||Ausbau.equals(AUSBAU_BUND)||Ausbau.equals(AUSBAU_BUND_1)||Ausbau.equals(AUSBAU_BUND_2)||Ausbau.equals(AUSBAU_BUND_3)||Ausbau.equals(AUSBAU_BUND_4)||Ausbau.equals(AUSBAU_BUND_5)||Ausbau.equals(AUSBAU_BUND_6)||Ausbau.equals(AUSBAU_BUND_SONDER) ||Ausbau.equals(AUSBAU_LAND))
             return Ausbau;
         else if(html)
             return "ungekl&auml;rt";
@@ -117,21 +117,25 @@ public class Schule {
                     ;
                 case AUSBAU_UNGEKLAERT:
                     ;
-                case AUSBAU_IM_AUSBAU:
-                    ;
                 case AUSBAU_EIGENWIRTSCHAFTLICH:
                     ;
                 case AUSBAU_BUND:
                     ;
+                case AUSBAU_BUND_1:
+                    ;
+                case AUSBAU_BUND_2:
+                    ;
+                case AUSBAU_BUND_3:
+                    ;
+                case AUSBAU_BUND_4:
+                    ;
+                case AUSBAU_BUND_5:
+                    ;
+                case AUSBAU_BUND_6:
+                    ;
+                case AUSBAU_BUND_SONDER:
+                    ;
                 case AUSBAU_LAND:
-                    ;
-                case AUSBAU_GUTE_SCHULE:
-                    ;
-                case AUSBAU_TRAEGERENTSCHEIDUNG:
-                    ;
-                case AUSBAU_E_BUND:
-                    ;
-                case AUSBAU_E_LAND:
                     Ausbau = pAusbau;
                     break;
                 default:
@@ -139,6 +143,17 @@ public class Schule {
             }
         }
 
+    }
+
+
+    public int getSchuelerzahlIT()
+    {
+        return schuelerzahlIT;
+    }
+
+    public void setSchuelerzahlIT(int schuelerzahlIT)
+    {
+        this.schuelerzahlIT = schuelerzahlIT;
     }
 
     public int getSchuelerzahl()
@@ -234,7 +249,11 @@ public class Schule {
             this.Telefon_Ansprechpartner = daten.get(i++);
             this.Email_Ansprechpartner = daten.get(i++);
             this.Schuelerzahl = Integer.parseInt(daten.get(i++));
-            setAusbau(daten.get(i));
+            setAusbau(daten.get(i++));
+            this.klassenanzahl = Integer.parseInt(daten.get(i++));
+            this.PWCDownload = Integer.parseInt(daten.get(i++));
+            this.PWCUpload = Integer.parseInt(daten.get(i++));
+            this.schuelerzahlIT = Integer.parseInt(daten.get(i++));
         }
         else
         {
@@ -248,7 +267,6 @@ public class Schule {
 
     }
 
-    // 1982,169298,Immanuel-Kant-Gymnasium,44319,Dortmund,"Grüningsweg 42",231,5012100,1000000,1000000
     public void setData(ArrayList<String> data)
     {
         this.id = Integer.parseInt(data.get(CSV_INTERNE_ID));
@@ -476,7 +494,7 @@ public class Schule {
     }
 
 
-   public static final String ausgabeSpalten[] = {"id","SNR","Name der Schule", "PLZ","Ort", "Strasse und HsNr","Download", "Upload", "Schüleranzahl", "Ausbau", "Schulamt"};
+   public static final String ausgabeSpalten[] = {"id","SNR","Name der Schule", "PLZ","Ort", "Strasse und HsNr","Download", "Upload", "Schüleranzahl","Schülerzahl von IT", "Ausbau", "Schulamt"};
 
 
 
@@ -491,7 +509,7 @@ public class Schule {
         this.setOrt(getStringValue(row.getCell(i++)));
         this.setStrasse_Hsnr(getStringValue(row.getCell(i++)));
         this.setZustaendiges_Schulamt(getStringValue(row.getCell(i++)));
-        this.setVorwahl(String.valueOf(getIntValue(row.getCell(i++))));
+        this.setVorwahl(String.valueOf(row.getCell(i++)));
         this.setRufnummer(getStringValue(row.getCell(i++)));
         this.setSF(getStringValue(row.getCell(i++)));
         this.setSchultyp(getStringValue(row.getCell(i++)));
@@ -508,6 +526,10 @@ public class Schule {
         this.setEmail_Ansprechpartner(getStringValue(row.getCell(i++)));
         this.setSchuelerzahl(getIntValue(row.getCell(i++)));
         this.setAusbau(getStringValue(row.getCell(i++)));
+        this.setKlassenanzahl(getIntValue(row.getCell(i++)));
+        this.setPWCDownload(getIntValue(row.getCell(i++)));
+        this.setPWCUpload(getIntValue(row.getCell(i++)));
+        this.setSchuelerzahlIT(getIntValue(row.getCell(i++)));
     }
     public void updateBreitbandData(ArrayList<String> data)
     { //13 ist Download 14 Upload
@@ -636,6 +658,22 @@ public class Schule {
         if(!this.standort.equals(schule.getStandort()))
         {
             returnString += "standort von "+this.standort+" zu "+schule.getStandort()+" ";
+        }
+        if(this.klassenanzahl != schule.getKlassenanzahl())
+        {
+            returnString += "Klassenanzahl von "+this.klassenanzahl+" zu "+schule.getKlassenanzahl()+" ";
+        }
+        if(this.PWCDownload != schule.getPWCDownload())
+        {
+            returnString += "PWC Download von "+this.PWCDownload+" zu "+schule.getPWCDownload()+" ";
+        }
+        if(this.PWCUpload != schule.getPWCUpload())
+        {
+            returnString += "PWC Upload von "+this.PWCUpload+" zu "+schule.getPWCDownload()+" ";
+        }
+        if(this.schuelerzahlIT != schule.getSchuelerzahlIT())
+        {
+            returnString += "schuelerzahlIT von "+this.schuelerzahlIT+" zu "+schule.getSchuelerzahlIT()+" ";
         }
         return returnString;
     }
@@ -778,15 +816,33 @@ public class Schule {
         v.add(String.valueOf(Anbindung_Kbit_DL));
         v.add(String.valueOf(Anbindung_Kbit_UL));
         v.add(String.valueOf(Schuelerzahl));
+        v.add(String.valueOf(schuelerzahlIT));
         v.add(String.valueOf(Ausbau));
         v.add(String.valueOf(Zustaendiges_Schulamt));
         return v;
     }
 
-    public String getFehlendSting()
-    {
-        String v = String.valueOf(String.valueOf(SNR)).concat(";").concat(Name_der_Schule).concat(";").concat(Art_der_Schule).concat(";").concat(String.valueOf(PLZ)).concat(";").concat(Ort).concat(";");
-        return v;
+    public int getPWCUpload() {
+        return PWCUpload;
     }
 
+    public void setPWCUpload(int pwcUpload) {
+        this.PWCUpload = pwcUpload;
+    }
+
+    public int getPWCDownload() {
+        return PWCDownload;
+    }
+
+    public void setPWCDownload(int pwcDownload) {
+        this.PWCDownload = pwcDownload;
+    }
+
+    public int getKlassenanzahl() {
+        return klassenanzahl;
+    }
+
+    public void setKlassenanzahl(int klassenanzahl) {
+        this.klassenanzahl = klassenanzahl;
+    }
 }
