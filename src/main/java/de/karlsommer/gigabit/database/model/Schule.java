@@ -49,6 +49,8 @@ public class Schule {
     public static final String AUSBAU_BUND_5 = "Bund 5. Call";
     public static final String AUSBAU_BUND_6 = "Bund 6. Call";
     public static final String AUSBAU_BUND = "Bund";
+    public static final String AUSBAU_ERMTTELT_BUND = "Bund ermittelt";
+    public static final String AUSBAU_ERMTTELT_LAND = "Land ermittelt";
     public static final String AUSBAU_BUND_SONDER = "Bund Sonderaufruf";
     public static final String AUSBAU_LAND = "Land";
     public static final String AUSBAU_UNGEKLAERT = "Ungeklärt";
@@ -85,11 +87,20 @@ public class Schule {
     private int PWCDownload;
     private int klassenanzahl;
     private int schuelerzahlIT;
+    private String schultraeger;
 
+
+    public String getSchultraeger() {
+        return schultraeger;
+    }
+
+    public void setSchultraeger(String schultraeger) {
+        this.schultraeger = schultraeger;
+    }
     public String getAusbau(boolean html)
     {
 
-        if(Ausbau.equals(AUSBAU_AUSGEBAUT) || Ausbau.equals(AUSBAU_EIGENWIRTSCHAFTLICH) ||Ausbau.equals(AUSBAU_BUND)||Ausbau.equals(AUSBAU_BUND_1)||Ausbau.equals(AUSBAU_BUND_2)||Ausbau.equals(AUSBAU_BUND_3)||Ausbau.equals(AUSBAU_BUND_4)||Ausbau.equals(AUSBAU_BUND_5)||Ausbau.equals(AUSBAU_BUND_6)||Ausbau.equals(AUSBAU_BUND_SONDER) ||Ausbau.equals(AUSBAU_LAND))
+        if(Ausbau.equals(AUSBAU_AUSGEBAUT) || Ausbau.equals(AUSBAU_EIGENWIRTSCHAFTLICH) ||Ausbau.equals(AUSBAU_BUND)||Ausbau.equals(AUSBAU_BUND_1)||Ausbau.equals(AUSBAU_BUND_2)||Ausbau.equals(AUSBAU_BUND_3)||Ausbau.equals(AUSBAU_BUND_4)||Ausbau.equals(AUSBAU_BUND_5)||Ausbau.equals(AUSBAU_BUND_6)||Ausbau.equals(AUSBAU_BUND_SONDER) ||Ausbau.equals(AUSBAU_LAND) ||Ausbau.equals(AUSBAU_ERMTTELT_BUND) ||Ausbau.equals(AUSBAU_ERMTTELT_LAND))
             return Ausbau;
         else if(html)
             return "ungekl&auml;rt";
@@ -134,6 +145,11 @@ public class Schule {
                 case AUSBAU_BUND_6:
                     ;
                 case AUSBAU_BUND_SONDER:
+                    ;
+                case AUSBAU_ERMTTELT_BUND:
+                    ;
+                    ;
+                case AUSBAU_ERMTTELT_LAND:
                     ;
                 case AUSBAU_LAND:
                     Ausbau = pAusbau;
@@ -254,6 +270,7 @@ public class Schule {
             this.PWCDownload = Integer.parseInt(daten.get(i++));
             this.PWCUpload = Integer.parseInt(daten.get(i++));
             this.schuelerzahlIT = Integer.parseInt(daten.get(i++));
+            this.schultraeger = daten.get(i++);
         }
         else
         {
@@ -505,6 +522,8 @@ public class Schule {
         int i = 1;
         this.setSNR(getIntValue(row.getCell(i++)));
         this.setName_der_Schule(getStringValue(row.getCell(i++)));
+        this.setArt_der_Schule(getStringValue(row.getCell(i++)));
+        this.setSchultraeger(getStringValue(row.getCell(i++)));
         this.setPLZ(getIntValue(row.getCell(i++)));
         this.setOrt(getStringValue(row.getCell(i++)));
         this.setStrasse_Hsnr(getStringValue(row.getCell(i++)));
@@ -562,6 +581,10 @@ public class Schule {
         if(!this.Art_der_Schule.equals(schule.getArt_der_Schule()))
         {
             returnString += "Art_der_Schule von "+this.Art_der_Schule+" zu "+schule.getArt_der_Schule()+" ";
+        }
+        if(!this.schultraeger.equals(schule.getSchultraeger()))
+        {
+            returnString += "Schulträger von "+this.schultraeger +" zu "+schule.getSchultraeger()+" ";
         }
         if(!(this.PLZ == (schule.getPLZ())))
         {

@@ -791,7 +791,7 @@ public class DocumentWriter {
 
         // Create a Row
         Row headerRow = sheet.createRow(0);
-        String[] columns = {"Id", "Schulnummer", "Name der Schule", "PLZ", "Ort", "Strasse und Hausnummer","Zuständiges Schulamt","Vorwahl","Rufnummer","Schulform","Schultyp","Mailadresse", "Bemerkungen",
+        String[] columns = {"Id", "Schulnummer", "Name der Schule", "Art der Schule", "PLZ", "Ort", "Strasse und Hausnummer","Zuständiges Schulamt","Vorwahl","Rufnummer","Schulform","Schultyp","Mailadresse", "Bemerkungen",
                 "Status GB" , "Anbindung Download", "Anbindung Upload","Status MK", "Status Inhouse","Standort","Ansprechpartner","Telefon Ansprechpartner","Email Ansprechpartner", "Schüleranzahl", "Ausbau", "Klassenanzahl", "PWC-Download", "PWC-Upload","Schülerzahl IT-NRW"};
 
         // Create cells
@@ -817,6 +817,10 @@ public class DocumentWriter {
 
             row.createCell(i++)
                     .setCellValue(schule.getName_der_Schule());
+            row.createCell(i++)
+                    .setCellValue(schule.getArt_der_Schule());
+            row.createCell(i++)
+                    .setCellValue(schule.getSchultraeger());
 
             //Cell dateOfBirthCell = row.createCell(2);
             //dateOfBirthCell.setCellValue(employee.getDateOfBirth());

@@ -48,6 +48,7 @@ public class AddTeilstandortFrame {
     private JTextField textFieldKlassenanzahl;
     private JTextField textFieldSchuelerzahl;
     private JTextField textFieldSchuelerzahlIT;
+    private JLabel labelSchultraeger;
     private Schule schule;
     private Schule hauptstandort;
     private SchuleRepository schuleRepository;
@@ -69,6 +70,7 @@ public class AddTeilstandortFrame {
                 schule.setName_der_Schule(textFieldNameDerSchule.getText());
                 schule.setArt_der_Schule(textFieldArtDerSchule.getText());
                 schule.setOrt(textFieldOrt.getText());
+                schule.setSchultraeger(hauptstandort.getSchultraeger());
                 schule.setStrasse_Hsnr(textFieldStrasseUndHausummer.getText());
                 schule.setBemerkungen(textAreaBemerkungen.getText());
                 schule.setVorwahl(textFieldVorwahl.getText());
@@ -151,6 +153,7 @@ public class AddTeilstandortFrame {
         jLAbelSchulamt.setText(this.hauptstandort.getZustaendiges_Schulamt());
         jLabelSchulform.setText(this.hauptstandort.getSF());
         jLabelSchultyp.setText(this.hauptstandort.getSchultyp());
+        labelSchultraeger.setText(this.hauptstandort.getSchultraeger());
         jLabelAnsprechpartner.setText(this.hauptstandort.getAnsprechpartner());
         jLabelEmailAnsprechpartner.setText(this.hauptstandort.getEmail_Ansprechpartner());
         jLabelTelefonAnsprechpartner.setText(this.hauptstandort.getTelefon_Ansprechpartner());

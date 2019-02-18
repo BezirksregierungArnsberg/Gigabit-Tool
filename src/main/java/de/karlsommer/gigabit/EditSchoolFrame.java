@@ -53,13 +53,14 @@ public class EditSchoolFrame implements DataUpdater {
     private JTextField textFieldPWCUpload;
     private JTextField textFieldPWCDownload;
     private JTextField textFieldSchuelerzahlIT;
+    private JTextField textFieldSchultraeger;
     private Schule schule;
     private AddTeilstandortFrame addTeilstandortFrame;
     private JFrame teilstandortBearbeitenFrame;
     private SchuleRepository schuleRepository;
     private JFrame frame;
     private DataUpdater dataUpdater;
-    public static final String[] ausbauArray = new String[] { AUSBAU_AUSGEBAUT, AUSBAU_EIGENWIRTSCHAFTLICH,AUSBAU_BUND,AUSBAU_BUND_1,AUSBAU_BUND_2,AUSBAU_BUND_3,AUSBAU_BUND_4,AUSBAU_BUND_5,AUSBAU_BUND_6,AUSBAU_BUND_SONDER,AUSBAU_LAND,AUSBAU_UNGEKLAERT };
+    public static final String[] ausbauArray = new String[] { AUSBAU_AUSGEBAUT, AUSBAU_EIGENWIRTSCHAFTLICH,AUSBAU_BUND,AUSBAU_BUND_1,AUSBAU_BUND_2,AUSBAU_BUND_3,AUSBAU_BUND_4,AUSBAU_BUND_5,AUSBAU_BUND_6,AUSBAU_BUND_SONDER,AUSBAU_LAND,AUSBAU_UNGEKLAERT, AUSBAU_ERMTTELT_BUND, AUSBAU_ERMTTELT_LAND };
 
     private void createUIComponents() {
         comboBoxAusbaustatus = new JComboBox<>(ausbauArray);
@@ -141,6 +142,7 @@ public class EditSchoolFrame implements DataUpdater {
                     schule.setSchuelerzahlIT(0);
 
                 schule.setAusbau((String) comboBoxAusbaustatus.getSelectedItem());
+                schule.setSchultraeger(textFieldSchultraeger.getText());
                 schuleRepository.save(schule);
 
                 EditSchoolFrame.this.dataUpdater.updateData();
@@ -198,6 +200,7 @@ public class EditSchoolFrame implements DataUpdater {
         textFieldPWCDownload.setText(String.valueOf(schule.getPWCDownload()));
         textFieldKlassenanzahl.setText(String.valueOf(schule.getKlassenanzahl()));
         textFieldSchuelerzahlIT.setText(String.valueOf(schule.getSchuelerzahlIT()));
+        textFieldSchultraeger.setText(this.schule.getSchultraeger());
 
         if((Arrays.asList(ausbauArray)).contains(schule.getAusbau(false)))
             comboBoxAusbaustatus.setSelectedIndex((Arrays.asList(ausbauArray)).indexOf(schule.getAusbau(false)));
