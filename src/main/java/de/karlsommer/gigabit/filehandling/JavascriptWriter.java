@@ -834,11 +834,11 @@ public class JavascriptWriter {
             stringBuilder.append(",'<div class=\"info_content\"><h3>").append(schule.getName_der_Schule()).append("</h3><p>Adresse:<br>").append(schule.getStrasse_Hsnr()).append(",<br>").append(schule.getPLZ()).append(" ").append(schule.getOrt()).append("</p><p>"); // append("</p><p>Gemeldete Anbindung Download in Kbit/s:").append(schule.getAnbindung_Kbit_DL()).append("</p><p>Gemeldete Anbindung Upload in Kbit/s:").append(schule.getAnbindung_Kbit_UL()).
             if(schule.getAusbau(false).equals(AUSBAU_AUSGEBAUT))
                 stringBuilder.append("Die Schule ist bereits mit Gigabit versorgt.");
-            else if(schule.getAusbau(false).equals(AUSBAU_BUND) || schule.getAusbau(false).equals(AUSBAU_BUND_1) || schule.getAusbau(false).equals(AUSBAU_BUND_2) || schule.getAusbau(false).equals(AUSBAU_BUND_3) || schule.getAusbau(false).equals(AUSBAU_BUND_4) || schule.getAusbau(false).equals(AUSBAU_BUND_5) || schule.getAusbau(false).equals(AUSBAU_BUND_6) || schule.getAusbau(false).equals(AUSBAU_BUND_SONDER))
+            else if(schule.getAusbau(false).equals(AUSBAU_BUND) || schule.getAusbau(false).equals(AUSBAU_ERMTTELT_BUND)  || schule.getAusbau(false).equals(AUSBAU_BUND_1) || schule.getAusbau(false).equals(AUSBAU_BUND_2) || schule.getAusbau(false).equals(AUSBAU_BUND_3) || schule.getAusbau(false).equals(AUSBAU_BUND_4) || schule.getAusbau(false).equals(AUSBAU_BUND_5) || schule.getAusbau(false).equals(AUSBAU_BUND_6) || schule.getAusbau(false).equals(AUSBAU_BUND_SONDER))
                 stringBuilder.append("Die Schule wird im Rahmen des Bundes-<br>f&ouml;rderprogramm mit Gigabit angeschlossen.<br><br> F&uuml;r weitere Informationen diesbez&uuml;glich wenden Sie<br> sich an Ihren Gigabitkoordinator.");
             else if(schule.getAusbau(false).equals(AUSBAU_EIGENWIRTSCHAFTLICH))
                 stringBuilder.append("Die Schule wird eigenwirtschaftlich mit Gigabit angeschlossen.<br><br> F&uuml;r weitere Informationen diesbez&uuml;glich wenden Sie<br> sich an Ihren Gigabitkoordinator.");
-            else if(schule.getAusbau(false).equals(AUSBAU_LAND)) {
+            else if(schule.getAusbau(false).equals(AUSBAU_LAND)  || schule.getAusbau(false).equals(AUSBAU_ERMTTELT_LAND)) {
                 stringBuilder.append("<span style=\"font-size:1.2em;\">Die Schule kann &uuml;ber das Landesförderprogramm<br> angebunden werden.<br><br> Bitte nehmen Sie <span style=\"font-weight: bold;\"><a style=\"text-decoration-color: red;color: red;text-decoration-line:none;\" href=\"mailto:gigabit@bra.nrw.de?subject=Information &uuml;ber Schulstandort: "+schule.getId()+"\">hier</a></span> per Mail Kontakt mit der <br>Gesch&auml;schftsstelle Gigabit.NRW der Bezirksregierung Arnsberg auf!</span>");
             }
             else
@@ -851,7 +851,7 @@ public class JavascriptWriter {
                 "\n" +
                 "        function placeMarker(lat,lon,marker, text){\n" +
                 "            var LonLat = new OpenLayers.Geometry.Point( lon, lat).transform(\"EPSG:4326\", map.getProjectionObject());\n" +
-                "            if(marker=='"+AUSBAU_LAND+"')\n" +
+                "            if(marker=='"+AUSBAU_LAND+"' || marker=='"+AUSBAU_ERMTTELT_LAND+"' )\n" +
                 "            {\n" +
                 "              var feature = new OpenLayers.Feature.Vector(LonLat,\n" +
                 "                                      { salutation: text, Lon : lon, Lat : lat},\n" +
@@ -867,7 +867,7 @@ public class JavascriptWriter {
                 "\n" +
                 "              vectorLayer.addFeatures(feature);\n" +
                 "            }\n" +
-                "            else if(marker=='"+AUSBAU_EIGENWIRTSCHAFTLICH+"' || marker=='"+AUSBAU_BUND+"' || marker=='"+AUSBAU_BUND_1+"' || marker=='"+AUSBAU_BUND_2+"' || marker=='"+AUSBAU_BUND_3+"' || marker=='"+AUSBAU_BUND_4+"' || marker=='"+AUSBAU_BUND_5+"' || marker=='"+AUSBAU_BUND_6+"' || marker=='"+AUSBAU_BUND_SONDER+"' )\n" +
+                "            else if(marker=='"+AUSBAU_EIGENWIRTSCHAFTLICH+"' || marker=='"+AUSBAU_ERMTTELT_BUND+"' || marker=='"+AUSBAU_BUND+"' || marker=='"+AUSBAU_BUND_1+"' || marker=='"+AUSBAU_BUND_2+"' || marker=='"+AUSBAU_BUND_3+"' || marker=='"+AUSBAU_BUND_4+"' || marker=='"+AUSBAU_BUND_5+"' || marker=='"+AUSBAU_BUND_6+"' || marker=='"+AUSBAU_BUND_SONDER+"' )\n" +
                 "            {\n" +
                 "              var feature = new OpenLayers.Feature.Vector(LonLat,\n" +
                 "                                      { salutation: text, Lon : lon, Lat : lat},\n" +
