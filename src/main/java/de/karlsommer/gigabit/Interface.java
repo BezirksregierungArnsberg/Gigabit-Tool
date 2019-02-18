@@ -39,9 +39,9 @@ import static org.apache.commons.lang.StringUtils.trim;
 
 public class Interface implements DataUpdater {
 
-    public static final boolean RELEASE = true; // Sollen die Admin-Optionen mit eingeblendet werden
+    public static final boolean RELEASE = false; // Sollen die Admin-Optionen mit eingeblendet werden, auf true stellen, wenn Version für Anwender compiliert wird.
     public static final String version = "1.72"; //Versionsnummer
-    public static final String releaseDate = "06.02.2019"; //Versionsdatum
+    public static final String releaseDate = "18.02.2019"; //Versionsdatum
     public static final String IMPORT_STRING_NOTHING = "-";
     public static final String IMPORT_STRING_SCHULE_MIT_FEHLENDEN_GEOCOORDINATEN = "Schule mit fehlenden Geocoordinaten zeigen";
     public static final String IMPORT_STRING_GEOCOORDINATEN_IN_DB_LADEN = "Geocoordinaten in DB laden";
@@ -132,6 +132,7 @@ public class Interface implements DataUpdater {
 
         updateData();
 
+        //Alle Schulen in Tool anzeigen
         alleSchulenAnzeigenButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -141,6 +142,7 @@ public class Interface implements DataUpdater {
                 updateData();
             }
         });
+        //Suchbutton nach Schulnummern geklickt
         suchenButtonSchullnummern.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -206,12 +208,14 @@ public class Interface implements DataUpdater {
                 }
             }
         });
+        //Button mit Aufruf der History
         changeHistoryButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 loggerFrame.setVisible(true);
             }
         });
+        //Import-Button für den Adminview, ruft entsprechende Funktionen auf
         adminImportButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -246,6 +250,7 @@ public class Interface implements DataUpdater {
                 }
             }
         });
+        //Exportbutton für den Adminview, ruft entsprechende Funktionen auf
         adminExportButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -263,6 +268,7 @@ public class Interface implements DataUpdater {
                 }
             }
         });
+        //Massenmailversand aus dem Tool
         sendMailButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -323,7 +329,6 @@ public class Interface implements DataUpdater {
                         message.setContent(messagetext, "text/html; charset=utf-8");
                         // Send message
                         Transport.send(message);
-                        System.out.println("Sent message successfully....");
                     } catch (MessagingException mex) {
                         mex.printStackTrace();
                     }
@@ -332,6 +337,11 @@ public class Interface implements DataUpdater {
         });
     }
 
+
+    /**
+     * Methode zum Abgleich der Gigabit-Tabelle mit der Datenbank.
+     * (Inzwischen veraltet und muss manuell angepasst werden, war für den initialen Bulk-Import gedacht)
+     */
     private void gigabitTabelleAbgleichen() {
         if (!RELEASE) {
             filename = Settings.getInstance().getDatabaseFolderPath()+"FINAL Uebersicht_Breitbandanschluesse_Geschäftsstelle BRA.csv";
@@ -519,6 +529,10 @@ public class Interface implements DataUpdater {
         }
     }
 
+    /**
+     * Methode, um spezielle Kartenschreibmethoden auszuführen.
+     * Wurde für spezielle Anlässe benutzt, um aus Exceltabellen Karten zu generieren.
+     */
     private void spezialKartenSchreiben() {
 
         DocumentWriter documentWriter = new DocumentWriter();
@@ -535,6 +549,9 @@ public class Interface implements DataUpdater {
         }
     }
 
+    /**
+     * Methode zum automatischen Schreiben des Berichtswesens. Inzwischen nicht mehr weiter implementiert.
+     */
     private void berichtSchreiben() {
         DocumentWriter documentWriter = new DocumentWriter();
         try {
@@ -546,13 +563,18 @@ public class Interface implements DataUpdater {
     }
 
     /**
-     * Den Javascript-Writer aufrufen und alle Ausgaben für die Gigabit-Geschäftsstelle erzeugen
+     * Den Javascript-Writer aufrufen und alle Ausgaben für die Gigabit-Geschäftsstellenkarte erzeugen.
+     *
      */
     private void gigabitkarteSchreiben() {
         JavascriptWriter javascriptWriter = new JavascriptWriter();
         javascriptWriter.writeJavaScript();
     }
 
+    /**
+     * Methode zum Abgleich mit verschiedenen CSV-Dateien.
+     * Musste im Verlauf immer manuell in verschiedenen Importszenarien angepasst werden.
+     */
     private void datenAusCSVAbgleichen() {
         if (!RELEASE) {
             JFileChooser c = new JFileChooser();
@@ -613,6 +635,14 @@ public class Interface implements DataUpdater {
         }
     }
 
+    /**
+     * Auswahldialog für die Dateiauswahl
+     *
+     * @param endsWith Angabe des gewünschten Dateityps
+     * @return String auf den Pfad der Datei.
+     * @throws FileNotFoundException, bei Cancel oder nicht gewählter Approve-Option
+     *
+     */
     private String getFilenameFromFileChoosen(String endsWith) throws FileNotFoundException {
         JFileChooser c = new JFileChooser();
         int rVal = c.showOpenDialog(mainView);
@@ -635,6 +665,9 @@ public class Interface implements DataUpdater {
         throw new FileNotFoundException();
     }
 
+    /**
+     * Methode zum Abgleich der Daten mit der von IT-NRW gelieferten Tabelle
+     */
     private void datenbankVonITNRWEinlesen()
         {
             int ROW_SCHULNUMMER = 0;
@@ -716,6 +749,7 @@ public class Interface implements DataUpdater {
 
     /**
      * Abgleich der internen Daten mit den Daten von IT-NRW aus der schulver.mdb
+     * (Inzwischen überholt, da die Tabelle von IT-NRW deutlich bessere Daten enthält)
      */
     private void tabelleVonITNRWDatenbankEinlesen() {
         if (!RELEASE) {
@@ -784,6 +818,10 @@ public class Interface implements DataUpdater {
         }
     }
 
+
+    /**
+     * Spezialimportmethode. Musste im Verlauf immer manuell angepasst werden.
+     */
     private void specialImport() {
         if (!RELEASE) {
             filename = Settings.getInstance().getDatabaseFolderPath()+"SchulNrUndCall.csv";
@@ -828,10 +866,16 @@ public class Interface implements DataUpdater {
         }
     }
 
+
+    /**
+     * Wenn zwei Schulen die gleiche Adresse haben, werden die Geocoordinaten leicht verschoben,
+     * um beide Schulstandorte auf der Karte sichtbar zu machen.
+     */
     private void doppelteGeocoordinatenVerschieben() {
         ArrayList<Schule> schulen = schuleRepository.getSchulenMitGleichenGeolocations();
         while(schulen.size() > 0) {
             for (Schule schule : schulen) {
+                //Geringfügig verschieben, um alle Schulen auf der Karte sichtbar zu machen.
                 schule.setLat(schule.getLat() + 0.0002);
                 schule.setLng(schule.getLng() + 0.0002);
                 schuleRepository.save(schule);
@@ -847,6 +891,7 @@ public class Interface implements DataUpdater {
      */
     private void geocoordinatenInDBLaden() {
 
+        //Nur ermittelte Schulen werden upgedatet
         for(Schule schule: schulenImZwischenspeicher)
         {
             try{
@@ -867,6 +912,10 @@ public class Interface implements DataUpdater {
         }
     }
 
+
+    /**
+     * Schulen, die in der aktuellen Datenbank keine Geocoordinaten haben in der Übersicht anzeigen.
+     */
     private void showSchuleMitFehlendenGeocoordinaten() {
         String col[] = {"Interne Nummer","SNR","Name der Schule","Art der Schule","PLZ","Ort"};//,"Stra�e + Hsnr.","Zust�ndiges Schulamt","Vorwahl","Rufnummer","SF","Schultyp","Mailadresse","FB","Zust�ndig","Bedarf S1","Status S1","Moderator S1","Datum S1","Bedarf S2","Status S2","Moderator S2","Datum S2","Bedarf S3","Status S3","Moderator S3","Datum S3","Bedarf S4","Status S4","Moderator S4","Datum S4","Bedarf R1","Status R1","Moderator R1","Datum R1","Bedarf R2","Status R2","Moderator R2","Datum R2","Bedarf L1","Status L1","Moderator L1","Datum L1","Bedarf K1","Status K1","Moderator K1","Datum K1","Bedarf K2","Status K2","Moderator K2","Datum K2","Bedarf A1","Status A1","Moderator A1","Datum A1","Bedarf X2","Status X2","Moderator X2","Datum X2","Bedarf X3","Status X3","Moderator X3","Datum X3","Bemerkungen"};
 
@@ -882,22 +931,15 @@ public class Interface implements DataUpdater {
         }
     }
 
-    private void showStringdataInTable(String[] col, ArrayList<ArrayList<String>> schulen, String ausgabe)
-    {
+    private String filterSNR = ""; //Filter nach Schulnummer
+    private String filterOrt = "-"; //Filtertext nach Ort
+    private String filterSchulamt = "-"; //Filter nach Schulamt
+    private String filterAusbau = "alle"; //Filter nach Ausbaustatus
 
-        DefaultTableModel tableModel = new DefaultTableModel(col,0);
-        for (ArrayList<String> data : schulen) {
-            tableModel.addRow(ImportBuilder.getStringVectorFromArrayListData(data));
-        }
-        Interface.this.ausgabeTabelle.setModel(tableModel);
-        ausgabeLabel.setText(ausgabe);
-    }
 
-    private String filterSNR = "";
-    private String filterOrt = "-";
-    private String filterSchulamt = "-";
-    private String filterAusbau = "alle";
-
+    /**
+     * Ausgabe nach Auswahl anzeigen.
+     */
     public void updateData()
     {
         ArrayList<Schule> schulen = schuleRepository.getAllSchools(filterSNR,filterOrt,filterSchulamt,filterAusbau);
@@ -930,6 +972,10 @@ public class Interface implements DataUpdater {
         showSchooldataInTable(ausgabeSpalten,schulen,ausgabe, false);
     }
 
+
+    /**
+     * Ermittelte Daten in Table-Bereich anzeigen.
+     */
     private void showSchooldataInTable(String[] col, ArrayList<Schule> schulen, String ausgabe, boolean fehlend) {
         DefaultTableModel tableModel = new DefaultTableModel(col,0);
         for (Schule schule : schulen) {
@@ -943,8 +989,7 @@ public class Interface implements DataUpdater {
         ausgabeLabel.setText(ausgabe);
         ausgabeTabelle.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
             public void valueChanged(ListSelectionEvent event) {
-                // do some actions here, for example
-                // print first column value from selected row
+                // Wenn Schule ausgewählt, Detailansicht zeigen
                 if(ausgabeTabelle.getSelectedRow()>-1)
                 {
                     System.out.println(ausgabeTabelle.getValueAt(ausgabeTabelle.getSelectedRow(), 0).toString());
@@ -964,6 +1009,10 @@ public class Interface implements DataUpdater {
         mainFrame.setVisible(true);
     }
 
+
+    /**
+     * Custom create für spezielle UI-Komponenten.
+     */
     private void createUIComponents() {
         SchuleRepository schuleRepository = new SchuleRepository();
         String[] staedteArray = schuleRepository.getAllStaedte();
@@ -975,6 +1024,7 @@ public class Interface implements DataUpdater {
         String[] finalStaedteArray = new String[staedteArray.length +1];
         String[] finalSchulaemterArray = new String[allSschulaemterArray.length +1];
         String[] finalAusbaustatusArray = new String[allAusbaustatusArray.length +2];
+        //Arrays um Leerfelder erweitern
         for(int i=0;i < staedteArray.length;i++)
             finalStaedteArray[i+1] = staedteArray[i];
         for(int i=0;i < allSschulaemterArray.length;i++)

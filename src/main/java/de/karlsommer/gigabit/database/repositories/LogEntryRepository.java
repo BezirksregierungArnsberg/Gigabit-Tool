@@ -10,6 +10,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class LogEntryRepository {
+
+    /**
+     * Logeinträge aus der Datenbank laden
+     * @return alle Logeinträge in der Datenbank
+     */
     public ArrayList<LogEntry> getAll()
     {
         String query = "SELECT * FROM LogEntry ORDER BY id DESC;";
@@ -23,6 +28,10 @@ public class LogEntryRepository {
         return logEntries;
     }
 
+    /**
+     * Logeintragsobjekt in der Datenbank speichern
+     * @param logEntry zu speichernder Logeintrag
+     */
     public void save(LogEntry logEntry) {
         String query;
         if(logEntry.getId()<0)
@@ -33,6 +42,10 @@ public class LogEntryRepository {
         DatabaseConnector.getInstance().executeStatement(query);
     }
 
+    /**
+     * Aktuelle Zeit
+     * @return Zeitstring
+     */
     private String getCurrentTimestamp()
     {
 
@@ -42,6 +55,10 @@ public class LogEntryRepository {
         return ts;
     }
 
+    /**
+     * Log in die Datenbank schreiben
+     * @param log zu loggende Nachricht
+     */
     public void log(String log) {
         String query = "INSERT INTO LogEntry VALUES(null,'"+getCurrentTimestamp()+"','"+log+"');";
         //System.out.println(query);

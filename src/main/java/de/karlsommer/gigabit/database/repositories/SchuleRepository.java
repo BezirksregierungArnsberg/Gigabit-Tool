@@ -22,31 +22,6 @@ public class SchuleRepository {
 
     public boolean schoolWithSNRExists(int schulnummer) {
         DatabaseConnector.getInstance().executeStatement("SELECT * FROM Schulen WHERE SNR="+String.valueOf(schulnummer)+";");
-        /*SQLiteDatabase db = DbHelper.getInstance(context).getReadableDatabase();
-        String[] projection = {
-                SubjectTable._ID,
-                SubjectTable.COLUMN_NAME_NAME,
-                SubjectTable.COLUMN_NAME_TEACHER,
-                SubjectTable.COLUMN_NAME_IS_MAJOR_CLASS
-        };
-
-        String selection = SubjectTable._ID + " = ?";
-        String[] selectionArgs = { Integer.toString(subjectId) };
-
-        String sortOrder = SubjectTable.COLUMN_NAME_NAME;
-
-        Cursor cursor = db.query(
-                SubjectTable.TABLE_NAME,                     // The table to query
-                projection,                               // The columns to return
-                selection,                                // The columns for the WHERE clause
-                selectionArgs,                            // The values for the WHERE clause
-                null,                                     // don't group the rows
-                null,                                     // don't filter by row groups
-                sortOrder                                 // The sort order
-        );
-        cursor.moveToNext();
-        Subject subject = createSubjectFromSql(cursor);
-        cursor.close();*/
         QueryResult result = DatabaseConnector.getInstance().getCurrentQueryResult();
         if(result == null)
             return false;
@@ -74,18 +49,6 @@ public class SchuleRepository {
     public ArrayList<Schule> getSchoolsOrderedByPLZ()
     {
         DatabaseConnector.getInstance().executeStatement("SELECT * FROM Schulen ORDER BY PLZ;");
-        QueryResult result = DatabaseConnector.getInstance().getCurrentQueryResult();
-        ArrayList<Schule> schulen = new ArrayList<>();
-        for(int i = 0; i < result.getRowCount(); i++)
-        {
-            schulen.add(new Schule(new ArrayList<String>(Arrays.asList(result.getData()[i])),true));
-        }
-        return schulen;
-    }
-
-    public ArrayList<Schule> getSchoolsWithoutAusbau()
-    {
-        DatabaseConnector.getInstance().executeStatement("SELECT * FROM Schulen WHERE Ausbau IS NULL;");
         QueryResult result = DatabaseConnector.getInstance().getCurrentQueryResult();
         ArrayList<Schule> schulen = new ArrayList<>();
         for(int i = 0; i < result.getRowCount(); i++)
@@ -153,18 +116,6 @@ public class SchuleRepository {
             staedte[i] = result.getData()[i][0];
         }
         return staedte;
-    }
-
-    public ArrayList<Schule> getSchoolsWithAusbau(String status)
-    {
-        DatabaseConnector.getInstance().executeStatement("SELECT * FROM Schulen WHERE Ausbau LIKE '%"+status+"%';");
-        QueryResult result = DatabaseConnector.getInstance().getCurrentQueryResult();
-        ArrayList<Schule> schulen = new ArrayList<>();
-        for(int i = 0; i < result.getRowCount(); i++)
-        {
-            schulen.add(new Schule(new ArrayList<String>(Arrays.asList(result.getData()[i])),true));
-        }
-        return schulen;
     }
     
     public ArrayList<Schule> getSchoolsWithGeodata()

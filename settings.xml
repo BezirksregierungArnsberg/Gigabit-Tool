@@ -5,4 +5,5 @@
 <entry key="bezirks_string">9</entry>
 <entry key="database_folder">../databases/</entry>
 <entry key="output_folder">../output/</entry>
+<entry key="geoutils_key">fill_in_geo_key</entry>
 </properties>

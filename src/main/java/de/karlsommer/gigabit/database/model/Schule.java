@@ -97,6 +97,12 @@ public class Schule {
     public void setSchultraeger(String schultraeger) {
         this.schultraeger = schultraeger;
     }
+
+    /**
+     * Ausbau der Schule
+     * @param html gibt an, ob in HTML-Format ausgegeben werden soll.
+     * @return mit dem aktuellen Ausbaustatus.
+     */
     public String getAusbau(boolean html)
     {
 
@@ -108,6 +114,10 @@ public class Schule {
             return "Ungeklärt";
     }
 
+    /**
+     * Ausbau der Schule setzen. Wird auf Validität geprüft.
+     * @param pAusbau Aubau
+     */
     public void setAusbau(String pAusbau)
     {
         if(pAusbau != null) {
@@ -215,7 +225,11 @@ public class Schule {
     }
 
 
-
+    /**
+     * Konstruktor, um eine Schule direkt mit Daten zu instanziieren.
+     * @param daten Datenquelle
+     * @param fromDatabase ob Daten direkt aus der Datenbank übergeben werden
+     */
     public Schule(ArrayList<String> daten, boolean fromDatabase)
     {
         int i = 0;
@@ -284,6 +298,10 @@ public class Schule {
 
     }
 
+    /**
+     * Methode für den Bulk-Import von Schulen
+     * @param data Daten aus Datenquelle
+     */
     public void setData(ArrayList<String> data)
     {
         this.id = Integer.parseInt(data.get(CSV_INTERNE_ID));
@@ -298,6 +316,10 @@ public class Schule {
         this.Anbindung_Kbit_DL = Integer.parseInt(data.get(CSV_DATA_DOWNLOAD));
     }
 
+    /**
+     * Bulk-Import aus Gigabit-Tabelle
+     * @param data ArrayList des Datensatz
+     */
     public void createFromGigabitTabelle(ArrayList<String> data)
     {
         this.standort = HAUPTSTANDORT;
@@ -511,10 +533,14 @@ public class Schule {
     }
 
 
+    // Anzuzeigende Spalten in der Übersicht.
    public static final String ausgabeSpalten[] = {"id","SNR","Name der Schule", "PLZ","Ort", "Strasse und HsNr","Download", "Upload", "Schüleranzahl","Schülerzahl von IT", "Ausbau", "Schulamt"};
 
 
-
+    /**
+     * Daten aus dem Import übernehmen
+     * @param row Zeile aus der Import-Excel-Tabelle
+     */
     public void updateData(Row row)
     {
         //"Id", "Schulnummer", ,"Rufnummer","Schulform","Schultyp","Mailadresse", "Bemerkungen",
@@ -550,6 +576,11 @@ public class Schule {
         this.setPWCUpload(getIntValue(row.getCell(i++)));
         this.setSchuelerzahlIT(getIntValue(row.getCell(i++)));
     }
+
+    /**
+     * Daten aus den Breitbanddaten importieren
+     * @param data ArrayList des Datensatzes
+     */
     public void updateBreitbandData(ArrayList<String> data)
     { //13 ist Download 14 Upload
         if(this.getSNR() == Integer.parseInt(data.get(GIGABIT_TABELLE_SNR)))
@@ -566,6 +597,11 @@ public class Schule {
         }
     }
 
+    /**
+     * Überprüfen, ob die Daten der Schule geändert wurden
+     * @param schule die zu prüfende Schule.
+     * @return Alle Änderungen in textueller Form
+     */
     public String getChangedValues(Schule schule)
     {
         String returnString = "";
@@ -701,6 +737,11 @@ public class Schule {
         return returnString;
     }
 
+    /**
+     * Schulen auf gleichheit prüfen
+     * @param schule zu prüfende Schule
+     * @return true, wenn Schulen gleiche Werte haben.
+     */
     public boolean isEqualTo(Schule schule)
     {
         if(getChangedValues(schule).equals(""))
@@ -709,6 +750,11 @@ public class Schule {
             return false;
     }
 
+    /**
+     * Helfermethode um einen Integer aus einer Tabellenzelle zu ermitteln.
+     * @param cell Zelle
+     * @return geprüfter Integer-Wert
+     */
     private int getIntValue(Cell cell)
     {
         switch(cell.getCellType()) {
@@ -728,6 +774,12 @@ public class Schule {
         }
     }
 
+
+    /**
+     * Helfermethode um einen String aus einer Tabellenzelle zu ermitteln.
+     * @param cell Zelle
+     * @return geprüfter String-Wert
+     */
     private String getStringValue(Cell cell)
     {
         if(cell != null) {
@@ -745,6 +797,11 @@ public class Schule {
         return "";
     }
 
+    /**
+     * Teilstandort aus CSV-Import generieren
+     * @param hauptstandort Hauptstandort des Teilstandorts
+     * @param data Datensatz, ArrayList aus dem eingelesenen CSV
+     */
     public void createTeilstandortWithCSV(Schule hauptstandort, ArrayList<String> data)
     {
         this.standort = TEILSTANDORT;
@@ -769,6 +826,10 @@ public class Schule {
         this.insertHauptstandortData(hauptstandort);
     }
 
+    /**
+     * Werte des Hauptstandortes übernehmen
+     * @param hauptstandort der Hauptstandort des Teilstandortes
+     */
     public void insertHauptstandortData(Schule hauptstandort)
     {
         this.Zustaendiges_Schulamt = hauptstandort.getZustaendiges_Schulamt();
@@ -777,6 +838,10 @@ public class Schule {
         this.SNR = hauptstandort.getSNR();
     }
 
+    /**
+     * Daten aus CSV-Import aktualisieren
+     * @param data ArrayList der Daten des CSV-Imports
+     */
     public void updateCSVData(ArrayList<String> data)
     { //13 ist Download 14 Upload
         this.Anbindung_Kbit_DL = getNormalizedDataInKbitFromString(data.get(CSV_DATA_DOWNLOAD));
@@ -793,6 +858,11 @@ public class Schule {
         }
     }
 
+    /**
+     * Helfermethode um die Daten beim Import zu bereinigen
+     * @param data unbereinigte Daten in MBits
+     * @return bereinigte Daten in KBits
+     */
     public int getNormalizedDataInKbitFromString(String data)
     {
         if(data.contains(","))
@@ -813,8 +883,13 @@ public class Schule {
         }
     }
 
+    // Anzeige der Schulen mit fehlenden Geocoordinaten
     public static final String fehlendeSchulenSpalten[] = {"ID","SNR","Name der Schule","Art der Schule","PLZ","Ort"};
 
+    /**
+     * Vektor für fehlende Schulen
+     * @return Schulen ohne Geodcoordinaten darstellen
+     */
     public Vector<String> getfehlendVector()
     {
         Vector<String> v =  new Vector<>();
@@ -827,6 +902,10 @@ public class Schule {
         return v;
     }
 
+    /**
+     * Vektor für die Darstellung in der Tabelle ausliefern
+     * @return mit Werten gefüllter Vector
+     */
     public Vector<String> getVector()
     {
         Vector<String> v =  new Vector<>();

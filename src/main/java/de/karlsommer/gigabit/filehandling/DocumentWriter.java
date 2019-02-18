@@ -21,6 +21,9 @@ import static de.karlsommer.gigabit.database.model.Schule.*;
 import static de.karlsommer.gigabit.helper.MathHelper.round;
 
 
+/**
+ * Veraltete Klasse, da momentan keine Berichte mehr aus dem Tool generiert werden.
+ */
 public class DocumentWriter {
 
     private static String[] columns = {"Standorte gesamt", "Grundschulen", "Förderschulen", "Sek I", "Sek II", "Berufskollegs", "Sonstige Schulen","BO","DO","EN","HA","HAM","HER","HSK","MK","OE","SI","SO","UN"};

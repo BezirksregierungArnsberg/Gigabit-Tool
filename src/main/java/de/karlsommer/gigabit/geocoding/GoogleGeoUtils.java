@@ -1,5 +1,6 @@
 package de.karlsommer.gigabit.geocoding;
 
+import de.karlsommer.gigabit.helper.Settings;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -37,7 +38,7 @@ public class GoogleGeoUtils {
 
         if ( ssl ) {
             url.append("key=");
-            url.append("AIzaSyBelI50Mr_wlgJNF3XDbagu0QINA65q_GY");
+            url.append(Settings.getInstance().getGoogleGeoUtilsKey());
             url.append("&");
         }
         url.append("sensor=false&address=");

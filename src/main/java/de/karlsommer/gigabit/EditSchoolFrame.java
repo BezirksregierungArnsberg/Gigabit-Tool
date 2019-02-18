@@ -60,6 +60,7 @@ public class EditSchoolFrame implements DataUpdater {
     private SchuleRepository schuleRepository;
     private JFrame frame;
     private DataUpdater dataUpdater;
+    //Erlaubte Ausbauvarianten
     public static final String[] ausbauArray = new String[] { AUSBAU_AUSGEBAUT, AUSBAU_EIGENWIRTSCHAFTLICH,AUSBAU_BUND,AUSBAU_BUND_1,AUSBAU_BUND_2,AUSBAU_BUND_3,AUSBAU_BUND_4,AUSBAU_BUND_5,AUSBAU_BUND_6,AUSBAU_BUND_SONDER,AUSBAU_LAND,AUSBAU_UNGEKLAERT, AUSBAU_ERMTTELT_BUND, AUSBAU_ERMTTELT_LAND };
 
     private void createUIComponents() {
@@ -227,11 +228,9 @@ public class EditSchoolFrame implements DataUpdater {
         ausgabeTabelle.setModel(tableModel);
         ausgabeTabelle.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
             public void valueChanged(ListSelectionEvent event) {
-                // do some actions here, for example
-                // print first column value from selected row
+                // Teilstandorte-Dialog zeigen
                 if(ausgabeTabelle.getSelectedRow()>-1)
                 {
-                    System.out.println(ausgabeTabelle.getValueAt(ausgabeTabelle.getSelectedRow(), 0).toString());
                     addTeilstandortFrame.setSchule(schuleRepository.getSchoolWithID(ausgabeTabelle.getValueAt(ausgabeTabelle.getSelectedRow(), 0).toString()), schule);
                     teilstandortBearbeitenFrame.setVisible(true);
                 }

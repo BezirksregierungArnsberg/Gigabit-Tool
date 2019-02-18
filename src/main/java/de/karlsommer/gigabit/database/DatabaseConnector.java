@@ -62,7 +62,11 @@ public class DatabaseConnector{
       System.exit(0);
     }
   }
-  
+
+  /**
+   * Erweiterung des Datenbankconnectors zum Singleton
+   * @return Singleton-Instanz
+   */
   public static DatabaseConnector getInstance()
   {
       if(_this == null) {

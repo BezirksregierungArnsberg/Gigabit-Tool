@@ -714,6 +714,9 @@ public class JavascriptWriter {
                 "\n");
     }
 
+    /**
+     * Karte für Veröffentlichung schreiben.
+     */
     public void writeJavaScript()
     {
         final Kml kml = Kml.unmarshal(new File(Settings.getInstance().getOutputFolderPath()+"/gadm36_DEU_2_NRW_Arnsberg.kml"));

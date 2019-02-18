@@ -13,6 +13,11 @@ public class ImportBuilder {
     public ImportBuilder(){
     }
 
+    /**
+     * Prüfen, ob Daten aus Datei einlesbar sind
+     * @param filename
+     * @return
+     */
     public boolean ladeCSVWebsiteDaten(String filename)
     {
         daten = new Tabelle(filename,',', true, false);
@@ -20,6 +25,11 @@ public class ImportBuilder {
         return (daten.gibZeilenanzahl() > 0);
     }
 
+    /**
+     * Prüfen, ob Daten aus Datei einlesbar sind
+     * @param filename
+     * @return
+     */
     public boolean ladeBreitbandDaten(String filename)
     {
         daten = new Tabelle(filename,';', true, true);
@@ -30,20 +40,14 @@ public class ImportBuilder {
         return (daten.gibZeilenanzahl() > 0);
     }
 
+    /**
+     * Eingelesene Daten als zweidimensionale ArrayList aus Strings liefern.
+     * @return
+     */
     public ArrayList<ArrayList<String>> gibArrayListsAusTabellen(){
 
         return daten.getDaten();
 
-    }
-
-    public static Vector<String> getStringVectorFromArrayListData(ArrayList<String> data)
-    {
-        Vector<String> v =  new Vector<>();
-        for(String value:data)
-        {
-            v.add(value);
-        }
-        return v;
     }
 
 }

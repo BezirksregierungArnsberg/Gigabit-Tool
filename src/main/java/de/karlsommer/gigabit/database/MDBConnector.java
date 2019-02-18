@@ -29,6 +29,10 @@ public class MDBConnector {
     {
     }
 
+    /**
+     * Gibt die Singelton-Instanz
+     * @return aktuelle Instanz
+     */
     public static MDBConnector getInstance()
     {
         if(_instance == null)

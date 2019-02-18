@@ -7,10 +7,6 @@ import java.util.Vector;
 
 public class LogEntry {
 
-    public static final int ID = 0;
-    public static final int TIMESTAMP = 1;
-    public static final int MESSAGE = 2;
-
     public int getId() {
         return id;
     }
@@ -36,10 +32,13 @@ public class LogEntry {
     }
 
     private int id = -1;
-    private String message;
-    private String timeStamp;
+    private String message;//Änderungstext
+    private String timeStamp;//Zeitpunkt der Änderung
 
-
+    /**
+     * Vektor für die Darstellung in der Liste erhalten
+     * @return Vector mit den Logeinträgen
+     */
     public Vector<String> getVector()
     {
         Vector<String> v =  new Vector<>();
@@ -49,6 +48,10 @@ public class LogEntry {
         return v;
     }
 
+    /**
+     * Konstruktor mit zu loggender Nachricht
+     * @param message Nachrichtentext
+     */
     public LogEntry(String message)
     {
         int id = -1;
@@ -60,6 +63,10 @@ public class LogEntry {
         this.timeStamp = ts;
     }
 
+    /**
+     * Kunstruktor für die Übergabe aus der Datenbank
+     * @param data ArrayList aus der Datenbank
+     */
     public LogEntry(ArrayList<String> data)
     {
 
