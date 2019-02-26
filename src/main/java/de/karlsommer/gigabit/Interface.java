@@ -39,9 +39,9 @@ import static org.apache.commons.lang.StringUtils.trim;
 
 public class Interface implements DataUpdater {
 
-    public static final boolean RELEASE = false; // Sollen die Admin-Optionen mit eingeblendet werden, auf true stellen, wenn Version für Anwender compiliert wird.
-    public static final String version = "1.72"; //Versionsnummer
-    public static final String releaseDate = "18.02.2019"; //Versionsdatum
+    public static final boolean RELEASE = true; // Sollen die Admin-Optionen mit eingeblendet werden, auf true stellen, wenn Version für Anwender compiliert wird.
+    public static final String version = "1.73"; //Versionsnummer
+    public static final String releaseDate = "19.02.2019"; //Versionsdatum
     public static final String IMPORT_STRING_NOTHING = "-";
     public static final String IMPORT_STRING_SCHULE_MIT_FEHLENDEN_GEOCOORDINATEN = "Schule mit fehlenden Geocoordinaten zeigen";
     public static final String IMPORT_STRING_GEOCOORDINATEN_IN_DB_LADEN = "Geocoordinaten in DB laden";
