@@ -106,6 +106,19 @@ public class SchuleRepository {
         return staedte;
     }
 
+    public String[] getAllBeratungsstatus()
+    {
+
+        DatabaseConnector.getInstance().executeStatement("SELECT DISTINCT Beratungsstatus FROM Schulen ORDER BY Beratungsstatus ASC;");
+        QueryResult result = DatabaseConnector.getInstance().getCurrentQueryResult();
+        String[] beratungsstati = new String[result.getRowCount()];
+        for(int i = 0; i < result.getRowCount(); i++)
+        {
+            beratungsstati[i] = result.getData()[i][0];
+        }
+        return beratungsstati;
+    }
+
     public String[] getAllStaedte()
     {
         DatabaseConnector.getInstance().executeStatement("SELECT DISTINCT Ort FROM Schulen ORDER BY Ort ASC;");
@@ -168,14 +181,14 @@ public class SchuleRepository {
                     schule.getVorwahl()+"',Rufnummer ='"+schule.getRufnummer()+"',SF ='"+schule.getSF()+"',Schultyp ='"+schule.getSchultyp()+"',Mailadresse ='"+schule.getMailadresse()+"',Bemerkungen='"+
                     schule.getBemerkungen()+"',flag="+schule.isFlag()+",[Status GB]='"+schule.getStatus_GB()+"',[Anbindung Kbit DL]='"+schule.getAnbindung_Kbit_DL()+"',[Anbindung Kbit UL]='"+schule.getAnbindung_Kbit_UL()+"',[Status MK]='"+schule.getStatus_MK()+"',[Status Inhouse]='"+schule.getStatus_Inhouse()+"',lat="+schule.getLat()+",lng="+
                     schule.getLng()+", Standort='"+schule.getStandort()+"', Ansprechpartner='"+schule.getAnsprechpartner()+"', [Telefon Ansprechpartner]='"+schule.getTelefon_Ansprechpartner()+"', [Email Ansprechpartner]='"+schule.getEmail_Ansprechpartner()+"', Schuelerzahl="+schule.getSchuelerzahl()+", Ausbau='"+schule.getAusbau(false)+"'," +
-                    "Klassenanzahl="+schule.getKlassenanzahl()+",[PWC Download]="+schule.getPWCDownload()+",[PWC Upload]="+schule.getPWCUpload()+", schuelerzahlIT="+schule.getSchuelerzahlIT()+", schultraeger='"+schule.getSchultraeger()+"' WHERE id="+schule.getId()+";";
+                    "Klassenanzahl="+schule.getKlassenanzahl()+",[PWC Download]="+schule.getPWCDownload()+",[PWC Upload]="+schule.getPWCUpload()+", schuelerzahlIT="+schule.getSchuelerzahlIT()+", schultraeger='"+schule.getSchultraeger()+"', Beratungsstatus='"+schule.getBeratungsstatus()+"' WHERE id="+schule.getId()+";";
             else
                 query = "UPDATE Schulen SET SNR="+schule.getSNR()+",[Name der Schule]='"+
                     schule.getName_der_Schule()+"',[Art der Schule]='"+schule.getArt_der_Schule()+"',PLZ="+schule.getPLZ()+",Ort='"+schule.getOrt()+"',[Straße + Hsnr.]='"+schule.getStrasse_Hsnr()+"',[Zuständiges Schulamt]='"+schule.getZustaendiges_Schulamt()+"',Vorwahl ='"+
                     schule.getVorwahl()+"',Rufnummer ='"+schule.getRufnummer()+"',SF ='"+schule.getSF()+"',Schultyp ='"+schule.getSchultyp()+"',Mailadresse ='"+schule.getMailadresse()+"',Bemerkungen='"+
                     schule.getBemerkungen()+"',flag="+schule.isFlag()+",[Status GB]='"+schule.getStatus_GB()+"',[Anbindung Kbit DL]='"+schule.getAnbindung_Kbit_DL()+"',[Anbindung Kbit UL]='"+schule.getAnbindung_Kbit_UL()+"',[Status MK]='"+schule.getStatus_MK()+"',[Status Inhouse]='"+
                     schule.getStatus_Inhouse()+"', Standort='"+schule.getStandort()+"', Ansprechpartner='"+schule.getAnsprechpartner()+"', [Telefon Ansprechpartner]='"+schule.getTelefon_Ansprechpartner()+"', [Email Ansprechpartner]='"+schule.getEmail_Ansprechpartner()+"', Schuelerzahl="+schule.getSchuelerzahl()+", Ausbau='"+schule.getAusbau(false)+"'," +
-                    "Klassenanzahl="+schule.getKlassenanzahl()+",[PWC Download]="+schule.getPWCDownload()+",[PWC Upload]="+schule.getPWCUpload()+", schuelerzahlIT="+schule.getSchuelerzahlIT()+", schultraeger='"+schule.getSchultraeger()+"' WHERE id="+schule.getId()+";";
+                    "Klassenanzahl="+schule.getKlassenanzahl()+",[PWC Download]="+schule.getPWCDownload()+",[PWC Upload]="+schule.getPWCUpload()+", schuelerzahlIT="+schule.getSchuelerzahlIT()+", schultraeger='"+schule.getSchultraeger()+"', Beratungsstatus='"+schule.getBeratungsstatus()+"' WHERE id="+schule.getId()+";";
 
             DatabaseConnector.getInstance().executeStatement(query);
             if(!oldSchule.isEqualTo(schule)) {
@@ -186,9 +199,9 @@ public class SchuleRepository {
         }
         else
         {
-            String query = "INSERT INTO Schulen VALUES(null,'"+schule.getSNR()+"','"+schule.getName_der_Schule()+"','"+schule.getArt_der_Schule()+"','"+schule.getPLZ()+"','"+schule.getOrt()+"','"+schule.getStrasse_Hsnr()+"','"+schule.getZustaendiges_Schulamt()+"','"+schule.getVorwahl()+"','"+schule.getRufnummer()+"','"+schule.getSF()+"','"+schule.getSchultyp()+"','"+schule.getMailadresse()+"','"+schule.getBemerkungen()+"','"+schule.isFlag()+"','"+schule.getStatus_GB()+"','"+schule.getAnbindung_Kbit_DL()+"','"+schule.getAnbindung_Kbit_UL()+"','"+schule.getStatus_MK()+"','"+schule.getStatus_Inhouse()+"','"+schule.getLat()+"','"+schule.getLng()+"','"+schule.getStandort()+"','"+schule.getAnsprechpartner()+"','"+schule.getTelefon_Ansprechpartner()+"','"+schule.getEmail_Ansprechpartner()+"', "+schule.getSchuelerzahl()+",'"+schule.getAusbau(false)+"',"+schule.getKlassenanzahl()+","+schule.getPWCDownload()+","+schule.getPWCUpload()+", "+schule.getSchuelerzahlIT()+",'"+schule.getSchultraeger()+"');";
+            String query = "INSERT INTO Schulen VALUES(null,'"+schule.getSNR()+"','"+schule.getName_der_Schule()+"','"+schule.getArt_der_Schule()+"','"+schule.getPLZ()+"','"+schule.getOrt()+"','"+schule.getStrasse_Hsnr()+"','"+schule.getZustaendiges_Schulamt()+"','"+schule.getVorwahl()+"','"+schule.getRufnummer()+"','"+schule.getSF()+"','"+schule.getSchultyp()+"','"+schule.getMailadresse()+"','"+schule.getBemerkungen()+"','"+schule.isFlag()+"','"+schule.getStatus_GB()+"','"+schule.getAnbindung_Kbit_DL()+"','"+schule.getAnbindung_Kbit_UL()+"','"+schule.getStatus_MK()+"','"+schule.getStatus_Inhouse()+"','"+schule.getLat()+"','"+schule.getLng()+"','"+schule.getStandort()+"','"+schule.getAnsprechpartner()+"','"+schule.getTelefon_Ansprechpartner()+"','"+schule.getEmail_Ansprechpartner()+"', "+schule.getSchuelerzahl()+",'"+schule.getAusbau(false)+"',"+schule.getKlassenanzahl()+","+schule.getPWCDownload()+","+schule.getPWCUpload()+", "+schule.getSchuelerzahlIT()+",'"+schule.getSchultraeger()+"', '"+schule.getBeratungsstatus()+"');";
             DatabaseConnector.getInstance().executeStatement(query);
-            logEntry = new LogEntry("Neue Schule angelegt. Werte: '"+schule.getSNR()+"','"+schule.getName_der_Schule()+"','"+schule.getArt_der_Schule()+"','"+schule.getPLZ()+"','"+schule.getOrt()+"','"+schule.getStrasse_Hsnr()+"','"+schule.getZustaendiges_Schulamt()+"','"+schule.getVorwahl()+"','"+schule.getRufnummer()+"','"+schule.getSF()+"','"+schule.getSchultyp()+"','"+schule.getMailadresse()+"','"+schule.getBemerkungen()+"','"+schule.isFlag()+"','"+schule.getStatus_GB()+"','"+schule.getAnbindung_Kbit_DL()+"','"+schule.getAnbindung_Kbit_UL()+"','"+schule.getStatus_MK()+"','"+schule.getStatus_Inhouse()+"','"+schule.getLat()+"','"+schule.getLng()+"','"+schule.getStandort()+"','"+schule.getAnsprechpartner()+"','"+schule.getTelefon_Ansprechpartner()+"','"+schule.getEmail_Ansprechpartner()+"', "+schule.getSchuelerzahl()+",'"+schule.getAusbau(false)+"', "+schule.getKlassenanzahl()+","+schule.getPWCDownload()+","+schule.getPWCUpload()+", "+schule.getSchuelerzahlIT()+", '"+schule.getSchultraeger()+"'");
+            logEntry = new LogEntry("Neue Schule angelegt. Werte: '"+schule.getSNR()+"','"+schule.getName_der_Schule()+"','"+schule.getArt_der_Schule()+"','"+schule.getPLZ()+"','"+schule.getOrt()+"','"+schule.getStrasse_Hsnr()+"','"+schule.getZustaendiges_Schulamt()+"','"+schule.getVorwahl()+"','"+schule.getRufnummer()+"','"+schule.getSF()+"','"+schule.getSchultyp()+"','"+schule.getMailadresse()+"','"+schule.getBemerkungen()+"','"+schule.isFlag()+"','"+schule.getStatus_GB()+"','"+schule.getAnbindung_Kbit_DL()+"','"+schule.getAnbindung_Kbit_UL()+"','"+schule.getStatus_MK()+"','"+schule.getStatus_Inhouse()+"','"+schule.getLat()+"','"+schule.getLng()+"','"+schule.getStandort()+"','"+schule.getAnsprechpartner()+"','"+schule.getTelefon_Ansprechpartner()+"','"+schule.getEmail_Ansprechpartner()+"', "+schule.getSchuelerzahl()+",'"+schule.getAusbau(false)+"', "+schule.getKlassenanzahl()+","+schule.getPWCDownload()+","+schule.getPWCUpload()+", "+schule.getSchuelerzahlIT()+", '"+schule.getSchultraeger()+"', '"+schule.getBeratungsstatus()+"'");
             logEntryRepository.save(logEntry);
         }
         /*
@@ -356,27 +369,27 @@ public class SchuleRepository {
         return new Schule(new ArrayList<String>(Arrays.asList(result.getData()[0])),true);
     }
 
-    public ArrayList<Schule> getAllSchools(String filterSNR,String filterOrt,String filterSchulamt, String filterAusbau)
+    public ArrayList<Schule> getAllSchools(String filterSNR,String filterOrt,String filterSchulamt, String filterAusbau, String filterBeratungsstatus)
     {
         String query = "SELECT * FROM Schulen";
-        if(!filterOrt.equals("-") || !filterSchulamt.equals("-") || !filterSNR.equals("") || !filterAusbau.equals("alle"))
+        if(!filterOrt.equals("-") || !filterSchulamt.equals("-") || !filterSNR.equals("") || !filterAusbau.equals("alle") || !filterBeratungsstatus.equals("alle"))
             query+=" WHERE ";
         if(!filterSNR.equals(""))
         {
             query+= "SNR LIKE '%"+filterSNR+"%'";
-            if(!filterSchulamt.equals("-") || !filterOrt.equals("-") || !filterAusbau.equals("alle"))
+            if(!filterSchulamt.equals("-") || !filterOrt.equals("-") || !filterAusbau.equals("alle") || !filterBeratungsstatus.equals("alle"))
                 query+= " AND ";
         }
         if(!filterSchulamt.equals("-"))
         {
             query+= "[Zuständiges Schulamt] LIKE '"+filterSchulamt+"'";
-            if(!filterOrt.equals("-") || !filterAusbau.equals("alle"))
+            if(!filterOrt.equals("-") || !filterAusbau.equals("alle") || !filterBeratungsstatus.equals("alle"))
                 query+= " AND ";
         }
         if(!filterOrt.equals("-"))
         {
             query+= "Ort LIKE '"+filterOrt+"'";
-            if(!filterAusbau.equals("alle"))
+            if(!filterAusbau.equals("alle") || !filterBeratungsstatus.equals("alle"))
                 query+= " AND ";
         }
         if(!filterAusbau.equals("alle"))
@@ -385,6 +398,12 @@ public class SchuleRepository {
                 query+= "Ausbau LIKE 'Bund%'";
             else
                 query+= "Ausbau LIKE '"+filterAusbau+"'";
+            if(!filterBeratungsstatus.equals("alle"))
+                query+= " AND ";
+        }
+        if(!filterBeratungsstatus.equals("alle"))
+        {
+            query+= "Beratungsstatus LIKE '"+filterBeratungsstatus+"'";
         }
         query += ";";
         DatabaseConnector.getInstance().executeStatement(query);

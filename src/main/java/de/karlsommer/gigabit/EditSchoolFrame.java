@@ -54,6 +54,7 @@ public class EditSchoolFrame implements DataUpdater {
     private JTextField textFieldPWCDownload;
     private JTextField textFieldSchuelerzahlIT;
     private JTextField textFieldSchultraeger;
+    private JComboBox comboBoxBeratungsstatus;
     private Schule schule;
     private AddTeilstandortFrame addTeilstandortFrame;
     private JFrame teilstandortBearbeitenFrame;
@@ -62,9 +63,11 @@ public class EditSchoolFrame implements DataUpdater {
     private DataUpdater dataUpdater;
     //Erlaubte Ausbauvarianten
     public static final String[] ausbauArray = new String[] { AUSBAU_AUSGEBAUT, AUSBAU_EIGENWIRTSCHAFTLICH,AUSBAU_BUND,AUSBAU_BUND_1,AUSBAU_BUND_2,AUSBAU_BUND_3,AUSBAU_BUND_4,AUSBAU_BUND_5,AUSBAU_BUND_6,AUSBAU_BUND_SONDER,AUSBAU_LAND,AUSBAU_UNGEKLAERT, AUSBAU_ERMTTELT_BUND, AUSBAU_ERMTTELT_LAND };
+    public static final String[] beratungsArray = new String[] { BERATUNGSSTATUS_ANGESCHOSSEN,BERATUNGSSTATUS_UMSETZUNG, BERATUNGSSTATUS_IN_BEARBEITUNG,BERATUNGSSTATUS_IN_BERATUNG,BERATUNGSSTATUS_KONTAKT_AUFNEHMEN,BERATUNGSSTATUS_KEIN_INTERESSE};
 
     private void createUIComponents() {
         comboBoxAusbaustatus = new JComboBox<>(ausbauArray);
+        comboBoxBeratungsstatus = new JComboBox<>(beratungsArray);
     }
 
     public EditSchoolFrame(JFrame frame, DataUpdater dataUpdater) {
@@ -143,6 +146,7 @@ public class EditSchoolFrame implements DataUpdater {
                     schule.setSchuelerzahlIT(0);
 
                 schule.setAusbau((String) comboBoxAusbaustatus.getSelectedItem());
+                schule.setBeratungsstatus((String)comboBoxBeratungsstatus.getSelectedItem());
                 schule.setSchultraeger(textFieldSchultraeger.getText());
                 schuleRepository.save(schule);
 
@@ -207,6 +211,11 @@ public class EditSchoolFrame implements DataUpdater {
             comboBoxAusbaustatus.setSelectedIndex((Arrays.asList(ausbauArray)).indexOf(schule.getAusbau(false)));
         else
             comboBoxAusbaustatus.setSelectedIndex((Arrays.asList(ausbauArray)).indexOf(AUSBAU_UNGEKLAERT));
+
+        if((Arrays.asList(beratungsArray)).contains(schule.getBeratungsstatus()))
+            comboBoxBeratungsstatus.setSelectedIndex((Arrays.asList(beratungsArray)).indexOf(schule.getBeratungsstatus()));
+        else
+            comboBoxBeratungsstatus.setSelectedIndex((Arrays.asList(beratungsArray)).indexOf(BERATUNGSSTATUS_KONTAKT_AUFNEHMEN));
 
 
         if(schuleRepository.getTeilstandorteZu(String.valueOf(schule.getSNR())).size() > 0)

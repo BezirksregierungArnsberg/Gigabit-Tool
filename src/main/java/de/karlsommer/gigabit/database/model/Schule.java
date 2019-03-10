@@ -54,6 +54,13 @@ public class Schule {
     public static final String AUSBAU_BUND_SONDER = "Bund Sonderaufruf";
     public static final String AUSBAU_LAND = "Land";
     public static final String AUSBAU_UNGEKLAERT = "Ungeklärt";
+
+    public static final String BERATUNGSSTATUS_KEIN_INTERESSE = "Kein Interesse";
+    public static final String BERATUNGSSTATUS_ANGESCHOSSEN = "Angeschlossen";
+    public static final String BERATUNGSSTATUS_UMSETZUNG = "Umsetzung";
+    public static final String BERATUNGSSTATUS_IN_BEARBEITUNG = "In Bearbeitung";
+    public static final String BERATUNGSSTATUS_IN_BERATUNG = "In Beratung";
+    public static final String BERATUNGSSTATUS_KONTAKT_AUFNEHMEN = "Kontakt aufnehmen";
     
     private int id;
     private int SNR;
@@ -88,6 +95,16 @@ public class Schule {
     private int klassenanzahl;
     private int schuelerzahlIT;
     private String schultraeger;
+    private String beratungsstatus;
+
+    public String getBeratungsstatus() {
+        return beratungsstatus;
+    }
+
+    public void setBeratungsstatus(String beratungsstatus) {
+        this.beratungsstatus = beratungsstatus;
+    }
+
 
 
     public String getSchultraeger() {
@@ -285,6 +302,7 @@ public class Schule {
             this.PWCUpload = Integer.parseInt(daten.get(i++));
             this.schuelerzahlIT = Integer.parseInt(daten.get(i++));
             this.schultraeger = daten.get(i++);
+            this.beratungsstatus = daten.get(i++);
         }
         else
         {
@@ -534,7 +552,7 @@ public class Schule {
 
 
     // Anzuzeigende Spalten in der Übersicht.
-   public static final String ausgabeSpalten[] = {"id","SNR","Name der Schule", "PLZ","Ort", "Strasse und HsNr","Download", "Upload", "Schüleranzahl","Schülerzahl von IT", "Ausbau", "Schulamt"};
+   public static final String ausgabeSpalten[] = {"id","SNR","Name der Schule", "PLZ","Ort", "Strasse und HsNr","Download", "Upload", "Schüleranzahl","Schülerzahl von IT", "Beratungsstatus","Ausbau", "Schulamt"};
 
 
     /**
@@ -571,6 +589,7 @@ public class Schule {
         this.setEmail_Ansprechpartner(getStringValue(row.getCell(i++)));
         this.setSchuelerzahl(getIntValue(row.getCell(i++)));
         this.setAusbau(getStringValue(row.getCell(i++)));
+        this.setBeratungsstatus(getStringValue(row.getCell(i++)));
         this.setKlassenanzahl(getIntValue(row.getCell(i++)));
         this.setPWCDownload(getIntValue(row.getCell(i++)));
         this.setPWCUpload(getIntValue(row.getCell(i++)));
@@ -733,6 +752,10 @@ public class Schule {
         if(this.schuelerzahlIT != schule.getSchuelerzahlIT())
         {
             returnString += "schuelerzahlIT von "+this.schuelerzahlIT+" zu "+schule.getSchuelerzahlIT()+" ";
+        }
+        if(this.beratungsstatus != schule.getBeratungsstatus())
+        {
+            returnString += "Beratungsstatus von "+this.beratungsstatus+" zu "+schule.getBeratungsstatus()+" ";
         }
         return returnString;
     }
@@ -919,6 +942,7 @@ public class Schule {
         v.add(String.valueOf(Anbindung_Kbit_UL));
         v.add(String.valueOf(Schuelerzahl));
         v.add(String.valueOf(schuelerzahlIT));
+        v.add(String.valueOf(beratungsstatus));
         v.add(String.valueOf(Ausbau));
         v.add(String.valueOf(Zustaendiges_Schulamt));
         return v;

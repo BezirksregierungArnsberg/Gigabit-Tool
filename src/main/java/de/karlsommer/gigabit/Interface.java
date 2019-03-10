@@ -39,9 +39,9 @@ import static org.apache.commons.lang.StringUtils.trim;
 
 public class Interface implements DataUpdater {
 
-    public static final boolean RELEASE = true; // Sollen die Admin-Optionen mit eingeblendet werden, auf true stellen, wenn Version für Anwender compiliert wird.
-    public static final String version = "1.73"; //Versionsnummer
-    public static final String releaseDate = "19.02.2019"; //Versionsdatum
+    public static final boolean RELEASE = false; // Sollen die Admin-Optionen mit eingeblendet werden, auf true stellen, wenn Version für Anwender compiliert wird.
+    public static final String version = "1.9"; //Versionsnummer
+    public static final String releaseDate = "08.03.2019"; //Versionsdatum
     public static final String IMPORT_STRING_NOTHING = "-";
     public static final String IMPORT_STRING_SCHULE_MIT_FEHLENDEN_GEOCOORDINATEN = "Schule mit fehlenden Geocoordinaten zeigen";
     public static final String IMPORT_STRING_GEOCOORDINATEN_IN_DB_LADEN = "Geocoordinaten in DB laden";
@@ -74,6 +74,8 @@ public class Interface implements DataUpdater {
     private JComboBox comboBoxAdminExport;
     private JButton adminExportButton;
     private JButton sendMailButton;
+    private JButton berichtSchreibenButton;
+    private JComboBox comboBoxBeratungsstatus;
     private String filename = "";
     private GoogleGeoUtils geoUtils;
     private ImportBuilder builder;
@@ -139,6 +141,8 @@ public class Interface implements DataUpdater {
                 filterSNR = "";
                 filterOrt = "-";
                 filterSchulamt = "-";
+                filterAusbau = "alle";
+                filterBeratungsstatus = "alle";
                 updateData();
             }
         });
@@ -151,6 +155,7 @@ public class Interface implements DataUpdater {
                 filterSchulamt = ((String)comboBoxSchulaemter.getSelectedItem());
                 filterOrt = ((String)comboBoxOrte.getSelectedItem());
                 filterAusbau = ((String)comboBoxAusbaustatus.getSelectedItem());
+                filterBeratungsstatus = ((String)comboBoxBeratungsstatus.getSelectedItem());
                 updateData();
             }
         });
@@ -159,7 +164,7 @@ public class Interface implements DataUpdater {
         exportButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                ArrayList<Schule> schulen = schuleRepository.getAllSchools(filterSNR,filterOrt,filterSchulamt,filterAusbau);
+                ArrayList<Schule> schulen = schuleRepository.getAllSchools(filterSNR,filterOrt,filterSchulamt,filterAusbau,filterBeratungsstatus);
                 DocumentWriter documentWriter = new DocumentWriter();
                 documentWriter.writeSchulenInExcel(schulen);
 
@@ -335,6 +340,22 @@ public class Interface implements DataUpdater {
                 }
             }
         });
+        berichtSchreibenButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                generateBericht();
+            }
+        });
+    }
+
+    private void generateBericht()
+    {
+        DocumentWriter documentWriter = new DocumentWriter();
+        try {
+            documentWriter.writeExcelBericht();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -935,6 +956,7 @@ public class Interface implements DataUpdater {
     private String filterOrt = "-"; //Filtertext nach Ort
     private String filterSchulamt = "-"; //Filter nach Schulamt
     private String filterAusbau = "alle"; //Filter nach Ausbaustatus
+    private String filterBeratungsstatus = "alle"; //Filter nach Beratungsstatus
 
 
     /**
@@ -942,7 +964,7 @@ public class Interface implements DataUpdater {
      */
     public void updateData()
     {
-        ArrayList<Schule> schulen = schuleRepository.getAllSchools(filterSNR,filterOrt,filterSchulamt,filterAusbau);
+        ArrayList<Schule> schulen = schuleRepository.getAllSchools(filterSNR,filterOrt,filterSchulamt,filterAusbau,filterBeratungsstatus);
         String ausgabe = "Alle Schulen";
         if(!filterOrt.equals("-") || !filterSchulamt.equals("-") || !filterSNR.equals("") || !filterAusbau.equals("alle"))
             ausgabe+=" mit ";
@@ -967,6 +989,10 @@ public class Interface implements DataUpdater {
         if(!filterAusbau.equals("alle"))
         {
             ausgabe+= "Ausbaustatus ist "+filterAusbau+"";
+        }
+        if(!filterBeratungsstatus.equals("alle"))
+        {
+            ausgabe+= "Beratungsstatus ist "+filterBeratungsstatus+"";
         }
         ausgabe+=". Anzahl: "+schulen.size()+".";
         showSchooldataInTable(ausgabeSpalten,schulen,ausgabe, false);
@@ -1018,21 +1044,26 @@ public class Interface implements DataUpdater {
         String[] staedteArray = schuleRepository.getAllStaedte();
         String[] allSschulaemterArray = schuleRepository.getAllSschulaemter();
         String[] allAusbaustatusArray = schuleRepository.getAllAusbaustatus();
+        String[] allBeratungsstatusArray = schuleRepository.getAllBeratungsstatus();
         String importFunctions[] = {IMPORT_STRING_NOTHING, IMPORT_STRING_SCHULE_MIT_FEHLENDEN_GEOCOORDINATEN, IMPORT_STRING_GEOCOORDINATEN_IN_DB_LADEN, IMPORT_STRING_DOPPELTE_GEOCOORDINATEN_VERSCHIEBEN, IMPORT_STRING_DATENBANK_VON_IT_NRW_EINLESEN,IMPORT_STRING_TABELLE_VON_IT_NRW_EINLESEN, IMPORT_STRING_DATEN_AUS_CSV_ABGLEICHEN, IMPORT_STRING_SONDERIMPORT, IMPORT_STRING_GIGABITTABELLE_ABGLEICHEN};
         String exportFunctions[] = {EXPORT_STRING_GIGABIT_KARTE_SCHREIBEN,EXPORT_STRING_BERICHT_SCHREIBEN , EXPORT_STRING_SPEZIALKARTE_SCHREIBEN};
 
         String[] finalStaedteArray = new String[staedteArray.length +1];
         String[] finalSchulaemterArray = new String[allSschulaemterArray.length +1];
+        String[] finalBeratungsstatusArray = new String[allBeratungsstatusArray.length+1];
         String[] finalAusbaustatusArray = new String[allAusbaustatusArray.length +2];
         //Arrays um Leerfelder erweitern
         for(int i=0;i < staedteArray.length;i++)
             finalStaedteArray[i+1] = staedteArray[i];
+        for(int i=0;i < allBeratungsstatusArray.length;i++)
+            finalBeratungsstatusArray[i+1] = allBeratungsstatusArray[i];
         for(int i=0;i < allSschulaemterArray.length;i++)
             finalSchulaemterArray[i+1] = allSschulaemterArray[i];
         for(int i=0;i < allAusbaustatusArray.length;i++)
             finalAusbaustatusArray[i+2] = allAusbaustatusArray[i];
         finalSchulaemterArray[0] = "-";
         finalStaedteArray[0] = "-";
+        finalBeratungsstatusArray[0] = "alle";
         finalAusbaustatusArray[0] = "alle";
         finalAusbaustatusArray[1] = finalAusbaustatusArray[2];
         finalAusbaustatusArray[2] = "Bund (alle)";
@@ -1043,5 +1074,6 @@ public class Interface implements DataUpdater {
         comboBoxAusbaustatus = new JComboBox<>(finalAusbaustatusArray);
         comboBoxAdminImport = new JComboBox<>(importFunctions);
         comboBoxAdminExport = new JComboBox<>(exportFunctions);
+        comboBoxBeratungsstatus = new JComboBox<>(finalBeratungsstatusArray);
     }
 }

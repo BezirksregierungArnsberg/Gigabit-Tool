@@ -305,6 +305,160 @@ public class DocumentWriter {
         workbook.close();
     }
 
+    public void writeExcelBericht() throws Exception
+    {
+        SchuleRepository schuleRepository = new SchuleRepository();
+
+        FileOutputStream out = null;
+        Date date = new Date() ;
+        SimpleDateFormat textDateFormat = new SimpleDateFormat("dd.MM.yyyy") ;
+
+        FileInputStream vorlage = new FileInputStream(new File(Settings.getInstance().getDatabaseFolderPath()+"entwurf_bericht.xlsx"));
+        XSSFWorkbook workbook = new XSSFWorkbook(vorlage);
+
+        CellStyle cellStyleHead = workbook.createCellStyle();
+
+        Font font = workbook.createFont();
+        font.setFontHeightInPoints((short)16);
+        font.setBold(true);
+
+        cellStyleHead.setAlignment(HorizontalAlignment.CENTER);
+        cellStyleHead.setFont(font);
+
+        XSSFSheet sheet = workbook.getSheetAt(0);
+        Row row = sheet.getRow(0);
+        Cell cell = row.getCell(0);
+        cell.setCellValue("Bericht Anbindung der Schulen vom "+textDateFormat.format(date));
+
+        sheet = workbook.getSheetAt(1);
+
+        String [] ausbauArray = new String[]{"Ausgebaut","Bund%","Eigenwirt%","Land%","Ungekl%"};
+        String [] beratungsArray = new String[]{"Angeschlossen","Umsetzung","In Bearbeitung","In Beratung","Kontakt aufnehmen","Kein Interesse"};
+
+        row = sheet.getRow(0);
+        cell = row.getCell(0);
+        cell.setCellValue("Bericht Anbindung der Schulen vom "+textDateFormat.format(date));
+
+        row = sheet.getRow(2);
+        cell = row.getCell(1);
+        cell.setCellValue(schuleRepository.getIntQueryValue("SELECT COUNT(*) FROM Schulen"));
+        int columnum = 1;
+
+        int rownum = 4;
+        for(String ausbau: ausbauArray) {
+            row = sheet.getRow(rownum++);
+            cell = row.getCell(columnum);
+            cell.setCellValue(schuleRepository.getIntQueryValue("SELECT COUNT(*) FROM Schulen WHERE Ausbau LIKE \""+ausbau+"\""));
+        }
+
+
+        rownum = 4;
+        columnum = 3;
+        for(String beratung: beratungsArray) {
+            row = sheet.getRow(rownum++);
+            cell = row.getCell(columnum);
+            cell.setCellValue(schuleRepository.getIntQueryValue("SELECT COUNT(*) FROM Schulen WHERE Beratungsstatus LIKE \""+beratung+"\""));
+        }
+
+
+        int cellnumber = 1;
+
+        for(String ausbau: ausbauArray) {
+            rownum = 13;
+
+            for(String beratung: beratungsArray) {
+                row = sheet.getRow(rownum++);
+                cell = row.createCell(cellnumber);
+                int value = schuleRepository.getIntQueryValue("SELECT COUNT(*) FROM Schulen WHERE Ausbau LIKE \""+ausbau+"\" AND Beratungsstatus LIKE \""+beratung+"\";");
+                if(value > 0)
+                    cell.setCellValue(value);
+
+            }
+            cellnumber++;
+        }
+
+        String[] schuleaemter = schuleRepository.getAllSschulaemter();
+        rownum = 22;
+        for (String schulamt:schuleaemter)
+        {
+            cellnumber = 0;
+            row = sheet.createRow(rownum);
+            cell =row.createCell(cellnumber++);
+            cell.setCellValue(schulamt);
+            cell.setCellStyle(cellStyleHead);
+
+            row = sheet.getRow(rownum);
+            cell = row.createCell(cellnumber++);
+            cell.setCellValue(schuleRepository.getIntQueryValue("SELECT COUNT(*) FROM Schulen WHERE [Zuständiges Schulamt] LIKE \""+schulamt+"\";"));
+
+            for(String beratung: beratungsArray) {
+                row = sheet.getRow(rownum);
+                cell = row.createCell(cellnumber++);
+                int value = schuleRepository.getIntQueryValue("SELECT COUNT(*) FROM Schulen WHERE Beratungsstatus LIKE \""+beratung+"\" AND [Zuständiges Schulamt] LIKE \""+schulamt+"\";");
+                if(value > 0)
+                    cell.setCellValue(value);
+            }
+
+            for(String ausbau: ausbauArray) {
+                row = sheet.getRow(rownum);
+                cell = row.createCell(cellnumber++);
+                int value = schuleRepository.getIntQueryValue("SELECT COUNT(*) FROM Schulen WHERE Ausbau LIKE \""+ausbau+"\" AND [Zuständiges Schulamt] LIKE \""+schulamt+"\";");
+                if(value > 0)
+                    cell.setCellValue(value);
+            }
+
+            rownum++;
+        }
+
+        String[] staedte = schuleRepository.getAllStaedte();
+        cellnumber = columnum;
+        font.setFontHeightInPoints((short)14);
+        font.setBold(false);
+        rownum = 38;
+        for (String stadt : staedte)
+        {
+            cellnumber = 0;
+            row = sheet.createRow(rownum);
+            cell =row.createCell(cellnumber++);
+            cell.setCellValue(stadt);
+            cell.setCellStyle(cellStyleHead);
+
+            row = sheet.getRow(rownum);
+            cell = row.createCell(cellnumber++);
+            cell.setCellValue(schuleRepository.getIntQueryValue("SELECT COUNT(*) FROM Schulen WHERE Ort LIKE \""+stadt+"\";"));
+
+
+            for(String beratung: beratungsArray) {
+                row = sheet.getRow(rownum);
+                cell = row.createCell(cellnumber++);
+                cell.setCellValue(schuleRepository.getIntQueryValue("SELECT COUNT(*) FROM Schulen WHERE Beratungsstatus LIKE \""+beratung+"\" AND Ort LIKE \""+stadt+"\";"));
+            }
+
+            for(String ausbau: ausbauArray) {
+                row = sheet.getRow(rownum);
+                cell = row.createCell(cellnumber++);
+                cell.setCellValue(schuleRepository.getIntQueryValue("SELECT COUNT(*) FROM Schulen WHERE Ausbau LIKE \""+ausbau+"\" AND Ort LIKE \""+stadt+"\";"));
+            }
+
+
+            rownum++;
+        }
+
+        for(int i = 1; i < cellnumber; i++)
+            sheet.autoSizeColumn(i);
+        try {
+            out = new FileOutputStream( new File(Settings.getInstance().getOutputFolderPath()+"Bericht-"+textDateFormat.format(date)+".xlsx"));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        workbook.write(out);
+        out.close();
+
+        // Closing the workbook
+        workbook.close();
+    }
+
 
 
     public void writeAnschlussSchoolTexts() throws Exception
@@ -795,7 +949,7 @@ public class DocumentWriter {
         // Create a Row
         Row headerRow = sheet.createRow(0);
         String[] columns = {"Id", "Schulnummer", "Name der Schule", "Art der Schule", "Schulträger","PLZ", "Ort", "Strasse und Hausnummer","Zuständiges Schulamt","Vorwahl","Rufnummer","Schulform","Schultyp","Mailadresse", "Bemerkungen",
-                "Status GB" , "Anbindung Download", "Anbindung Upload","Status MK", "Status Inhouse","Standort","Ansprechpartner","Telefon Ansprechpartner","Email Ansprechpartner", "Schüleranzahl", "Ausbau", "Klassenanzahl", "PWC-Download", "PWC-Upload","Schülerzahl IT-NRW"};
+                "Status GB" , "Anbindung Download", "Anbindung Upload","Status MK", "Status Inhouse","Standort","Ansprechpartner","Telefon Ansprechpartner","Email Ansprechpartner", "Schüleranzahl", "Ausbau", "Beratungsstatus", "Klassenanzahl", "PWC-Download", "PWC-Upload","Schülerzahl IT-NRW"};
 
         // Create cells
         for(int i = 0; i < columns.length; i++) {
@@ -858,6 +1012,8 @@ public class DocumentWriter {
                     .setCellValue(schule.getSchuelerzahl());
             row.createCell(i++)
                     .setCellValue(schule.getAusbau(false));
+            row.createCell(i++)
+                    .setCellValue(schule.getBeratungsstatus());
             row.createCell(i++)
                     .setCellValue(schule.getKlassenanzahl());
             row.createCell(i++)

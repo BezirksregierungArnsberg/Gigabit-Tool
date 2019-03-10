@@ -11,7 +11,9 @@ import java.awt.event.ActionListener;
 import java.util.Arrays;
 
 import static de.karlsommer.gigabit.EditSchoolFrame.ausbauArray;
+import static de.karlsommer.gigabit.EditSchoolFrame.beratungsArray;
 import static de.karlsommer.gigabit.database.model.Schule.AUSBAU_UNGEKLAERT;
+import static de.karlsommer.gigabit.database.model.Schule.BERATUNGSSTATUS_KONTAKT_AUFNEHMEN;
 import static de.karlsommer.gigabit.database.model.Schule.TEILSTANDORT;
 
 public class AddTeilstandortFrame {
@@ -49,6 +51,7 @@ public class AddTeilstandortFrame {
     private JTextField textFieldSchuelerzahl;
     private JTextField textFieldSchuelerzahlIT;
     private JLabel labelSchultraeger;
+    private JComboBox comboBoxBeratungsstatus;
     private Schule schule;
     private Schule hauptstandort;
     private SchuleRepository schuleRepository;
@@ -125,6 +128,7 @@ public class AddTeilstandortFrame {
                 schule.setSchultyp(AddTeilstandortFrame.this.hauptstandort.getSchultyp());
                 schule.setStandort(TEILSTANDORT);
                 schule.setAusbau((String) comboBoxAusbaustatus.getSelectedItem());
+                schule.setBeratungsstatus((String) comboBoxBeratungsstatus.getSelectedItem());
 
                 schuleRepository.save(schule);
 
@@ -182,6 +186,11 @@ public class AddTeilstandortFrame {
                 comboBoxAusbaustatus.setSelectedIndex((Arrays.asList(ausbauArray)).indexOf(schule.getAusbau(false)));
             else
                 comboBoxAusbaustatus.setSelectedIndex((Arrays.asList(ausbauArray)).indexOf(AUSBAU_UNGEKLAERT));
+
+            if((Arrays.asList(beratungsArray)).contains(schule.getBeratungsstatus()))
+                comboBoxBeratungsstatus.setSelectedIndex((Arrays.asList(beratungsArray)).indexOf(schule.getBeratungsstatus()));
+            else
+                comboBoxBeratungsstatus.setSelectedIndex((Arrays.asList(beratungsArray)).indexOf(BERATUNGSSTATUS_KONTAKT_AUFNEHMEN));
         }else
         {
             jLabelID.setText(String.valueOf(schuleRepository.getMaxID()+1));
@@ -204,10 +213,12 @@ public class AddTeilstandortFrame {
             textFieldSchuelerzahl.setText("");
             textFieldSchuelerzahlIT.setText("");
             comboBoxAusbaustatus.setSelectedIndex((Arrays.asList(ausbauArray)).indexOf(AUSBAU_UNGEKLAERT));
+            comboBoxBeratungsstatus.setSelectedIndex((Arrays.asList(beratungsArray)).indexOf(BERATUNGSSTATUS_KONTAKT_AUFNEHMEN));
         }
     }
 
     private void createUIComponents() {
         comboBoxAusbaustatus = new JComboBox<>(ausbauArray);
+        comboBoxBeratungsstatus = new JComboBox<>(beratungsArray);
     }
 }
