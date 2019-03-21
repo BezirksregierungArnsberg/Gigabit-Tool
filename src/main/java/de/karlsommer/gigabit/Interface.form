@@ -223,6 +223,15 @@
             </constraints>
             <properties/>
           </component>
+          <component id="dba24" class="javax.swing.JButton" binding="aktionsplanSchulenBefüllenButton" default-binding="true">
+            <constraints>
+              <grid row="8" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+              <gridbag weightx="0.0" weighty="0.0"/>
+            </constraints>
+            <properties>
+              <text value="Aktionsplan Schulen befüllen"/>
+            </properties>
+          </component>
         </children>
       </grid>
       <component id="e67fb" class="javax.swing.JLabel" binding="ausgabeLabel">

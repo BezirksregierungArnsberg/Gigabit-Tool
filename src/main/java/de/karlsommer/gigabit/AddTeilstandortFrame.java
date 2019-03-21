@@ -52,6 +52,8 @@ public class AddTeilstandortFrame {
     private JTextField textFieldSchuelerzahlIT;
     private JLabel labelSchultraeger;
     private JComboBox comboBoxBeratungsstatus;
+    private JTextField textFieldAktenzeichenBund;
+    private JTextField textFieldAktenzeichenLand;
     private Schule schule;
     private Schule hauptstandort;
     private SchuleRepository schuleRepository;
@@ -129,6 +131,8 @@ public class AddTeilstandortFrame {
                 schule.setStandort(TEILSTANDORT);
                 schule.setAusbau((String) comboBoxAusbaustatus.getSelectedItem());
                 schule.setBeratungsstatus((String) comboBoxBeratungsstatus.getSelectedItem());
+                schule.setAktenzeichenBund(textFieldAktenzeichenBund.getText());
+                schule.setAktenzeichenLand(textFieldAktenzeichenLand.getText());
 
                 schuleRepository.save(schule);
 
@@ -181,6 +185,8 @@ public class AddTeilstandortFrame {
             textFieldSchuelerzahl.setText(String.valueOf(schule.getSchuelerzahl()));
             textFieldKlassenanzahl.setText(String.valueOf(schule.getKlassenanzahl()));
             textFieldSchuelerzahlIT.setText(String.valueOf(schule.getSchuelerzahlIT()));
+            textFieldAktenzeichenBund.setText(schule.getAktenzeichenBund());
+            textFieldAktenzeichenLand.setText(schule.getAktenzeichenLand());
 
             if((Arrays.asList(ausbauArray)).contains(schule.getAusbau(false)))
                 comboBoxAusbaustatus.setSelectedIndex((Arrays.asList(ausbauArray)).indexOf(schule.getAusbau(false)));
@@ -214,6 +220,8 @@ public class AddTeilstandortFrame {
             textFieldSchuelerzahlIT.setText("");
             comboBoxAusbaustatus.setSelectedIndex((Arrays.asList(ausbauArray)).indexOf(AUSBAU_UNGEKLAERT));
             comboBoxBeratungsstatus.setSelectedIndex((Arrays.asList(beratungsArray)).indexOf(BERATUNGSSTATUS_KONTAKT_AUFNEHMEN));
+            textFieldAktenzeichenBund.setText("");
+            textFieldAktenzeichenLand.setText("");
         }
     }
 

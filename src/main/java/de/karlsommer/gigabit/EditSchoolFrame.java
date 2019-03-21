@@ -55,6 +55,8 @@ public class EditSchoolFrame implements DataUpdater {
     private JTextField textFieldSchuelerzahlIT;
     private JTextField textFieldSchultraeger;
     private JComboBox comboBoxBeratungsstatus;
+    private JTextField textFieldAktenzeichenBund;
+    private JTextField textFieldAktenzeichenLand;
     private Schule schule;
     private AddTeilstandortFrame addTeilstandortFrame;
     private JFrame teilstandortBearbeitenFrame;
@@ -62,7 +64,7 @@ public class EditSchoolFrame implements DataUpdater {
     private JFrame frame;
     private DataUpdater dataUpdater;
     //Erlaubte Ausbauvarianten
-    public static final String[] ausbauArray = new String[] { AUSBAU_AUSGEBAUT, AUSBAU_EIGENWIRTSCHAFTLICH,AUSBAU_BUND,AUSBAU_BUND_1,AUSBAU_BUND_2,AUSBAU_BUND_3,AUSBAU_BUND_4,AUSBAU_BUND_5,AUSBAU_BUND_6,AUSBAU_BUND_SONDER,AUSBAU_LAND,AUSBAU_UNGEKLAERT, AUSBAU_ERMTTELT_BUND, AUSBAU_ERMTTELT_LAND };
+    public static final String[] ausbauArray = new String[] { AUSBAU_AUSGEBAUT, AUSBAU_EIGENWIRTSCHAFTLICH,AUSBAU_BUND,AUSBAU_BUND_1,AUSBAU_BUND_2,AUSBAU_BUND_3,AUSBAU_BUND_4,AUSBAU_BUND_5,AUSBAU_BUND_6,AUSBAU_BUND_SONDER,AUSBAU_LAND,AUSBAU_UNGEKLAERT, AUSBAU_ERMTTELT_BUND, AUSBAU_ERMTTELT_LAND, AUSBAU_RWP };
     public static final String[] beratungsArray = new String[] { BERATUNGSSTATUS_ANGESCHOSSEN,BERATUNGSSTATUS_UMSETZUNG, BERATUNGSSTATUS_IN_BEARBEITUNG,BERATUNGSSTATUS_IN_BERATUNG,BERATUNGSSTATUS_KONTAKT_AUFNEHMEN,BERATUNGSSTATUS_KEIN_INTERESSE};
 
     private void createUIComponents() {
@@ -148,6 +150,8 @@ public class EditSchoolFrame implements DataUpdater {
                 schule.setAusbau((String) comboBoxAusbaustatus.getSelectedItem());
                 schule.setBeratungsstatus((String)comboBoxBeratungsstatus.getSelectedItem());
                 schule.setSchultraeger(textFieldSchultraeger.getText());
+                schule.setAktenzeichenBund(textFieldAktenzeichenBund.getText());
+                schule.setAktenzeichenLand(textFieldAktenzeichenLand.getText());
                 schuleRepository.save(schule);
 
                 EditSchoolFrame.this.dataUpdater.updateData();
@@ -168,7 +172,7 @@ public class EditSchoolFrame implements DataUpdater {
     public void setSchule(Schule schule)
     {
         if(!schule.getStandort().equals(HAUPTSTANDORT))
-            this.schule = schuleRepository.getSchoolWithSNR(String.valueOf(schule.getSNR()));
+            this.schule = schuleRepository.getSchoolWith(KEY_SNR+"="+String.valueOf(schule.getSNR()));
         this.schule = schule;
         updateData();
     }
@@ -206,6 +210,8 @@ public class EditSchoolFrame implements DataUpdater {
         textFieldKlassenanzahl.setText(String.valueOf(schule.getKlassenanzahl()));
         textFieldSchuelerzahlIT.setText(String.valueOf(schule.getSchuelerzahlIT()));
         textFieldSchultraeger.setText(this.schule.getSchultraeger());
+        textFieldAktenzeichenBund.setText(schule.getAktenzeichenBund());
+        textFieldAktenzeichenLand.setText(schule.getAktenzeichenLand());
 
         if((Arrays.asList(ausbauArray)).contains(schule.getAusbau(false)))
             comboBoxAusbaustatus.setSelectedIndex((Arrays.asList(ausbauArray)).indexOf(schule.getAusbau(false)));
@@ -218,7 +224,7 @@ public class EditSchoolFrame implements DataUpdater {
             comboBoxBeratungsstatus.setSelectedIndex((Arrays.asList(beratungsArray)).indexOf(BERATUNGSSTATUS_KONTAKT_AUFNEHMEN));
 
 
-        if(schuleRepository.getTeilstandorteZu(String.valueOf(schule.getSNR())).size() > 0)
+        if(schuleRepository.getSchools(KEY_SNR+"="+schule.getSNR()+" AND "+KEY_STANDORT+"='T';").size() > 0)
             showTeilstandorteInTable();
         else {
             DefaultTableModel model = (DefaultTableModel) ausgabeTabelle.getModel();
@@ -230,7 +236,7 @@ public class EditSchoolFrame implements DataUpdater {
 
     private void showTeilstandorteInTable() {
         DefaultTableModel tableModel = new DefaultTableModel(ausgabeSpalten,0);
-        for (Schule teilstandOrt : schuleRepository.getTeilstandorteZu(String.valueOf(schule.getSNR()))) {
+        for (Schule teilstandOrt : schuleRepository.getSchools(KEY_SNR+"="+schule.getSNR()+" AND "+KEY_STANDORT+"='T';")) {
             tableModel.addRow(teilstandOrt.getVector());
         }
         ausgabeTabelle.setAutoCreateRowSorter(true);
@@ -240,7 +246,7 @@ public class EditSchoolFrame implements DataUpdater {
                 // Teilstandorte-Dialog zeigen
                 if(ausgabeTabelle.getSelectedRow()>-1)
                 {
-                    addTeilstandortFrame.setSchule(schuleRepository.getSchoolWithID(ausgabeTabelle.getValueAt(ausgabeTabelle.getSelectedRow(), 0).toString()), schule);
+                    addTeilstandortFrame.setSchule(schuleRepository.getSchoolWith(KEY_ID+"="+ausgabeTabelle.getValueAt(ausgabeTabelle.getSelectedRow(), 0).toString()), schule);
                     teilstandortBearbeitenFrame.setVisible(true);
                 }
             }

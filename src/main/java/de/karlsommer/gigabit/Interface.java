@@ -10,12 +10,12 @@ import de.karlsommer.gigabit.database.model.Schule;
 import de.karlsommer.gigabit.helper.DataUpdater;
 import de.karlsommer.gigabit.helper.Settings;
 import org.apache.commons.lang.StringUtils;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import javax.mail.Message;
-import javax.mail.Message.RecipientType;
 import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.Transport;
@@ -40,8 +40,8 @@ import static org.apache.commons.lang.StringUtils.trim;
 public class Interface implements DataUpdater {
 
     public static final boolean RELEASE = false; // Sollen die Admin-Optionen mit eingeblendet werden, auf true stellen, wenn Version für Anwender compiliert wird.
-    public static final String version = "1.9"; //Versionsnummer
-    public static final String releaseDate = "08.03.2019"; //Versionsdatum
+    public static final String version = "1.11"; //Versionsnummer
+    public static final String releaseDate = "21.03.2019"; //Versionsdatum
     public static final String IMPORT_STRING_NOTHING = "-";
     public static final String IMPORT_STRING_SCHULE_MIT_FEHLENDEN_GEOCOORDINATEN = "Schule mit fehlenden Geocoordinaten zeigen";
     public static final String IMPORT_STRING_GEOCOORDINATEN_IN_DB_LADEN = "Geocoordinaten in DB laden";
@@ -76,6 +76,7 @@ public class Interface implements DataUpdater {
     private JButton sendMailButton;
     private JButton berichtSchreibenButton;
     private JComboBox comboBoxBeratungsstatus;
+    private JButton aktionsplanSchulenBefüllenButton;
     private String filename = "";
     private GoogleGeoUtils geoUtils;
     private ImportBuilder builder;
@@ -164,7 +165,7 @@ public class Interface implements DataUpdater {
         exportButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                ArrayList<Schule> schulen = schuleRepository.getAllSchools(filterSNR,filterOrt,filterSchulamt,filterAusbau,filterBeratungsstatus);
+                ArrayList<Schule> schulen = schuleRepository.getSchoolsWithCondition(filterSNR,filterOrt,filterSchulamt,filterAusbau,filterBeratungsstatus);
                 DocumentWriter documentWriter = new DocumentWriter();
                 documentWriter.writeSchulenInExcel(schulen);
 
@@ -195,8 +196,8 @@ public class Interface implements DataUpdater {
                     for(int i = 1; i <= sheet.getLastRowNum() && sheet.getRow(i).getCell(0) != null;i++){
 
                         XSSFRow row = sheet.getRow(i);
-                        if(schuleRepository.schoolWithIDExists(Integer.parseInt((row.getCell(0) + " ").split("\\.")[0]))) {
-                            Schule toUpdate = schuleRepository.getSchoolWithID((row.getCell(0) + " ").split("\\.")[0]);
+                        if(schuleRepository.entryExisits(KEY_ID,(row.getCell(0) + " ").split("\\.")[0])) {
+                            Schule toUpdate = schuleRepository.getSchoolWith(KEY_ID+"="+(row.getCell(0) + " ").split("\\.")[0]);
                             toUpdate.updateData(row);
                             schuleRepository.save(toUpdate);
                         }
@@ -237,10 +238,10 @@ public class Interface implements DataUpdater {
                         doppelteGeocoordinatenVerschieben();
                         break;
                     case IMPORT_STRING_DATENBANK_VON_IT_NRW_EINLESEN:
-                        tabelleVonITNRWDatenbankEinlesen();
+                        datenbankVonITNRWEinlesen();
                         break;
                     case IMPORT_STRING_TABELLE_VON_IT_NRW_EINLESEN:
-                        datenbankVonITNRWEinlesen();
+                        tabelleVonITNRWDatenbankEinlesen();
                         break;
                     case IMPORT_STRING_DATEN_AUS_CSV_ABGLEICHEN:
                         datenAusCSVAbgleichen();
@@ -308,14 +309,14 @@ public class Interface implements DataUpdater {
                         message.setSubject("Schulen die wir anschreiben sollten");
                         // Now set the actual message
                         String messagetext = "Liebe Kollegen, <br><br> folgende Schulen müssen wir anschreiben (ungeklärt):<br>";
-                        ArrayList<Schule> schules = schuleRepository.getSchools(" WHERE Ausbau=\"Ungeklärt\" ORDER BY SNR");
+                        ArrayList<Schule> schules = schuleRepository.getSchools(" Ausbau=\"Ungeklärt\" ORDER BY SNR");
                         int SNR = 0;
                         for (Schule schule : schules) {
                             if (SNR != schule.getSNR())
                                 messagetext += "Email:" + schule.getSNR() + ".dienst@schule.nrw.de ; Schulname:" + schule.getName_der_Schule() + "; Status ungeklärt. <br>";
                             SNR = schule.getSNR();
                         }
-                        schules = schuleRepository.getSchools(" WHERE Ausbau=\"Land\" ORDER BY SNR");
+                        schules = schuleRepository.getSchools(" Ausbau=\"Land\" ORDER BY SNR");
                         SNR = 0;
                         messagetext += " Folgende Schulen müssen in das Landesprogramm:<br>";
                         for (Schule schule : schules) {
@@ -323,7 +324,7 @@ public class Interface implements DataUpdater {
                                 messagetext += "Email:" + schule.getSNR() + ".dienst@schule.nrw.de ; Schulname:" + schule.getName_der_Schule() + "; Status Landesförderung. <br>";
                             SNR = schule.getSNR();
                         }
-                        schules = schuleRepository.getSchools(" WHERE Ausbau=\"Bund\" ORDER BY SNR");
+                        schules = schuleRepository.getSchools(" Ausbau=\"Bund\" ORDER BY SNR");
                         SNR = 0;
                         messagetext += " Folgende Schulen können wahrscheinlich in ein Bundesprogramm:<br>";
                         for (Schule schule : schules) {
@@ -344,6 +345,29 @@ public class Interface implements DataUpdater {
             @Override
             public void actionPerformed(ActionEvent e) {
                 generateBericht();
+            }
+        });
+        aktionsplanSchulenBefüllenButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String filename = "Aktionsplan_Schulen_Schuldaten_Arnsberg.xlsx";
+                String file = Settings.getInstance().getDatabaseFolderPath()+filename;
+
+                File f = new File(file);
+                if(f.exists() && !f.isDirectory()) {
+                    ausgabeLabel.setVisible(false);
+                    DocumentWriter documentWriter = new DocumentWriter();
+                    try {
+                        documentWriter.writeAktionsplan(filename);
+                    } catch (Exception e1) {
+                        e1.printStackTrace();
+                    }
+                }
+                else
+                {
+                    ausgabeLabel.setText("FEHLER Vorlage nicht gefunden: Datei "+filename+" nicht im Datenbankverzeichnis");
+                    ausgabeLabel.setVisible(true);
+                }
             }
         });
     }
@@ -379,7 +403,7 @@ public class Interface implements DataUpdater {
                     if (data.size() > 8) {
                         data.set(GIGABIT_TABELLE_SNR, trim(data.get(GIGABIT_TABELLE_SNR)).replaceAll(" ", ""));
                         if (StringUtils.isNumeric(data.get(GIGABIT_TABELLE_SNR)) && data.get(GIGABIT_TABELLE_SNR).length() == 6) {
-                            if (!schuleRepository.schoolWithSNRExists(Integer.parseInt(data.get(GIGABIT_TABELLE_SNR)))) {
+                            if (!schuleRepository.entryExisits(KEY_SNR,data.get(GIGABIT_TABELLE_SNR))) {
                                 //Schule toUpdate = schuleRepository.getSchoolWithSNR(data.get(Schule.GIGABIT_TABELLE_SNR));
                                 //if (toUpdate != null) {
                                 //System.out.println("Updating Schule:" + toUpdate.getSNR());
@@ -400,7 +424,7 @@ public class Interface implements DataUpdater {
                                 //}
                             }
                             else {
-                                Schule toUpdate = schuleRepository.getSchoolWithSNR(data.get(GIGABIT_TABELLE_SNR));
+                                Schule toUpdate = schuleRepository.getSchoolWith(KEY_SNR+"="+data.get(GIGABIT_TABELLE_SNR));
                                 if (toUpdate != null) {
                                     //System.out.println("Updating Schule:" + toUpdate.getSNR());
                                     //toUpdate.updateBreitbandData(data);
@@ -619,8 +643,8 @@ public class Interface implements DataUpdater {
                         System.out.println(data.get(1));
                         if (data.size() > 9) {
                             if (StringUtils.isNumeric(data.get(Schule.CSV_DATA_SRN)) && data.get(Schule.CSV_DATA_SRN).length() == 6) {
-                                if (schuleRepository.schoolWithSNRExists(Integer.parseInt(data.get(Schule.CSV_DATA_SRN)))) {
-                                    Schule toUpdate = schuleRepository.getSchoolWithSNR(data.get(Schule.CSV_DATA_SRN));
+                                if (schuleRepository.entryExisits(KEY_SNR,data.get(Schule.CSV_DATA_SRN))) {
+                                    Schule toUpdate = schuleRepository.getSchoolWith(KEY_SNR+"="+data.get(Schule.CSV_DATA_SRN));
                                     if (toUpdate != null) {
                                         System.out.println("Updating Schule:" + toUpdate.getSNR());
                                         toUpdate.updateCSVData(data);
@@ -629,8 +653,8 @@ public class Interface implements DataUpdater {
                                     }
                                 }
                             } else if (StringUtils.isNumeric(data.get(Schule.CSV_INTERNE_ID)) && data.get(Schule.CSV_INTERNE_ID).length() > 0) {
-                                if (schuleRepository.schoolWithIDExists(Integer.parseInt(data.get(Schule.CSV_INTERNE_ID)))) {
-                                    Schule toUpdate = schuleRepository.getSchoolWithID(data.get(Schule.CSV_INTERNE_ID));
+                                if (schuleRepository.entryExisits(KEY_ID,data.get(Schule.CSV_INTERNE_ID))) {
+                                    Schule toUpdate = schuleRepository.getSchoolWith(KEY_ID+"="+data.get(Schule.CSV_INTERNE_ID));
                                     if (toUpdate != null) {
                                         System.out.println("Updating Schule:" + toUpdate.getSNR());
                                         toUpdate.updateCSVData(data);
@@ -689,12 +713,13 @@ public class Interface implements DataUpdater {
     /**
      * Methode zum Abgleich der Daten mit der von IT-NRW gelieferten Tabelle
      */
-    private void datenbankVonITNRWEinlesen()
+    private void tabelleVonITNRWDatenbankEinlesen()
         {
             int ROW_SCHULNUMMER = 0;
-            int ROW_HAUPTSTANDORT = 12;
-            int ROW_STRASSE_UND_HAUSNUMMER = 14;
-            int ROW_SCHUELERANZAHL = 29;
+            int ROW_HAUPTSTANDORT = 13;
+            int ROW_STRASSE_UND_HAUSNUMMER = 15;
+            int ROW_SCHUELERANZAHL = 30;
+            int ROW_KLASSENZAHL=32;
             if (!RELEASE) {
             String filename = null;
             XSSFWorkbook workbook = null;
@@ -718,15 +743,21 @@ public class Interface implements DataUpdater {
                 if(row.getCell(ROW_SCHUELERANZAHL).getNumericCellValue() != 0) {
 
                     int current_schulnummer = Integer.parseInt((row.getCell(ROW_SCHULNUMMER) + " ").split("\\.")[0]);
-                    if (schuleRepository.schoolWithSNRExists(current_schulnummer)) {
-                        ArrayList<Schule> schules = schuleRepository.getStandorteZu(String.valueOf(current_schulnummer));
+                    if (schuleRepository.entryExisits(KEY_SNR, String.valueOf(current_schulnummer))) {
+                        ArrayList<Schule> schules = schuleRepository.getSchools(KEY_SNR+"="+String.valueOf(current_schulnummer)+";");
                         boolean found = false;
                         for (Schule schule : schules) {
                             if (schule.getStrasse_Hsnr().substring(0,4).equals(row.getCell(ROW_STRASSE_UND_HAUSNUMMER).getStringCellValue().substring(0,4))) {
                                 if ((schule.getStandort().equals(HAUPTSTANDORT) && row.getCell(ROW_HAUPTSTANDORT).getStringCellValue().equals("1")) || (schule.getStandort().equals(TEILSTANDORT) && row.getCell(ROW_HAUPTSTANDORT).getStringCellValue().equals("0"))) {
                                     found = true;
+                                    if(row.getCell(ROW_KLASSENZAHL).getCellTypeEnum() != CellType.NUMERIC)
+                                        System.out.println("Updating Schule mit ID:" + schule.getId() + "; setze SchülerzahlIT von: "+schule.getSchuelerzahlIT()+" auf: "+((int)Math.round(row.getCell(ROW_SCHUELERANZAHL).getNumericCellValue()))+"; setze Klassenzahl auf: 0!");
+                                    else
+                                    {
+                                        System.out.println("Updating Schule mit ID:" + schule.getId() + "; setze SchülerzahlIT von: "+schule.getSchuelerzahlIT()+" auf: "+((int)Math.round(row.getCell(ROW_SCHUELERANZAHL).getNumericCellValue()))+"; setze Klassenzahl auf: "+((int)Math.round(row.getCell(ROW_KLASSENZAHL).getNumericCellValue()))+"!");
+                                        schule.setKlassenanzahl((int)Math.round(row.getCell(ROW_KLASSENZAHL).getNumericCellValue()));
+                                    }
                                     schule.setSchuelerzahlIT((int)Math.round(row.getCell(ROW_SCHUELERANZAHL).getNumericCellValue()));
-                                    System.out.println("Updating Schule mit ID:" + schule.getId() + "; setze SchülerzahlIT auf: "+((int)Math.round(row.getCell(ROW_SCHUELERANZAHL).getNumericCellValue()))+"!");
                                     schuleRepository.save(schule);
                                 }
                             }
@@ -736,27 +767,30 @@ public class Interface implements DataUpdater {
                             for (Schule schule : schules) {
                                 if (schule.getStrasse_Hsnr().substring(0,4).equals(row.getCell(ROW_STRASSE_UND_HAUSNUMMER).getStringCellValue().substring(0,4))) {
                                     found2 = true;
-                                    if(schule.getSchuelerzahlIT() == 0)
+                                    if(row.getCell(ROW_KLASSENZAHL).getCellTypeEnum() != CellType.NUMERIC)
+                                        System.out.println("Updating Schule mit ID:" + schule.getId() + "; setze SchülerzahlIT von: "+schule.getSchuelerzahlIT()+" auf: "+((int)Math.round(row.getCell(ROW_SCHUELERANZAHL).getNumericCellValue()))+"; setze Klassenzahl auf: 0!");
+                                    else
                                     {
-                                        System.out.println("Updating Schule mit ID:" + schule.getId() + "; setze SchülerzahlIT auf: "+((int)Math.round(row.getCell(ROW_SCHUELERANZAHL).getNumericCellValue()))+"!");
-                                        schule.setSchuelerzahlIT((int)Math.round(row.getCell(ROW_SCHUELERANZAHL).getNumericCellValue()));
-                                        schuleRepository.save(schule);
+                                        System.out.println("Updating Schule mit ID:" + schule.getId() + "; setze SchülerzahlIT von: "+schule.getSchuelerzahlIT()+" auf: "+((int)Math.round(row.getCell(ROW_SCHUELERANZAHL).getNumericCellValue()))+"; setze Klassenzahl auf: "+((int)Math.round(row.getCell(ROW_KLASSENZAHL).getNumericCellValue()))+"!");
+                                        schule.setKlassenanzahl((int)Math.round(row.getCell(ROW_KLASSENZAHL).getNumericCellValue()));
                                     }
+                                    schule.setSchuelerzahlIT((int)Math.round(row.getCell(ROW_SCHUELERANZAHL).getNumericCellValue()));
+                                    schuleRepository.save(schule);
                                 }
                             }
                             if(!found2)
-                                System.out.println("Schule mit ID:" + current_schulnummer + ", Standort:" + row.getCell(ROW_STRASSE_UND_HAUSNUMMER).getStringCellValue() + " und Hauptstandort:" + row.getCell(ROW_HAUPTSTANDORT).getStringCellValue() + " nicht in der Datenbank gefunden!");
+                                Schule.printData(String.valueOf(current_schulnummer),"","","",row.getCell(ROW_STRASSE_UND_HAUSNUMMER).getStringCellValue(),"Schule nicht in der Datenbank gefunden. Hauptstandort?:" + row.getCell(ROW_HAUPTSTANDORT).getStringCellValue() + "!");
                             else
-                                System.out.println("Schule mit ID:" + current_schulnummer + ", Standort:" + row.getCell(ROW_STRASSE_UND_HAUSNUMMER).getStringCellValue() + " hat Haupt- und Teilstandort gedreht!");
+                                Schule.printData(String.valueOf(current_schulnummer),"","","",row.getCell(ROW_STRASSE_UND_HAUSNUMMER).getStringCellValue(),"Haupt- und Teilstandort gedreht!");
                         }
                     }
                     else {
-                        System.out.println("Schule mit SNR:" + current_schulnummer + " nicht in der Datenbank gefunden!");
+                        Schule.printData(String.valueOf(current_schulnummer),"","","","","Schule nicht in der Datenbank gefunden");
                     }
 
                 }
             }
-            ArrayList<Schule> schules = schuleRepository.getSchools("WHERE schuelerzahlIT=0");
+            ArrayList<Schule> schules = schuleRepository.getSchools("schuelerzahlIT=0");
             for (Schule schule : schules) {
                 System.out.println("Schule :" + schule.getSNR() + " mit ID:"+schule.getId()+" ohne IT-Schülerzahl.");
             }
@@ -772,7 +806,7 @@ public class Interface implements DataUpdater {
      * Abgleich der internen Daten mit den Daten von IT-NRW aus der schulver.mdb
      * (Inzwischen überholt, da die Tabelle von IT-NRW deutlich bessere Daten enthält)
      */
-    private void tabelleVonITNRWDatenbankEinlesen() {
+    private void datenbankVonITNRWEinlesen() {
         if (!RELEASE) {
             String filename = null;
             try {
@@ -784,7 +818,7 @@ public class Interface implements DataUpdater {
             schuleRepository.resetFlags();
             int i = 0;
             for (ArrayList<String> school : itNRWSchulen) {
-                Schule schule = schuleRepository.getSchoolWithSNR(school.get(0));
+                Schule schule = schuleRepository.getSchoolWith(KEY_SNR+"="+school.get(0));
                 i++;
                 if (schule == null) {
                     System.out.print(":Schule mit Schulnummer:" + school.get(0) + " fehlt:");
@@ -861,7 +895,7 @@ public class Interface implements DataUpdater {
                     if (data.size() > 1) {
                         data.set(0, trim(data.get(0)).replaceAll(" ", ""));
                         if (StringUtils.isNumeric(data.get(0)) && data.get(0).length() == 6) {
-                            if (!schuleRepository.schoolWithSNRExists(Integer.parseInt(data.get(0)))) {
+                            if (!schuleRepository.entryExisits(KEY_SNR,data.get(0))) {
                                 System.out.println("Schulnummer nicht gefunden:" + data.get(0));
                                 //}
                             } else {
@@ -941,7 +975,7 @@ public class Interface implements DataUpdater {
         String col[] = {"Interne Nummer","SNR","Name der Schule","Art der Schule","PLZ","Ort"};//,"Stra�e + Hsnr.","Zust�ndiges Schulamt","Vorwahl","Rufnummer","SF","Schultyp","Mailadresse","FB","Zust�ndig","Bedarf S1","Status S1","Moderator S1","Datum S1","Bedarf S2","Status S2","Moderator S2","Datum S2","Bedarf S3","Status S3","Moderator S3","Datum S3","Bedarf S4","Status S4","Moderator S4","Datum S4","Bedarf R1","Status R1","Moderator R1","Datum R1","Bedarf R2","Status R2","Moderator R2","Datum R2","Bedarf L1","Status L1","Moderator L1","Datum L1","Bedarf K1","Status K1","Moderator K1","Datum K1","Bedarf K2","Status K2","Moderator K2","Datum K2","Bedarf A1","Status A1","Moderator A1","Datum A1","Bedarf X2","Status X2","Moderator X2","Datum X2","Bedarf X3","Status X3","Moderator X3","Datum X3","Bemerkungen"};
 
 
-        schulenImZwischenspeicher = schuleRepository.getSchoolsWithoutGeodata();
+        schulenImZwischenspeicher = schuleRepository.getSchools("lat=0");
         if(schulenImZwischenspeicher != null && !schulenImZwischenspeicher.isEmpty()) {
 
             showSchooldataInTable(fehlendeSchulenSpalten,schulenImZwischenspeicher,"Folgenden Schulen fehlt die Geocoordinate.", true);
@@ -964,7 +998,7 @@ public class Interface implements DataUpdater {
      */
     public void updateData()
     {
-        ArrayList<Schule> schulen = schuleRepository.getAllSchools(filterSNR,filterOrt,filterSchulamt,filterAusbau,filterBeratungsstatus);
+        ArrayList<Schule> schulen = schuleRepository.getSchoolsWithCondition(filterSNR,filterOrt,filterSchulamt,filterAusbau,filterBeratungsstatus);
         String ausgabe = "Alle Schulen";
         if(!filterOrt.equals("-") || !filterSchulamt.equals("-") || !filterSNR.equals("") || !filterAusbau.equals("alle"))
             ausgabe+=" mit ";
@@ -1041,10 +1075,10 @@ public class Interface implements DataUpdater {
      */
     private void createUIComponents() {
         SchuleRepository schuleRepository = new SchuleRepository();
-        String[] staedteArray = schuleRepository.getAllStaedte();
-        String[] allSschulaemterArray = schuleRepository.getAllSschulaemter();
-        String[] allAusbaustatusArray = schuleRepository.getAllAusbaustatus();
-        String[] allBeratungsstatusArray = schuleRepository.getAllBeratungsstatus();
+        String[] staedteArray = schuleRepository.getAllValuesForKeyInDatabase(KEY_ORT);
+        String[] allSschulaemterArray = schuleRepository.getAllValuesForKeyInDatabase(KEY_ZUSTAENDIGES_SCHULAMT);
+        String[] allAusbaustatusArray = schuleRepository.getAllValuesForKeyInDatabase(KEY_AUSBAU);
+        String[] allBeratungsstatusArray = schuleRepository.getAllValuesForKeyInDatabase(KEY_BERATUNGSSTATUS);
         String importFunctions[] = {IMPORT_STRING_NOTHING, IMPORT_STRING_SCHULE_MIT_FEHLENDEN_GEOCOORDINATEN, IMPORT_STRING_GEOCOORDINATEN_IN_DB_LADEN, IMPORT_STRING_DOPPELTE_GEOCOORDINATEN_VERSCHIEBEN, IMPORT_STRING_DATENBANK_VON_IT_NRW_EINLESEN,IMPORT_STRING_TABELLE_VON_IT_NRW_EINLESEN, IMPORT_STRING_DATEN_AUS_CSV_ABGLEICHEN, IMPORT_STRING_SONDERIMPORT, IMPORT_STRING_GIGABITTABELLE_ABGLEICHEN};
         String exportFunctions[] = {EXPORT_STRING_GIGABIT_KARTE_SCHREIBEN,EXPORT_STRING_BERICHT_SCHREIBEN , EXPORT_STRING_SPEZIALKARTE_SCHREIBEN};
 

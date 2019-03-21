@@ -13,42 +13,23 @@ import de.karlsommer.gigabit.datastructures.QueryResult;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import static de.karlsommer.gigabit.database.model.Schule.HAUPTSTANDORT;
+import static de.karlsommer.gigabit.database.model.Schule.*;
 import static de.karlsommer.gigabit.helper.MathHelper.round;
 
 
 public class SchuleRepository {
-    
 
-    public boolean schoolWithSNRExists(int schulnummer) {
-        DatabaseConnector.getInstance().executeStatement("SELECT * FROM Schulen WHERE SNR="+String.valueOf(schulnummer)+";");
+    private Schule getSchuleForQuery(String query)
+    {
+        DatabaseConnector.getInstance().executeStatement(query);
         QueryResult result = DatabaseConnector.getInstance().getCurrentQueryResult();
-        if(result == null)
-            return false;
-        return result.getColumnCount()>0;
+        if (checkValidity(result)) return null;
+        return new Schule(new ArrayList<String>(Arrays.asList(result.getData()[0])),true);
     }
 
-    public boolean schoolWithIDExists(int _id)
+    private ArrayList<Schule> getArrayListForQuery(String query)
     {
-        DatabaseConnector.getInstance().executeStatement("SELECT * FROM Schulen WHERE id="+_id+";");
-        QueryResult result = DatabaseConnector.getInstance().getCurrentQueryResult();
-        if(result == null)
-            return false;
-        return result.getColumnCount()>0;
-    }
-
-    public boolean schuleWithPLZExisits(int PLZ)
-    {
-        DatabaseConnector.getInstance().executeStatement("SELECT * FROM Schulen WHERE PLZ="+PLZ+";");
-        QueryResult result = DatabaseConnector.getInstance().getCurrentQueryResult();
-        if(result == null)
-            return false;
-        return result.getColumnCount()>0;
-    }
-
-    public ArrayList<Schule> getSchoolsOrderedByPLZ()
-    {
-        DatabaseConnector.getInstance().executeStatement("SELECT * FROM Schulen ORDER BY PLZ;");
+        DatabaseConnector.getInstance().executeStatement(query);
         QueryResult result = DatabaseConnector.getInstance().getCurrentQueryResult();
         ArrayList<Schule> schulen = new ArrayList<>();
         for(int i = 0; i < result.getRowCount(); i++)
@@ -56,35 +37,30 @@ public class SchuleRepository {
             schulen.add(new Schule(new ArrayList<String>(Arrays.asList(result.getData()[i])),true));
         }
         return schulen;
+    }
+
+    public boolean entryExisits(String condition, String value)
+    {
+        DatabaseConnector.getInstance().executeStatement("SELECT * FROM "+TABLENAME+" WHERE "+condition+"='"+value+"';");
+        QueryResult result = DatabaseConnector.getInstance().getCurrentQueryResult();
+        if(result == null)
+            return false;
+        return result.getColumnCount()>0;
+    }
+
+    public ArrayList<Schule> getSchoolsOrderedBy(String orderedBy)
+    {
+        return getArrayListForQuery("SELECT * FROM "+TABLENAME+" ORDER BY "+orderedBy+";");
     }
 
     public ArrayList<Schule> getSchulenMitGleichenGeolocations()
     {
-        DatabaseConnector.getInstance().executeStatement("SELECT Schulen1.* FROM Schulen AS Schulen1 JOIN (SELECT SNR,lat,lng FROM Schulen) AS Schulen2 ON (Schulen1.lat=Schulen2.lat) WHERE Schulen1.SNR <> Schulen2.SNR AND Schulen1.lng=Schulen2.lng AND Schulen1.SNR < Schulen2.SNR ORDER BY Schulen1.SNR;");
-        QueryResult result = DatabaseConnector.getInstance().getCurrentQueryResult();
-        ArrayList<Schule> schulen = new ArrayList<>();
-        for(int i = 0; i < result.getRowCount(); i++)
-        {
-            schulen.add(new Schule(new ArrayList<String>(Arrays.asList(result.getData()[i])),true));
-        }
-        return schulen;
-    }
-    
-    public ArrayList<Schule> getSchoolsWithoutGeodata()
-    {
-        DatabaseConnector.getInstance().executeStatement("SELECT * FROM Schulen WHERE lat=0;");
-        QueryResult result = DatabaseConnector.getInstance().getCurrentQueryResult();
-        ArrayList<Schule> schulen = new ArrayList<>();
-        for(int i = 0; i < result.getRowCount(); i++)
-        {
-            schulen.add(new Schule(new ArrayList<String>(Arrays.asList(result.getData()[i])),true));
-        }
-        return schulen;
+        return getArrayListForQuery("SELECT Schulen1.* FROM "+TABLENAME+" AS Schulen1 JOIN (SELECT "+KEY_SNR+",lat,lng FROM "+TABLENAME+") AS Schulen2 ON (Schulen1.lat=Schulen2.lat) WHERE Schulen1."+KEY_SNR+" <> Schulen2."+KEY_SNR+" AND Schulen1.lng=Schulen2.lng AND Schulen1."+KEY_SNR+" < Schulen2."+KEY_SNR+" ORDER BY Schulen1."+KEY_SNR+";");
     }
 
-    public String[] getAllAusbaustatus()
+    public String[] getAllValuesForKeyInDatabase(String type)
     {
-        DatabaseConnector.getInstance().executeStatement("SELECT DISTINCT Ausbau FROM Schulen ORDER BY Ausbau ASC;");
+        DatabaseConnector.getInstance().executeStatement("SELECT DISTINCT "+type+" FROM "+TABLENAME+" ORDER BY "+type+" ASC;");
         QueryResult result = DatabaseConnector.getInstance().getCurrentQueryResult();
         String[] ausbau = new String[result.getRowCount()];
         for(int i = 0; i < result.getRowCount(); i++)
@@ -94,60 +70,9 @@ public class SchuleRepository {
         return ausbau;
     }
 
-    public String[] getAllSschulaemter()
-    {
-        DatabaseConnector.getInstance().executeStatement("SELECT DISTINCT [Zuständiges Schulamt] FROM Schulen ORDER BY [Zuständiges Schulamt] ASC;");
-        QueryResult result = DatabaseConnector.getInstance().getCurrentQueryResult();
-        String[] staedte = new String[result.getRowCount()];
-        for(int i = 0; i < result.getRowCount(); i++)
-        {
-            staedte[i] = result.getData()[i][0];
-        }
-        return staedte;
-    }
-
-    public String[] getAllBeratungsstatus()
-    {
-
-        DatabaseConnector.getInstance().executeStatement("SELECT DISTINCT Beratungsstatus FROM Schulen ORDER BY Beratungsstatus ASC;");
-        QueryResult result = DatabaseConnector.getInstance().getCurrentQueryResult();
-        String[] beratungsstati = new String[result.getRowCount()];
-        for(int i = 0; i < result.getRowCount(); i++)
-        {
-            beratungsstati[i] = result.getData()[i][0];
-        }
-        return beratungsstati;
-    }
-
-    public String[] getAllStaedte()
-    {
-        DatabaseConnector.getInstance().executeStatement("SELECT DISTINCT Ort FROM Schulen ORDER BY Ort ASC;");
-        QueryResult result = DatabaseConnector.getInstance().getCurrentQueryResult();
-        String[] staedte = new String[result.getRowCount()];
-        for(int i = 0; i < result.getRowCount(); i++)
-        {
-            staedte[i] = result.getData()[i][0];
-        }
-        return staedte;
-    }
-    
-    public ArrayList<Schule> getSchoolsWithGeodata()
-    {
-        DatabaseConnector.getInstance().executeStatement("SELECT * FROM Schulen WHERE lat<>0;");
-        QueryResult result = DatabaseConnector.getInstance().getCurrentQueryResult();
-        ArrayList<Schule> schulen = new ArrayList<>();
-        for(int i = 0; i < result.getRowCount(); i++)
-        {
-            schulen.add(new Schule(new ArrayList<String>(Arrays.asList(result.getData()[i])),true));
-        }
-        return schulen;
-    }
-
     public int getMaxID()
     {
-        DatabaseConnector.getInstance().executeStatement("SELECT MAX(id) FROM Schulen;");
-        QueryResult result = DatabaseConnector.getInstance().getCurrentQueryResult();
-        return Integer.parseInt(result.getData()[0][0]);
+        return getIntQueryValue("SELECT MAX("+KEY_ID+") FROM "+TABLENAME+";");
     }
 
     public int getIntQueryValue(String query)
@@ -170,136 +95,103 @@ public class SchuleRepository {
 
     public void save(Schule schule) {
         LogEntryRepository logEntryRepository = new LogEntryRepository();
-        LogEntry logEntry;
-        if(schoolWithIDExists(schule.getId()))
+        if(entryExisits(KEY_ID, String.valueOf(schule.getId())))
         {
-            String query;
-            Schule oldSchule = getSchoolWithID(String.valueOf(schule.getId()));
-            if(schule.getLng() != 0 && schule.getLat() != 0)
-             query = "UPDATE Schulen SET SNR="+schule.getSNR()+",[Name der Schule]='"+
-                    schule.getName_der_Schule()+"',[Art der Schule]='"+schule.getArt_der_Schule()+"',PLZ="+schule.getPLZ()+",Ort='"+schule.getOrt()+"',[Straße + Hsnr.]='"+schule.getStrasse_Hsnr()+"',[Zuständiges Schulamt]='"+schule.getZustaendiges_Schulamt()+"',Vorwahl ='"+
-                    schule.getVorwahl()+"',Rufnummer ='"+schule.getRufnummer()+"',SF ='"+schule.getSF()+"',Schultyp ='"+schule.getSchultyp()+"',Mailadresse ='"+schule.getMailadresse()+"',Bemerkungen='"+
-                    schule.getBemerkungen()+"',flag="+schule.isFlag()+",[Status GB]='"+schule.getStatus_GB()+"',[Anbindung Kbit DL]='"+schule.getAnbindung_Kbit_DL()+"',[Anbindung Kbit UL]='"+schule.getAnbindung_Kbit_UL()+"',[Status MK]='"+schule.getStatus_MK()+"',[Status Inhouse]='"+schule.getStatus_Inhouse()+"',lat="+schule.getLat()+",lng="+
-                    schule.getLng()+", Standort='"+schule.getStandort()+"', Ansprechpartner='"+schule.getAnsprechpartner()+"', [Telefon Ansprechpartner]='"+schule.getTelefon_Ansprechpartner()+"', [Email Ansprechpartner]='"+schule.getEmail_Ansprechpartner()+"', Schuelerzahl="+schule.getSchuelerzahl()+", Ausbau='"+schule.getAusbau(false)+"'," +
-                    "Klassenanzahl="+schule.getKlassenanzahl()+",[PWC Download]="+schule.getPWCDownload()+",[PWC Upload]="+schule.getPWCUpload()+", schuelerzahlIT="+schule.getSchuelerzahlIT()+", schultraeger='"+schule.getSchultraeger()+"', Beratungsstatus='"+schule.getBeratungsstatus()+"' WHERE id="+schule.getId()+";";
-            else
-                query = "UPDATE Schulen SET SNR="+schule.getSNR()+",[Name der Schule]='"+
-                    schule.getName_der_Schule()+"',[Art der Schule]='"+schule.getArt_der_Schule()+"',PLZ="+schule.getPLZ()+",Ort='"+schule.getOrt()+"',[Straße + Hsnr.]='"+schule.getStrasse_Hsnr()+"',[Zuständiges Schulamt]='"+schule.getZustaendiges_Schulamt()+"',Vorwahl ='"+
-                    schule.getVorwahl()+"',Rufnummer ='"+schule.getRufnummer()+"',SF ='"+schule.getSF()+"',Schultyp ='"+schule.getSchultyp()+"',Mailadresse ='"+schule.getMailadresse()+"',Bemerkungen='"+
-                    schule.getBemerkungen()+"',flag="+schule.isFlag()+",[Status GB]='"+schule.getStatus_GB()+"',[Anbindung Kbit DL]='"+schule.getAnbindung_Kbit_DL()+"',[Anbindung Kbit UL]='"+schule.getAnbindung_Kbit_UL()+"',[Status MK]='"+schule.getStatus_MK()+"',[Status Inhouse]='"+
-                    schule.getStatus_Inhouse()+"', Standort='"+schule.getStandort()+"', Ansprechpartner='"+schule.getAnsprechpartner()+"', [Telefon Ansprechpartner]='"+schule.getTelefon_Ansprechpartner()+"', [Email Ansprechpartner]='"+schule.getEmail_Ansprechpartner()+"', Schuelerzahl="+schule.getSchuelerzahl()+", Ausbau='"+schule.getAusbau(false)+"'," +
-                    "Klassenanzahl="+schule.getKlassenanzahl()+",[PWC Download]="+schule.getPWCDownload()+",[PWC Upload]="+schule.getPWCUpload()+", schuelerzahlIT="+schule.getSchuelerzahlIT()+", schultraeger='"+schule.getSchultraeger()+"', Beratungsstatus='"+schule.getBeratungsstatus()+"' WHERE id="+schule.getId()+";";
+            StringBuilder query = new StringBuilder();
+            Schule oldSchule = getSchoolWith(KEY_ID+"="+String.valueOf(schule.getId()));
 
-            DatabaseConnector.getInstance().executeStatement(query);
+            query.append("UPDATE "+TABLENAME+" SET "+KEY_SNR+"="+schule.getSNR()+"," +
+                    "[Name der Schule]='"+schule.getName_der_Schule()+"'," +
+                    "[Art der Schule]='"+schule.getArt_der_Schule()+"'," +
+                    ""+KEY_PLZ+"="+schule.getPLZ()+"," +
+                    ""+KEY_ORT+"='"+schule.getOrt()+"'," +
+                    "[Straße + Hsnr.]='"+schule.getStrasse_Hsnr()+"'," +
+                    ""+KEY_ZUSTAENDIGES_SCHULAMT+"='"+schule.getZustaendiges_Schulamt()+"'" +
+                    ",Vorwahl ='"+schule.getVorwahl()+"'," +
+                    "Rufnummer ='"+schule.getRufnummer()+"'," +
+                    "SF ='"+schule.getSF()+"'," +
+                    "Schultyp ='"+schule.getSchultyp()+"'," +
+                    "Mailadresse ='"+schule.getMailadresse()+"'," +
+                    "Bemerkungen='"+schule.getBemerkungen()+"'," +
+                    "flag="+schule.isFlag()+"," +
+                    "[Status GB]='"+schule.getStatus_GB()+"'," +
+                    "[Anbindung Kbit DL]='"+schule.getAnbindung_Kbit_DL()+"'," +
+                    "[Anbindung Kbit UL]='"+schule.getAnbindung_Kbit_UL()+"'," +
+                    "[Status MK]='"+schule.getStatus_MK()+"'," +
+                    "[Status Inhouse]='"+schule.getStatus_Inhouse()+"',");
+
+            if(schule.getLng() != 0 && schule.getLat() != 0) {
+                query.append("lat=" + schule.getLat() + ",");
+                query.append("lng=" + schule.getLng() + ",");
+            }
+
+            query.append("Standort='"+schule.getStandort()+"'," +
+                    "Ansprechpartner='"+schule.getAnsprechpartner()+"'," +
+                    "[Telefon Ansprechpartner]='"+schule.getTelefon_Ansprechpartner()+"'," +
+                    "[Email Ansprechpartner]='"+schule.getEmail_Ansprechpartner()+"'," +
+                    "Schuelerzahl="+schule.getSchuelerzahl()+"," +
+                    "Ausbau='"+schule.getAusbau(false)+"'," +
+                    "Klassenanzahl="+schule.getKlassenanzahl()+"," +
+                    "[PWC Download]="+schule.getPWCDownload()+"," +
+                    "[PWC Upload]="+schule.getPWCUpload()+"," +
+                    "schuelerzahlIT="+schule.getSchuelerzahlIT()+"," +
+                    "schultraeger='"+schule.getSchultraeger()+"'," +
+                    "Beratungsstatus='"+schule.getBeratungsstatus()+"', " +
+                    "aktenzeichenBund='"+schule.getAktenzeichenBund()+"'," +
+                    "aktenzeichenLand='"+schule.getAktenzeichenLand()+"'" +
+                    "WHERE id="+schule.getId()+";");
+
+
+            DatabaseConnector.getInstance().executeStatement(query.toString());
             if(!oldSchule.isEqualTo(schule)) {
-                String logText = "Schule mit ID:" + schule.getId() + " geändert. Veränderte Werte: "+oldSchule.getChangedValues(schule);
-                logEntry = new LogEntry(logText);
-                logEntryRepository.save(logEntry);
+                logEntryRepository.save(new LogEntry("Schule mit ID:" + schule.getId() + " geändert. Veränderte Werte: "+oldSchule.getChangedValues(schule)));
             }
         }
         else
         {
-            String query = "INSERT INTO Schulen VALUES(null,'"+schule.getSNR()+"','"+schule.getName_der_Schule()+"','"+schule.getArt_der_Schule()+"','"+schule.getPLZ()+"','"+schule.getOrt()+"','"+schule.getStrasse_Hsnr()+"','"+schule.getZustaendiges_Schulamt()+"','"+schule.getVorwahl()+"','"+schule.getRufnummer()+"','"+schule.getSF()+"','"+schule.getSchultyp()+"','"+schule.getMailadresse()+"','"+schule.getBemerkungen()+"','"+schule.isFlag()+"','"+schule.getStatus_GB()+"','"+schule.getAnbindung_Kbit_DL()+"','"+schule.getAnbindung_Kbit_UL()+"','"+schule.getStatus_MK()+"','"+schule.getStatus_Inhouse()+"','"+schule.getLat()+"','"+schule.getLng()+"','"+schule.getStandort()+"','"+schule.getAnsprechpartner()+"','"+schule.getTelefon_Ansprechpartner()+"','"+schule.getEmail_Ansprechpartner()+"', "+schule.getSchuelerzahl()+",'"+schule.getAusbau(false)+"',"+schule.getKlassenanzahl()+","+schule.getPWCDownload()+","+schule.getPWCUpload()+", "+schule.getSchuelerzahlIT()+",'"+schule.getSchultraeger()+"', '"+schule.getBeratungsstatus()+"');";
+            String query = "INSERT INTO "+TABLENAME+" VALUES(null,'"+schule.getSNR()+"','"+schule.getName_der_Schule()+"','"+schule.getArt_der_Schule()+"','"+schule.getPLZ()+"','"+schule.getOrt()+"','"+schule.getStrasse_Hsnr()+"','"+schule.getZustaendiges_Schulamt()+"','"+schule.getVorwahl()+"','"+schule.getRufnummer()+"','"+schule.getSF()+"','"+schule.getSchultyp()+"','"+schule.getMailadresse()+"','"+schule.getBemerkungen()+"','"+schule.isFlag()+"','"+schule.getStatus_GB()+"','"+schule.getAnbindung_Kbit_DL()+"','"+schule.getAnbindung_Kbit_UL()+"','"+schule.getStatus_MK()+"','"+schule.getStatus_Inhouse()+"','"+schule.getLat()+"','"+schule.getLng()+"','"+schule.getStandort()+"','"+schule.getAnsprechpartner()+"','"+schule.getTelefon_Ansprechpartner()+"','"+schule.getEmail_Ansprechpartner()+"', "+schule.getSchuelerzahl()+",'"+schule.getAusbau(false)+"',"+schule.getKlassenanzahl()+","+schule.getPWCDownload()+","+schule.getPWCUpload()+", "+schule.getSchuelerzahlIT()+",'"+schule.getSchultraeger()+"', '"+schule.getBeratungsstatus()+"','"+schule.getAktenzeichenBund()+"','"+schule.getAktenzeichenLand()+"');";
             DatabaseConnector.getInstance().executeStatement(query);
-            logEntry = new LogEntry("Neue Schule angelegt. Werte: '"+schule.getSNR()+"','"+schule.getName_der_Schule()+"','"+schule.getArt_der_Schule()+"','"+schule.getPLZ()+"','"+schule.getOrt()+"','"+schule.getStrasse_Hsnr()+"','"+schule.getZustaendiges_Schulamt()+"','"+schule.getVorwahl()+"','"+schule.getRufnummer()+"','"+schule.getSF()+"','"+schule.getSchultyp()+"','"+schule.getMailadresse()+"','"+schule.getBemerkungen()+"','"+schule.isFlag()+"','"+schule.getStatus_GB()+"','"+schule.getAnbindung_Kbit_DL()+"','"+schule.getAnbindung_Kbit_UL()+"','"+schule.getStatus_MK()+"','"+schule.getStatus_Inhouse()+"','"+schule.getLat()+"','"+schule.getLng()+"','"+schule.getStandort()+"','"+schule.getAnsprechpartner()+"','"+schule.getTelefon_Ansprechpartner()+"','"+schule.getEmail_Ansprechpartner()+"', "+schule.getSchuelerzahl()+",'"+schule.getAusbau(false)+"', "+schule.getKlassenanzahl()+","+schule.getPWCDownload()+","+schule.getPWCUpload()+", "+schule.getSchuelerzahlIT()+", '"+schule.getSchultraeger()+"', '"+schule.getBeratungsstatus()+"'");
-            logEntryRepository.save(logEntry);
-        }
-        /*
-        ContentValues values = new ContentValues();
-        values.put(SubjectTable.COLUMN_NAME_NAME, subject.getName());
-        values.put(SubjectTable.COLUMN_NAME_TEACHER, subject.getTeacher());
-        values.put(SubjectTable.COLUMN_NAME_IS_MAJOR_CLASS, subject.isMajorClass());
-
-        SQLiteDatabase db = DbHelper.getInstance(context).getWritableDatabase();
-
-        if (subject.getId() < 0) {
-            // Subject has not been persisted yet => insert
-            int id = (int) db.insert(SubjectTable.TABLE_NAME, null, values);
-            subject.setId(id);
-        } else {
-            // Subject has been persisted => update
-            db.update(SubjectTable.TABLE_NAME, values, SubjectTable._ID + " = ?"', new String[] {Integer.toString(subject.getId())});
+            logEntryRepository.save(new LogEntry("Neue Schule angelegt. Werte: '"+schule.getSNR()+"','"+schule.getName_der_Schule()+"','"+schule.getArt_der_Schule()+"','"+schule.getPLZ()+"','"+schule.getOrt()+"','"+schule.getStrasse_Hsnr()+"','"+schule.getZustaendiges_Schulamt()+"','"+schule.getVorwahl()+"','"+schule.getRufnummer()+"','"+schule.getSF()+"','"+schule.getSchultyp()+"','"+schule.getMailadresse()+"','"+schule.getBemerkungen()+"','"+schule.isFlag()+"','"+schule.getStatus_GB()+"','"+schule.getAnbindung_Kbit_DL()+"','"+schule.getAnbindung_Kbit_UL()+"','"+schule.getStatus_MK()+"','"+schule.getStatus_Inhouse()+"','"+schule.getLat()+"','"+schule.getLng()+"','"+schule.getStandort()+"','"+schule.getAnsprechpartner()+"','"+schule.getTelefon_Ansprechpartner()+"','"+schule.getEmail_Ansprechpartner()+"', "+schule.getSchuelerzahl()+",'"+schule.getAusbau(false)+"', "+schule.getKlassenanzahl()+","+schule.getPWCDownload()+","+schule.getPWCUpload()+", "+schule.getSchuelerzahlIT()+", '"+schule.getSchultraeger()+"', '"+schule.getBeratungsstatus()+"','"+schule.getAktenzeichenBund()+"','"+schule.getAktenzeichenLand()+"'"));
         }
     }
-
-    public void deleteSubject(int subjectId) {
-        SQLiteDatabase db = DbHelper.getInstance(context).getWritableDatabase();
-        db.delete(SubjectTable.TABLE_NAME, SubjectTable._ID + " = ?"', new String[] {Integer.toString(subjectId)});
-    }
-
-    private Subject createSubjectFromSql(Cursor cursor) {
-        Subject subject = new Subject(cursor.getInt(cursor.getColumnIndexOrThrow(SubjectTable._ID)));
-        subject.setName(cursor.getString(cursor.getColumnIndexOrThrow(SubjectTable.COLUMN_NAME_NAME)));
-        subject.setTeacher(cursor.getString(cursor.getColumnIndexOrThrow(SubjectTable.COLUMN_NAME_TEACHER)));
-        subject.setMajorClass(cursor.getInt(cursor.getColumnIndexOrThrow(SubjectTable.COLUMN_NAME_IS_MAJOR_CLASS)) > 0);
-        return subject;
-   */ }
 
     public void flagSchool(String SNR) {
-        String query = "UPDATE Schulen SET flag=1 WHERE SNR="+SNR+";";
+        String query = "UPDATE "+TABLENAME+" SET flag=1 WHERE "+KEY_SNR+"="+SNR+";";
         DatabaseConnector.getInstance().executeStatement(query);
-    }
-
-    public ArrayList<Schule> getSchools(String condition)
-    {
-        DatabaseConnector.getInstance().executeStatement("SELECT * FROM Schulen "+condition+";");
-        QueryResult result = DatabaseConnector.getInstance().getCurrentQueryResult();
-        ArrayList<Schule> schulen = new ArrayList<>();
-        for(int i = 0; i < result.getRowCount(); i++)
-        {
-            schulen.add(new Schule(new ArrayList<String>(Arrays.asList(result.getData()[i])),true));
-        }
-        return schulen;
     }
 
     public Schule findSchuleWithValues(String schulname, String PLZ, String strasse)
     {
-
-
         if(strasse == null || strasse.equals(""))
-            return findSchuleWithNameAndPLZ(schulname,PLZ);
+            return getSchuleForQuery("SELECT * FROM "+TABLENAME+" WHERE PLZ="+PLZ+" AND [Name der Schule] LIKE \""+schulname+"%\";");
         else if (PLZ == null || PLZ.equals("") || PLZ.length() < 5)
-            return findSchuleWithNameAndStrasse(schulname,strasse);
+            return getSchuleForQuery("SELECT * FROM "+TABLENAME+" WHERE [Straße + Hsnr.] LIKE \""+strasse+"%\" AND [Name der Schule] LIKE \""+schulname+"%\";");
         else if (schulname == null || schulname.equals(""))
-            return findSchuleWithStrasse(PLZ,strasse);
+            return getSchuleForQuery("SELECT * FROM "+TABLENAME+" WHERE PLZ="+PLZ+" AND [Straße + Hsnr.] LIKE \""+strasse+"%\";");
 
-        if(strasse != null && !strasse.equals(""))
+        if(!strasse.equals(""))
             strasse = strasse.substring(0,strasse.length()-8);
-        if(schulname != null && !schulname.equals(""))
+        if(!schulname.equals(""))
             schulname = schulname.substring(0,5);
-        String query = "SELECT * FROM Schulen WHERE PLZ="+PLZ+" AND [Straße + Hsnr.] LIKE \""+strasse+"%\" AND [Name der Schule] LIKE \""+schulname+"%\";";
+        String query = "SELECT * FROM "+TABLENAME+" WHERE "+KEY_PLZ+"="+PLZ+" AND [Straße + Hsnr.] LIKE \""+strasse+"%\" AND [Name der Schule] LIKE \""+schulname+"%\";";
         //System.out.println(query);
-        DatabaseConnector.getInstance().executeStatement(query);
-        QueryResult result = DatabaseConnector.getInstance().getCurrentQueryResult();
-        if (checkValidity(result)) return null;
-        return new Schule(new ArrayList<String>(Arrays.asList(result.getData()[0])),true);
+        return getSchuleForQuery(query);
     }
 
-    public Schule findSchuleWithNameAndStrasse(String schulname, String strasse)
+    public void deleteSchoolWithID(String _id)
     {
-        String query = "SELECT * FROM Schulen WHERE [Straße + Hsnr.] LIKE \""+strasse+"%\" AND [Name der Schule] LIKE \""+schulname+"%\";";
-        DatabaseConnector.getInstance().executeStatement(query);
-        QueryResult result = DatabaseConnector.getInstance().getCurrentQueryResult();
-        if (checkValidity(result)) return null;
-        return new Schule(new ArrayList<String>(Arrays.asList(result.getData()[0])),true);
+        DatabaseConnector.getInstance().executeStatement("DELETE FROM "+TABLENAME+" WHERE "+KEY_ID+"="+_id+";");
     }
 
-    public Schule findSchuleWithStrasse(String PLZ, String strasse)
+    public Schule getHauptstandortWithID(String id)
     {
-        String query = "SELECT * FROM Schulen WHERE PLZ="+PLZ+" AND [Straße + Hsnr.] LIKE \""+strasse+"%\";";
-        DatabaseConnector.getInstance().executeStatement(query);
-        QueryResult result = DatabaseConnector.getInstance().getCurrentQueryResult();
-        if (checkValidity(result)) return null;
-        return new Schule(new ArrayList<String>(Arrays.asList(result.getData()[0])),true);
-    }
-
-    public Schule findSchuleWithNameAndPLZ(String schulname, String PLZ)
-    {
-        String query = "SELECT * FROM Schulen WHERE PLZ="+PLZ+" AND [Name der Schule] LIKE \""+schulname+"%\";";
-        DatabaseConnector.getInstance().executeStatement(query);
-        QueryResult result = DatabaseConnector.getInstance().getCurrentQueryResult();
-        if (checkValidity(result)) return null;
-        return new Schule(new ArrayList<String>(Arrays.asList(result.getData()[0])),true);
+        Schule standort = getSchoolWith(KEY_ID+"="+id);
+        if(standort == null)
+            return null;
+        if (standort.getStandort().equals(HAUPTSTANDORT))
+            return standort;
+        else
+            return getHauptstandorteZu(String.valueOf(standort.getSNR()));
     }
 
     private boolean checkValidity(QueryResult result) {
@@ -316,121 +208,69 @@ public class SchuleRepository {
         return false;
     }
 
-    public Schule getSchoolWithSNR(String SNR) {
-        String query = "SELECT * FROM Schulen WHERE SNR="+SNR+";";
-        DatabaseConnector.getInstance().executeStatement(query);
-        QueryResult result = DatabaseConnector.getInstance().getCurrentQueryResult();
-        if (checkValidity(result)) return null;
-        return new Schule(new ArrayList<String>(Arrays.asList(result.getData()[0])),true);
-    }
-
-    public void deleteSchoolWithID(String _id)
+    public Schule getSchoolWith(String condition)
     {
-        DatabaseConnector.getInstance().executeStatement("DELETE FROM Schulen WHERE id="+_id+";");
-    }
-
-    public ArrayList<Schule> getStandorteZu(String _snr)
-    {
-        return this.getSchools("WHERE SNR="+_snr+";");
-    }
-
-    public ArrayList<Schule> getTeilstandorteZu(String _snr)
-    {
-        return this.getSchools("WHERE SNR="+_snr+" AND Standort='T';");
-    }
-
-    public Schule getHauptstandortWithID(String id)
-    {
-        Schule standort = getSchoolWithID(id);
-        if (standort.getStandort().equals(HAUPTSTANDORT))
-            return standort;
-        else
-            return getHauptstandorteZu(String.valueOf(standort.getSNR()));
+        return getSchuleForQuery("SELECT * FROM "+TABLENAME+" WHERE "+condition+"");
     }
 
     public Schule getHauptstandorteZu(String _snr)
     {
-        String query = "SELECT * FROM Schulen WHERE SNR="+_snr+" AND Standort='H';";
-        DatabaseConnector.getInstance().executeStatement(query);
-        QueryResult result = DatabaseConnector.getInstance().getCurrentQueryResult();
-        if(result == null || result.getData()[0] == null || result.getData()[0].length < 10)
-            return null;
-        return new Schule(new ArrayList<String>(Arrays.asList(result.getData()[0])),true);
+        return getSchoolWith(KEY_SNR+"="+_snr+" AND "+KEY_STANDORT+"='H'");
     }
 
-    public Schule getSchoolWithID(String _id)
+    public ArrayList<Schule> getSchools(String condition)
     {
-        String query = "SELECT * FROM Schulen WHERE id="+_id+";";
-        //System.out.println(query);
-        DatabaseConnector.getInstance().executeStatement(query);
-        QueryResult result = DatabaseConnector.getInstance().getCurrentQueryResult();
-        if(result == null || result.getData()[0] == null || result.getData()[0].length < 10)
-            return null;
-        return new Schule(new ArrayList<String>(Arrays.asList(result.getData()[0])),true);
+        return getArrayListForQuery("SELECT * FROM "+TABLENAME+" WHERE "+condition+";");
     }
 
-    public ArrayList<Schule> getAllSchools(String filterSNR,String filterOrt,String filterSchulamt, String filterAusbau, String filterBeratungsstatus)
+    public ArrayList<Schule> getAllFlagedSchools(boolean flaged)
     {
-        String query = "SELECT * FROM Schulen";
+        return getSchools("flag="+(flaged?"1":"0")+"");
+    }
+
+    public ArrayList<Schule> getSchoolsWithCondition(String filterSNR, String filterOrt, String filterSchulamt, String filterAusbau, String filterBeratungsstatus)
+    {
+        String query = "SELECT * FROM "+TABLENAME;
         if(!filterOrt.equals("-") || !filterSchulamt.equals("-") || !filterSNR.equals("") || !filterAusbau.equals("alle") || !filterBeratungsstatus.equals("alle"))
             query+=" WHERE ";
         if(!filterSNR.equals(""))
         {
-            query+= "SNR LIKE '%"+filterSNR+"%'";
+            query+= KEY_SNR+" LIKE '%"+filterSNR+"%'";
             if(!filterSchulamt.equals("-") || !filterOrt.equals("-") || !filterAusbau.equals("alle") || !filterBeratungsstatus.equals("alle"))
                 query+= " AND ";
         }
         if(!filterSchulamt.equals("-"))
         {
-            query+= "[Zuständiges Schulamt] LIKE '"+filterSchulamt+"'";
+            query+= KEY_ZUSTAENDIGES_SCHULAMT+" LIKE '"+filterSchulamt+"'";
             if(!filterOrt.equals("-") || !filterAusbau.equals("alle") || !filterBeratungsstatus.equals("alle"))
                 query+= " AND ";
         }
         if(!filterOrt.equals("-"))
         {
-            query+= "Ort LIKE '"+filterOrt+"'";
+            query+= KEY_ORT+" LIKE '"+filterOrt+"'";
             if(!filterAusbau.equals("alle") || !filterBeratungsstatus.equals("alle"))
                 query+= " AND ";
         }
         if(!filterAusbau.equals("alle"))
         {
             if(filterAusbau.equals("Bund (alle)"))
-                query+= "Ausbau LIKE 'Bund%'";
+                query+= KEY_AUSBAU+" LIKE 'Bund%'";
             else
-                query+= "Ausbau LIKE '"+filterAusbau+"'";
+                query+= KEY_AUSBAU+" LIKE '"+filterAusbau+"'";
             if(!filterBeratungsstatus.equals("alle"))
                 query+= " AND ";
         }
         if(!filterBeratungsstatus.equals("alle"))
         {
-            query+= "Beratungsstatus LIKE '"+filterBeratungsstatus+"'";
+            query+= KEY_BERATUNGSSTATUS+" LIKE '"+filterBeratungsstatus+"'";
         }
         query += ";";
-        DatabaseConnector.getInstance().executeStatement(query);
-        QueryResult result = DatabaseConnector.getInstance().getCurrentQueryResult();
-        ArrayList<Schule> schulen = new ArrayList<>();
-        for(int i = 0; i < result.getRowCount(); i++)
-        {
-            schulen.add(new Schule(new ArrayList<String>(Arrays.asList(result.getData()[i])),true));
-        }
-        return schulen;
-    }
-
-    public ArrayList<Schule> getAllFlagedSchools(boolean flaged)
-    {
-        DatabaseConnector.getInstance().executeStatement("SELECT * FROM Schulen WHERE flag="+(flaged?"1":"0")+";");
-        QueryResult result = DatabaseConnector.getInstance().getCurrentQueryResult();
-        ArrayList<Schule> schulen = new ArrayList<>();
-        for(int i = 0; i < result.getRowCount(); i++)
-        {
-            schulen.add(new Schule(new ArrayList<String>(Arrays.asList(result.getData()[i])),true));
-        }
-        return schulen;
+        return getArrayListForQuery(query);
     }
 
     public void resetFlags()
     {
-        String query = "UPDATE Schulen SET flag=0 WHERE id>0;";
+        String query = "UPDATE "+TABLENAME+" SET flag=0 WHERE "+KEY_ID+">0;";
         DatabaseConnector.getInstance().executeStatement(query);
     }
 }

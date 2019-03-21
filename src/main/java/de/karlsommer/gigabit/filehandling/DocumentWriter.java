@@ -5,6 +5,7 @@ import de.karlsommer.gigabit.database.repositories.SchuleRepository;
 import de.karlsommer.gigabit.geocoding.GoogleGeoUtils;
 import de.karlsommer.gigabit.helper.Settings;
 import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.poi.xwpf.usermodel.*;
@@ -75,7 +76,7 @@ public class DocumentWriter {
 
             Row row = sheet.getRow(i);
             if(row.getCell(12) == null || row.getCell(13) == null) {
-                if(schuleRepository.schuleWithPLZExisits(Integer.parseInt((row.getCell(7) + " ").split("\\.")[0]))) {
+                if(schuleRepository.entryExisits(KEY_PLZ,(row.getCell(7) + " ").split("\\.")[0])) {
                     String address = row.getCell(8) + ", " + Integer.parseInt((row.getCell(7) + " ").split("\\.")[0]) + " " + row.getCell(9);
                     System.out.println(address);
                     GoogleGeoUtils.GoogleGeoLatLng geoCode = geoUtils.getGeoCode(address, true);
@@ -305,6 +306,62 @@ public class DocumentWriter {
         workbook.close();
     }
 
+    public void writeAktionsplan(String filename) throws Exception
+    {
+        SchuleRepository schuleRepository = new SchuleRepository();
+        FileOutputStream out = null;
+
+        FileInputStream vorlage = new FileInputStream(new File(Settings.getInstance().getDatabaseFolderPath()+filename));
+        XSSFWorkbook workbook = new XSSFWorkbook(vorlage);
+
+        XSSFSheet sheet = workbook.getSheetAt(1);
+        int ROW_SCHULNUMMER = 1;
+        int ROW_STRASSE_UND_HAUSNUMMER = 5;
+        int ROW_BEREITS_GIGABITFAEHIG = 37;
+        int ROW_CALL_BUNDESPORGRAMM = 38;
+        int ROW_IN_FOERDERPROGRAMM_BEWILLIGT = 39;
+        int ROW_IN_FOERDERPROGRAMM_BEANTRAGT = 40;
+        int ROW_AKTENZEICHEN = 41;
+        int ROW_EIGENWIRTSCHAFTLICHER_AUSBAU = 42;
+        for(int i = 4; i < sheet.getLastRowNum() && sheet.getRow(i) != null && sheet.getRow(i).getCell(ROW_SCHULNUMMER) != null;i++) {
+            XSSFRow row = sheet.getRow(i);
+            Schule schule = schuleRepository.getHauptstandorteZu(String.valueOf((int)Math.round(row.getCell(ROW_SCHULNUMMER).getNumericCellValue())));
+            if(schule != null) {
+                schule.printData("Schule gefunden!");
+                schule.fillRowBereitsGigabitfaehig(row.getCell(ROW_BEREITS_GIGABITFAEHIG));
+                schule.fillRowCall(row.getCell(ROW_CALL_BUNDESPORGRAMM));
+                schule.fillRowInFoerderProgrammBewilligt(row.getCell(ROW_IN_FOERDERPROGRAMM_BEWILLIGT));
+                schule.fillRowInFoerderProgrammBeantragt(row.getCell(ROW_IN_FOERDERPROGRAMM_BEANTRAGT));
+                if(row.getCell(ROW_AKTENZEICHEN) == null)
+                    row.createCell(ROW_AKTENZEICHEN);
+                schule.fillRowInAktenzeichen(row.getCell(ROW_AKTENZEICHEN));
+                schule.fillRowEigenwirtschaftlicherAusbau(row.getCell(ROW_EIGENWIRTSCHAFTLICHER_AUSBAU));
+            }
+            else
+            {
+                row.getCell(ROW_BEREITS_GIGABITFAEHIG).setCellValue("keine Angabe");
+                row.getCell(ROW_CALL_BUNDESPORGRAMM).setCellValue("-");
+                row.getCell(ROW_IN_FOERDERPROGRAMM_BEWILLIGT).setCellValue("nein");
+                row.getCell(ROW_IN_FOERDERPROGRAMM_BEANTRAGT).setCellValue("nein");
+                Schule.printData(String.valueOf((int)Math.round(row.getCell(ROW_SCHULNUMMER).getNumericCellValue())),"Schule nicht gefunden");
+            }
+        }
+
+        workbook.setForceFormulaRecalculation(true);
+
+        try {
+            out = new FileOutputStream( new File(Settings.getInstance().getOutputFolderPath()+filename));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        workbook.write(out);
+        out.close();
+
+        // Closing the workbook
+        workbook.close();
+        vorlage.close();
+    }
+
     public void writeExcelBericht() throws Exception
     {
         SchuleRepository schuleRepository = new SchuleRepository();
@@ -377,7 +434,7 @@ public class DocumentWriter {
             cellnumber++;
         }
 
-        String[] schuleaemter = schuleRepository.getAllSschulaemter();
+        String[] schuleaemter = schuleRepository.getAllValuesForKeyInDatabase(KEY_ZUSTAENDIGES_SCHULAMT);
         rownum = 22;
         for (String schulamt:schuleaemter)
         {
@@ -410,7 +467,7 @@ public class DocumentWriter {
             rownum++;
         }
 
-        String[] staedte = schuleRepository.getAllStaedte();
+        String[] staedte = schuleRepository.getAllValuesForKeyInDatabase(KEY_ORT);
         cellnumber = columnum;
         font.setFontHeightInPoints((short)14);
         font.setBold(false);
@@ -495,7 +552,7 @@ public class DocumentWriter {
         createParagraph(document, heading,"Anschlussliste Schulen vom "+textDateFormat.format(date),ParagraphAlignment.CENTER);
 
         int PLZ = 0;
-        for (Schule schule: schuleRepository.getSchoolsOrderedByPLZ())
+        for (Schule schule: schuleRepository.getSchoolsOrderedBy("PLZ"))
         {
             if(PLZ != schule.getPLZ())
             {
@@ -948,13 +1005,11 @@ public class DocumentWriter {
 
         // Create a Row
         Row headerRow = sheet.createRow(0);
-        String[] columns = {"Id", "Schulnummer", "Name der Schule", "Art der Schule", "Schulträger","PLZ", "Ort", "Strasse und Hausnummer","Zuständiges Schulamt","Vorwahl","Rufnummer","Schulform","Schultyp","Mailadresse", "Bemerkungen",
-                "Status GB" , "Anbindung Download", "Anbindung Upload","Status MK", "Status Inhouse","Standort","Ansprechpartner","Telefon Ansprechpartner","Email Ansprechpartner", "Schüleranzahl", "Ausbau", "Beratungsstatus", "Klassenanzahl", "PWC-Download", "PWC-Upload","Schülerzahl IT-NRW"};
 
         // Create cells
-        for(int i = 0; i < columns.length; i++) {
+        for(int i = 0; i < Schule.exportImportRows.length; i++) {
             Cell cell = headerRow.createCell(i);
-            cell.setCellValue(columns[i]);
+            cell.setCellValue(Schule.exportImportRows[i]);
             cell.setCellStyle(headerCellStyle);
         }
 
@@ -966,62 +1021,7 @@ public class DocumentWriter {
         int rowNum = 1;
         for(Schule schule: schulen) {
             Row row = sheet.createRow(rowNum++);
-            int i = 0;
-            row.createCell(i++)
-                    .setCellValue(schule.getId());
-            row.createCell(i++)
-                    .setCellValue(schule.getSNR());
-
-            row.createCell(i++)
-                    .setCellValue(schule.getName_der_Schule());
-            row.createCell(i++)
-                    .setCellValue(schule.getArt_der_Schule());
-            row.createCell(i++)
-                    .setCellValue(schule.getSchultraeger());
-
-            //Cell dateOfBirthCell = row.createCell(2);
-            //dateOfBirthCell.setCellValue(employee.getDateOfBirth());
-            //dateOfBirthCell.setCellStyle(dateCellStyle);
-
-            row.createCell(i++)
-                    .setCellValue(schule.getPLZ());
-
-            row.createCell(i++)
-                    .setCellValue(schule.getOrt());
-            row.createCell(i++)
-                    .setCellValue(schule.getStrasse_Hsnr());
-            row.createCell(i++).setCellValue(schule.getZustaendiges_Schulamt());
-            row.createCell(i++).setCellValue(schule.getVorwahl());
-            row.createCell(i++).setCellValue(schule.getRufnummer());
-            row.createCell(i++).setCellValue(schule.getSF());
-            row.createCell(i++).setCellValue(schule.getSchultyp());
-            row.createCell(i++).setCellValue(schule.getMailadresse());
-            row.createCell(i++).setCellValue(schule.getBemerkungen());
-            row.createCell(i++).setCellValue(schule.getStatus_GB());
-            row.createCell(i++)
-                    .setCellValue(schule.getAnbindung_Kbit_DL());
-            row.createCell(i++)
-                    .setCellValue(schule.getAnbindung_Kbit_UL());
-            row.createCell(i++).setCellValue(schule.getStatus_MK());
-            row.createCell(i++).setCellValue(schule.getStatus_Inhouse());
-            row.createCell(i++).setCellValue(schule.getStandort());
-            row.createCell(i++).setCellValue(schule.getAnsprechpartner());
-            row.createCell(i++).setCellValue(schule.getTelefon_Ansprechpartner());
-            row.createCell(i++).setCellValue(schule.getEmail_Ansprechpartner());
-            row.createCell(i++)
-                    .setCellValue(schule.getSchuelerzahl());
-            row.createCell(i++)
-                    .setCellValue(schule.getAusbau(false));
-            row.createCell(i++)
-                    .setCellValue(schule.getBeratungsstatus());
-            row.createCell(i++)
-                    .setCellValue(schule.getKlassenanzahl());
-            row.createCell(i++)
-                    .setCellValue(schule.getPWCDownload());
-            row.createCell(i++)
-                    .setCellValue(schule.getPWCUpload());
-            row.createCell(i++)
-                    .setCellValue(schule.getSchuelerzahlIT());
+            schule.fillRow(row);
         }
 
         // Resize all columns to fit the content size

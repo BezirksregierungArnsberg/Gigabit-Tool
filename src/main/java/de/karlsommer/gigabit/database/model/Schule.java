@@ -8,11 +8,22 @@ package de.karlsommer.gigabit.database.model;
 import org.apache.commons.lang.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFCell;
 
 import java.util.ArrayList;
 import java.util.Vector;
 
 public class Schule {
+
+    public static final String TABLENAME = "Schulen";
+    public static final String KEY_ID = "id";
+    public static final String KEY_SNR = "SNR";
+    public static final String KEY_PLZ = "PLZ";
+    public static final String KEY_ZUSTAENDIGES_SCHULAMT = "[Zuständiges Schulamt]";
+    public static final String KEY_AUSBAU = "Ausbau";
+    public static final String KEY_BERATUNGSSTATUS = "Beratungsstatus";
+    public static final String KEY_ORT = "Ort";
+    public static final String KEY_STANDORT = "Standort";
 
 
     public static final int GIGABIT_TABELLE_ANSPRECHPARTNER = 4;
@@ -54,6 +65,7 @@ public class Schule {
     public static final String AUSBAU_BUND_SONDER = "Bund Sonderaufruf";
     public static final String AUSBAU_LAND = "Land";
     public static final String AUSBAU_UNGEKLAERT = "Ungeklärt";
+    public static final String AUSBAU_RWP = "RWP";
 
     public static final String BERATUNGSSTATUS_KEIN_INTERESSE = "Kein Interesse";
     public static final String BERATUNGSSTATUS_ANGESCHOSSEN = "Angeschlossen";
@@ -61,6 +73,9 @@ public class Schule {
     public static final String BERATUNGSSTATUS_IN_BEARBEITUNG = "In Bearbeitung";
     public static final String BERATUNGSSTATUS_IN_BERATUNG = "In Beratung";
     public static final String BERATUNGSSTATUS_KONTAKT_AUFNEHMEN = "Kontakt aufnehmen";
+
+    public static final String [] exportImportRows = {"Id", "Schulnummer", "Name der Schule", "Art der Schule", "Schulträger","PLZ", "Ort", "Strasse und Hausnummer","Zuständiges Schulamt","Vorwahl","Rufnummer","Schulform","Schultyp","Mailadresse", "Bemerkungen",
+            "Status GB" , "Anbindung Download", "Anbindung Upload","Status MK", "Status Inhouse","Standort","Ansprechpartner","Telefon Ansprechpartner","Email Ansprechpartner", "Schüleranzahl", "Ausbau", "Beratungsstatus", "Klassenanzahl", "PWC-Download", "PWC-Upload","Schülerzahl IT-NRW","Aktenzeichen Bund","Aktenzeichen Land"};
     
     private int id;
     private int SNR;
@@ -96,6 +111,25 @@ public class Schule {
     private int schuelerzahlIT;
     private String schultraeger;
     private String beratungsstatus;
+    private String aktenzeichenBund;
+    private String aktenzeichenLand;
+
+    public String getAktenzeichenBund() {
+        return aktenzeichenBund;
+    }
+
+    public void setAktenzeichenBund(String aktenzeichenBund) {
+        this.aktenzeichenBund = aktenzeichenBund;
+    }
+
+    public String getAktenzeichenLand() {
+        return aktenzeichenLand;
+    }
+
+    public void setAktenzeichenLand(String aktenzeichenLand) {
+        this.aktenzeichenLand = aktenzeichenLand;
+    }
+
 
     public String getBeratungsstatus() {
         return beratungsstatus;
@@ -123,7 +157,7 @@ public class Schule {
     public String getAusbau(boolean html)
     {
 
-        if(Ausbau.equals(AUSBAU_AUSGEBAUT) || Ausbau.equals(AUSBAU_EIGENWIRTSCHAFTLICH) ||Ausbau.equals(AUSBAU_BUND)||Ausbau.equals(AUSBAU_BUND_1)||Ausbau.equals(AUSBAU_BUND_2)||Ausbau.equals(AUSBAU_BUND_3)||Ausbau.equals(AUSBAU_BUND_4)||Ausbau.equals(AUSBAU_BUND_5)||Ausbau.equals(AUSBAU_BUND_6)||Ausbau.equals(AUSBAU_BUND_SONDER) ||Ausbau.equals(AUSBAU_LAND) ||Ausbau.equals(AUSBAU_ERMTTELT_BUND) ||Ausbau.equals(AUSBAU_ERMTTELT_LAND))
+        if(Ausbau.equals(AUSBAU_AUSGEBAUT) || Ausbau.equals(AUSBAU_EIGENWIRTSCHAFTLICH) ||Ausbau.equals(AUSBAU_BUND)||Ausbau.equals(AUSBAU_BUND_1)||Ausbau.equals(AUSBAU_BUND_2)||Ausbau.equals(AUSBAU_BUND_3)||Ausbau.equals(AUSBAU_BUND_4)||Ausbau.equals(AUSBAU_BUND_5)||Ausbau.equals(AUSBAU_BUND_6)||Ausbau.equals(AUSBAU_BUND_SONDER) ||Ausbau.equals(AUSBAU_LAND) ||Ausbau.equals(AUSBAU_ERMTTELT_BUND) ||Ausbau.equals(AUSBAU_ERMTTELT_LAND)||Ausbau.equals(AUSBAU_RWP))
             return Ausbau;
         else if(html)
             return "ungekl&auml;rt";
@@ -177,6 +211,8 @@ public class Schule {
                     ;
                     ;
                 case AUSBAU_ERMTTELT_LAND:
+                    ;
+                case AUSBAU_RWP:
                     ;
                 case AUSBAU_LAND:
                     Ausbau = pAusbau;
@@ -303,6 +339,8 @@ public class Schule {
             this.schuelerzahlIT = Integer.parseInt(daten.get(i++));
             this.schultraeger = daten.get(i++);
             this.beratungsstatus = daten.get(i++);
+            this.aktenzeichenBund = daten.get(i++);
+            this.aktenzeichenLand = daten.get(i++);
         }
         else
         {
@@ -594,6 +632,68 @@ public class Schule {
         this.setPWCDownload(getIntValue(row.getCell(i++)));
         this.setPWCUpload(getIntValue(row.getCell(i++)));
         this.setSchuelerzahlIT(getIntValue(row.getCell(i++)));
+        this.setAktenzeichenBund(getStringValue(row.getCell(i++)));
+        this.setAktenzeichenLand(getStringValue(row.getCell(i++)));
+    }
+
+    public void fillRow(Row row)
+    {
+        int i = 0;
+        row.createCell(i++)
+                .setCellValue(this.getId());
+        row.createCell(i++)
+                .setCellValue(this.getSNR());
+
+        row.createCell(i++)
+                .setCellValue(this.getName_der_Schule());
+        row.createCell(i++)
+                .setCellValue(this.getArt_der_Schule());
+        row.createCell(i++)
+                .setCellValue(this.getSchultraeger());
+
+        row.createCell(i++)
+                .setCellValue(this.getPLZ());
+
+        row.createCell(i++)
+                .setCellValue(this.getOrt());
+        row.createCell(i++)
+                .setCellValue(this.getStrasse_Hsnr());
+        row.createCell(i++).setCellValue(this.getZustaendiges_Schulamt());
+        row.createCell(i++).setCellValue(this.getVorwahl());
+        row.createCell(i++).setCellValue(this.getRufnummer());
+        row.createCell(i++).setCellValue(this.getSF());
+        row.createCell(i++).setCellValue(this.getSchultyp());
+        row.createCell(i++).setCellValue(this.getMailadresse());
+        row.createCell(i++).setCellValue(this.getBemerkungen());
+        row.createCell(i++).setCellValue(this.getStatus_GB());
+        row.createCell(i++)
+                .setCellValue(this.getAnbindung_Kbit_DL());
+        row.createCell(i++)
+                .setCellValue(this.getAnbindung_Kbit_UL());
+        row.createCell(i++).setCellValue(this.getStatus_MK());
+        row.createCell(i++).setCellValue(this.getStatus_Inhouse());
+        row.createCell(i++).setCellValue(this.getStandort());
+        row.createCell(i++).setCellValue(this.getAnsprechpartner());
+        row.createCell(i++).setCellValue(this.getTelefon_Ansprechpartner());
+        row.createCell(i++).setCellValue(this.getEmail_Ansprechpartner());
+        row.createCell(i++)
+                .setCellValue(this.getSchuelerzahl());
+        row.createCell(i++)
+                .setCellValue(this.getAusbau(false));
+        row.createCell(i++)
+                .setCellValue(this.getBeratungsstatus());
+        row.createCell(i++)
+                .setCellValue(this.getKlassenanzahl());
+        row.createCell(i++)
+                .setCellValue(this.getPWCDownload());
+        row.createCell(i++)
+                .setCellValue(this.getPWCUpload());
+        row.createCell(i++)
+                .setCellValue(this.getSchuelerzahlIT());
+        row.createCell(i++)
+                .setCellValue(this.getAktenzeichenBund());
+        row.createCell(i++)
+                .setCellValue(this.getAktenzeichenLand());
     }
 
     /**
@@ -756,6 +856,14 @@ public class Schule {
         if(this.beratungsstatus != schule.getBeratungsstatus())
         {
             returnString += "Beratungsstatus von "+this.beratungsstatus+" zu "+schule.getBeratungsstatus()+" ";
+        }
+        if(this.aktenzeichenBund != schule.getAktenzeichenBund())
+        {
+            returnString += "Aktenzeichen Bund von "+this.aktenzeichenBund+" zu "+schule.getAktenzeichenBund()+" ";
+        }
+        if(this.aktenzeichenLand != schule.getAktenzeichenLand())
+        {
+            returnString += "Aktenzeichen Land von "+this.aktenzeichenLand+" zu "+schule.getAktenzeichenLand()+" ";
         }
         return returnString;
     }
@@ -970,5 +1078,111 @@ public class Schule {
 
     public void setKlassenanzahl(int klassenanzahl) {
         this.klassenanzahl = klassenanzahl;
+    }
+
+    public void printData(String preamble)
+    {
+        Schule.printData(String.valueOf(SNR),getName_der_Schule(),String.valueOf(PLZ),Ort,Strasse_Hsnr,preamble);
+    }
+
+    public static void printData(String SNR, String preamble)
+    {
+        Schule.printData(SNR, "","","","", preamble);
+    }
+
+    public static void printData(String SNR, String name_der_Schule,String PLZ, String Ort, String Strasse, String preamble)
+    {
+        System.out.println(preamble+"SNR:" + SNR + "; Name"+name_der_Schule+"; PLZ: "+PLZ+" Ort:"+Ort+"; Strasse:"+Strasse+"");
+    }
+
+    public void fillRowBereitsGigabitfaehig(XSSFCell cell) {
+        if(this.getAusbau(false).equals(AUSBAU_AUSGEBAUT))
+            cell.setCellValue("ja, Glasfaser");
+        else if(this.getAnbindung_Kbit_DL() >= 400000 || this.getPWCDownload() >= 400000)
+            cell.setCellValue("nein, nicht-gigabitfähiges Kabel (bis DOCSIS 3.0 oder DOCSIS 3.1 ohne Verlässlichkeit)");
+        else
+            cell.setCellValue("nein, nicht-gigabitfähige sonstige Technologie");
+    }
+
+    public void fillRowCall(XSSFCell cell) {
+        if(this.getAusbau(false).equals(AUSBAU_BUND_1))
+            cell.setCellValue("1");
+        else if(this.getAusbau(false).equals(AUSBAU_BUND_2))
+            cell.setCellValue("2");
+        else if(this.getAusbau(false).equals(AUSBAU_BUND_3))
+            cell.setCellValue("3");
+        else if(this.getAusbau(false).equals(AUSBAU_BUND_4))
+            cell.setCellValue("4");
+        else if(this.getAusbau(false).equals(AUSBAU_BUND_5))
+            cell.setCellValue("5");
+        else if(this.getAusbau(false).equals(AUSBAU_BUND_6))
+            cell.setCellValue("6");
+        else
+            cell.setCellValue("-");
+    }
+
+    public void fillRowInFoerderProgrammBewilligt(XSSFCell cell) {
+        if(!(this.getBeratungsstatus().equals(BERATUNGSSTATUS_UMSETZUNG) || this.getBeratungsstatus().equals(BERATUNGSSTATUS_ANGESCHOSSEN)))
+            cell.setCellValue("nein");
+        else fillInAusBauForCell(cell);
+    }
+
+    public void fillRowInFoerderProgrammBeantragt(XSSFCell cell) {
+        if(!this.getBeratungsstatus().equals(BERATUNGSSTATUS_IN_BEARBEITUNG))
+            cell.setCellValue("nein");
+        else {
+            fillInAusBauForCell(cell);
+        }
+    }
+
+    private void fillInAusBauForCell(XSSFCell cell) {
+        switch (this.getAusbau(false)) {
+            case AUSBAU_BUND_SONDER:
+                cell.setCellValue("ja, Sonderaufruf Schule Bund");
+                break;
+            case AUSBAU_BUND_1:
+                cell.setCellValue("ja, Kofinanzierung Bund - gigabitfähig");
+                break;
+            case AUSBAU_BUND_2:
+                cell.setCellValue("ja, Kofinanzierung Bund - gigabitfähig");
+                break;
+            case AUSBAU_BUND_3:
+                cell.setCellValue("ja, Kofinanzierung Bund - gigabitfähig");
+                break;
+            case AUSBAU_BUND_4:
+                cell.setCellValue("ja, Kofinanzierung Bund - gigabitfähig");
+                break;
+            case AUSBAU_BUND_5:
+                cell.setCellValue("ja, Kofinanzierung Bund - gigabitfähig");
+                break;
+            case AUSBAU_BUND_6:
+                cell.setCellValue("ja, Kofinanzierung Bund - gigabitfähig");
+                break;
+            case AUSBAU_LAND:
+                cell.setCellValue("ja, Schulrichtlinie NRW");
+                break;
+            case AUSBAU_RWP:
+                cell.setCellValue("ja, RWP - gigabitfähig");
+                break;
+            default:
+                cell.setCellValue("nein");
+                break;
+        }
+    }
+
+    public void fillRowInAktenzeichen(XSSFCell cell) {
+        if(this.getAktenzeichenBund().equals(""))
+            cell.setCellValue("-");
+        else
+            cell.setCellValue(this.getAktenzeichenBund());
+    }
+
+    public void fillRowEigenwirtschaftlicherAusbau(XSSFCell cell) {
+        if(this.getAusbau(false).equals(AUSBAU_EIGENWIRTSCHAFTLICH) && this.getBeratungsstatus().equals(BERATUNGSSTATUS_UMSETZUNG))
+            cell.setCellValue("ja, eigenwirtschaftlich - gigabitfähig (Ausbauvertrag geschlossen)");
+        else if(this.getAusbau(false).equals(AUSBAU_EIGENWIRTSCHAFTLICH) && this.getBeratungsstatus().equals(BERATUNGSSTATUS_IN_BEARBEITUNG))
+            cell.setCellValue("nein oder noch keine Verträge geschlossen");
+        else
+            cell.setCellValue("");
     }
 }
