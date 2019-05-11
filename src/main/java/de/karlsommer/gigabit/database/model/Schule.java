@@ -1185,4 +1185,13 @@ public class Schule {
         else
             cell.setCellValue("");
     }
+
+    public void fillRowBandbreiteInMbits(XSSFCell cell) {
+        if(this.getAnbindung_Kbit_DL() > 0)
+            cell.setCellValue(this.getAnbindung_Kbit_DL()/1000);
+        else if(this.getPWCDownload() > 0)
+            cell.setCellValue(this.getPWCDownload()/1000);
+        else
+            cell.setCellValue("k.A.");
+    }
 }

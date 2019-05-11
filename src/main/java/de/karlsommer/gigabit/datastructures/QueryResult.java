@@ -1,9 +1,8 @@
 package de.karlsommer.gigabit.datastructures;
 
+import java.util.ArrayList;
+
 /**
- * <p>
- * Vorschlag fuer die Materialien zu den zentralen NRW-Abiturpruefungen im Fach Informatik ab 2018.
- * </p>
  * <p>
  * Klasse QueryResult
  * </p>
@@ -13,29 +12,29 @@ package de.karlsommer.gigabit.datastructures;
  * Die Klasse verfuegt ueber keinen oeffentlichen Konstruktor.
  * </p>
  * 
- * @author Volker Quade
- * @version 2015-01-31
+ * @author Karl Sommer
+ * @version 2019-01-31
  */
 public class QueryResult{
-  private String[][] data;
-  private String[] columnNames;
-  private String[] columnTypes;
+  private ArrayList<ArrayList<String>> data;
+  private ArrayList<String> columnNames;
+  private ArrayList<String> columnTypes;
 
   /**
    * Paketinterner Konstruktor.
    */
-  public QueryResult(String[][] pData, String[] pColumnNames, String[] pColumnTypes){
+  public QueryResult(ArrayList<ArrayList<String>> pData, ArrayList<String> pColumnNames, ArrayList<String> pColumnTypes){
     data = pData;
     columnNames = pColumnNames;   
     columnTypes = pColumnTypes;
   }
 
   /**
-   * Die Anfrage liefert die Eintraege der Ergebnistabelle als zweidimensionales Feld
-   * vom Typ String. Der erste Index des Feldes stellt die Zeile und der zweite die 
-   * Spalte dar (d.h. Object[zeile][spalte]).
+   * Die Anfrage liefert die Eintraege der Ergebnistabelle als zweidimensionale ArrayList
+   * vom Typ String. Der erste Index des Arrays stellt die Zeile und der zweite die
+   * Spalte dar.
    */
-  public String[][] getData(){
+  public ArrayList<ArrayList<String>> getData(){
     return data;
   }
 
@@ -43,7 +42,7 @@ public class QueryResult{
    * Die Anfrage liefert die Bezeichner der Spalten der Ergebnistabelle als Feld vom 
    * Typ String zurueck.
    */
-  public String[] getColumnNames(){
+  public ArrayList<String> getColumnNames(){
     return columnNames;
   }
 
@@ -51,7 +50,7 @@ public class QueryResult{
    * Die Anfrage liefert die Typenbezeichnung der Spalten der Ergebnistabelle als Feld 
    * vom Typ String zurueck. Die Bezeichnungen entsprechen den Angaben in der MySQL-Datenbank.
    */
-  public String[] getColumnTypes(){
+  public ArrayList<String> getColumnTypes(){
     return columnTypes;
   }
 
@@ -60,7 +59,7 @@ public class QueryResult{
    */
   public int getRowCount(){
     if (data != null )
-      return data.length;
+      return data.size();
     else 
       return 0;
   }
@@ -69,8 +68,8 @@ public class QueryResult{
    * Die Anfrage liefert die Anzahl der Spalten der Ergebnistabelle als Integer.
    */
   public int getColumnCount(){
-    if (data != null && data.length > 0 && data[0] != null)
-      return data[0].length;
+    if (data != null && data.size() > 0 && data.get(0) != null)
+      return data.get(0).size();
     else
       return 0;
   }

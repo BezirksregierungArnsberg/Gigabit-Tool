@@ -1,6 +1,7 @@
 package de.karlsommer.gigabit.database;
 
 import com.healthmarketscience.jackcess.*;
+import de.karlsommer.gigabit.datastructures.QueryResult;
 import de.karlsommer.gigabit.helper.Settings;
 
 import java.io.File;
@@ -8,8 +9,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 
-public class MDBConnector {
+public class MDBConnector{
     private static MDBConnector _instance = null;
+    private String bezirk;
+    private String filename;
     public static final ArrayList<String> columnsFromDatabase = new ArrayList<String>() {{
         add("Schulnr");
         add("Regschl");
@@ -25,8 +28,10 @@ public class MDBConnector {
         add("KurzBez");
     }};
 
-    private MDBConnector()
+    protected MDBConnector()
     {
+        super();
+        bezirk = Settings.getInstance().getBezirksSuchString();
     }
 
     /**
@@ -40,15 +45,7 @@ public class MDBConnector {
         return _instance;
     }
 
-    /**
-     * Gibt alle Schulen des definierten Schulbezirks aus der Datenank zurück.
-     *
-     * @param bezirk der zu suchende String des Bezirks
-     * @return ArrayList aus Arraylists, die jeweils die Werte einer Schule repräsentieren
-     *
-     */
-    public ArrayList<ArrayList<String>> getAllSchools(String bezirk, String filename)
-    {
+    public QueryResult executeStatement(String filename) {
         ArrayList<ArrayList<String>> returnList = new ArrayList<>();
         try (Database db = DatabaseBuilder.open(new File(filename))) {
             Table schoolTable = db.getTable("DBS");
@@ -65,7 +62,7 @@ public class MDBConnector {
         } catch (IOException ioe) {
             ioe.printStackTrace(System.err);
         }
-        return returnList;
+        return new QueryResult(returnList, columnsFromDatabase, null);
     }
 
 }

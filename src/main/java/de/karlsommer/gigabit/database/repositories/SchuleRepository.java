@@ -24,7 +24,7 @@ public class SchuleRepository {
         DatabaseConnector.getInstance().executeStatement(query);
         QueryResult result = DatabaseConnector.getInstance().getCurrentQueryResult();
         if (checkValidity(result)) return null;
-        return new Schule(new ArrayList<String>(Arrays.asList(result.getData()[0])),true);
+        return new Schule(new ArrayList<String>(result.getData().get(0)),true);
     }
 
     private ArrayList<Schule> getArrayListForQuery(String query)
@@ -34,7 +34,7 @@ public class SchuleRepository {
         ArrayList<Schule> schulen = new ArrayList<>();
         for(int i = 0; i < result.getRowCount(); i++)
         {
-            schulen.add(new Schule(new ArrayList<String>(Arrays.asList(result.getData()[i])),true));
+            schulen.add(new Schule(result.getData().get(i),true));
         }
         return schulen;
     }
@@ -65,7 +65,7 @@ public class SchuleRepository {
         String[] ausbau = new String[result.getRowCount()];
         for(int i = 0; i < result.getRowCount(); i++)
         {
-            ausbau[i] = result.getData()[i][0];
+            ausbau[i] = result.getData().get(i).get(0);
         }
         return ausbau;
     }
@@ -79,18 +79,18 @@ public class SchuleRepository {
     {
         DatabaseConnector.getInstance().executeStatement(query);
         QueryResult result = DatabaseConnector.getInstance().getCurrentQueryResult();
-        if(result == null || result.getData() == null || result.getData()[0] == null || result.getData()[0][0] == null)
+        if(!checkValidity(result))
             return 0;
-        return Integer.parseInt(result.getData()[0][0]);
+        return Integer.parseInt(result.getData().get(0).get(0));
     }
 
     public double getDoubleQueryValue(String query, int places)
     {
         DatabaseConnector.getInstance().executeStatement(query);
         QueryResult result = DatabaseConnector.getInstance().getCurrentQueryResult();
-        if(result == null || result.getData() == null || result.getData()[0][0] == null)
+        if(!checkValidity(result))
             return 0d;
-        return round(Double.parseDouble(result.getData()[0][0]),places);
+        return round(Double.parseDouble(result.getData().get(0).get(0)),places);
     }
 
     public void save(Schule schule) {
@@ -199,11 +199,11 @@ public class SchuleRepository {
             return true;
         else if(result.getData() == null)
             return true;
-        else if(result.getData().length<1)
+        else if(result.getData().size()<1)
             return true;
-        else if(result.getData()[0] == null)
+        else if(result.getData().get(0) == null)
             return true;
-        else if(result.getData()[0].length < 10)
+        else if(result.getData().get(0).size()< 10)
             return true;
         return false;
     }

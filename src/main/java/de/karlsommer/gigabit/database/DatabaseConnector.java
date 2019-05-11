@@ -1,21 +1,16 @@
 package de.karlsommer.gigabit.database;
 
-import de.karlsommer.gigabit.Interface;
 import de.karlsommer.gigabit.datastructures.QueryResult;
-import de.karlsommer.gigabit.datastructures.Queue;
 import de.karlsommer.gigabit.helper.Settings;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
 import java.sql.*;
 import java.text.Format;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
-import java.text.DateFormat;
 
 /**
  * <p>
@@ -62,7 +57,6 @@ public class DatabaseConnector{
       System.exit(0);
     }
   }
-
   /**
    * Erweiterung des Datenbankconnectors zum Singleton
    * @return Singleton-Instanz
@@ -114,36 +108,20 @@ public class DatabaseConnector{
         int columnCount = resultset.getMetaData().getColumnCount();
         
         //Spaltennamen und Spaltentypen in Felder uebertragen
-        String[] resultColumnNames = new String[columnCount];
-        String[] resultColumnTypes = new String[columnCount];
+        ArrayList<String> resultColumnNames = new ArrayList<>();
+        ArrayList<String> resultColumnTypes = new ArrayList<>();
         for (int i = 0; i < columnCount; i++){
-          resultColumnNames[i] = resultset.getMetaData().getColumnLabel(i+1);
-          resultColumnTypes[i] = resultset.getMetaData().getColumnTypeName(i+1);
+          resultColumnNames.add(resultset.getMetaData().getColumnLabel(i+1));
+          resultColumnTypes.add(resultset.getMetaData().getColumnTypeName(i+1));
         }
+        ArrayList<ArrayList<String>> resultData = new ArrayList<>();
 
-        //Queue fuer die Zeilen der Ergebnistabelle erstellen
-        Queue<String[]> rows = new Queue<String[]>();
-
-        //Daten in Queue uebertragen und Zeilen zaehlen
-        int rowCount = 0;
         while (resultset.next()){
-          String[] resultrow =  new String[columnCount];
+          resultData.add(new ArrayList<>());
           for (int s = 0; s < columnCount; s++){
-            resultrow[s] = resultset.getString(s+1);
+            resultData.get(resultData.size()-1).add(resultset.getString(s+1));
           }
-          rows.enqueue(resultrow);
-          rowCount = rowCount + 1;
         }
-
-        //Ergebnisfeld erstellen und Zeilen aus Queue uebertragen
-        String[][] resultData = new String[rowCount][columnCount];
-        int j = 0;
-        while (!rows.isEmpty()){
-          resultData[j] = rows.front();
-          rows.dequeue();          
-          j = j + 1;
-        }
-               
         //Statement schließen und Ergebnisobjekt erstellen
         statement.close();
         currentQueryResult =  new QueryResult(resultData, resultColumnNames, resultColumnTypes); 
@@ -161,12 +139,12 @@ public class DatabaseConnector{
   }
 
   /**
-   * Die Anfrage liefert das Ergebnis des letzten mit der Methode executeStatement an 
+   * Die Anfrage liefert das Ergebnis des letzten mit der Methode executeStatement an
    * die Datenbank geschickten SQL-Befehls als Ob-jekt vom Typ QueryResult zurueck.
-   * Wurde bisher kein SQL-Befehl abgeschickt oder ergab der letzte Aufruf von 
-   * executeStatement keine Ergebnismenge (z.B. bei einem INSERT-Befehl oder einem 
-   * Syntaxfehler), so wird null geliefert.  
-   */  
+   * Wurde bisher kein SQL-Befehl abgeschickt oder ergab der letzte Aufruf von
+   * executeStatement keine Ergebnismenge (z.B. bei einem INSERT-Befehl oder einem
+   * Syntaxfehler), so wird null geliefert.
+   */
   public QueryResult getCurrentQueryResult(){
     return currentQueryResult;
   }

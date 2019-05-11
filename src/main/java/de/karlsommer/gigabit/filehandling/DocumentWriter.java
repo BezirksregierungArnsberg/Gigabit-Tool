@@ -317,6 +317,8 @@ public class DocumentWriter {
         XSSFSheet sheet = workbook.getSheetAt(1);
         int ROW_SCHULNUMMER = 1;
         int ROW_STRASSE_UND_HAUSNUMMER = 5;
+        int ROW_TECHNOLOGIE_ANSCHLUSS_1 = 22;
+        int ROW_BANDBREITE_ANSCHLUSS_1 = 24;
         int ROW_BEREITS_GIGABITFAEHIG = 37;
         int ROW_CALL_BUNDESPORGRAMM = 38;
         int ROW_IN_FOERDERPROGRAMM_BEWILLIGT = 39;
@@ -336,6 +338,14 @@ public class DocumentWriter {
                     row.createCell(ROW_AKTENZEICHEN);
                 schule.fillRowInAktenzeichen(row.getCell(ROW_AKTENZEICHEN));
                 schule.fillRowEigenwirtschaftlicherAusbau(row.getCell(ROW_EIGENWIRTSCHAFTLICHER_AUSBAU));
+                if(row.getCell(ROW_TECHNOLOGIE_ANSCHLUSS_1).getStringCellValue().equals("Nicht in Abfragerücklauf enthalten"))
+                {
+                    row.getCell(ROW_TECHNOLOGIE_ANSCHLUSS_1).setCellValue("k.A.");
+                }
+                if(row.getCell(ROW_BANDBREITE_ANSCHLUSS_1).getCellTypeEnum() == CellType.STRING && (row.getCell(ROW_BANDBREITE_ANSCHLUSS_1).getStringCellValue().equals("Nicht in Abfragerücklauf enthalten") || row.getCell(ROW_BANDBREITE_ANSCHLUSS_1).getStringCellValue().equals("k.A.")))
+                {
+                    schule.fillRowBandbreiteInMbits(row.getCell(ROW_BANDBREITE_ANSCHLUSS_1));
+                }
             }
             else
             {
@@ -389,7 +399,7 @@ public class DocumentWriter {
 
         sheet = workbook.getSheetAt(1);
 
-        String [] ausbauArray = new String[]{"Ausgebaut","Bund%","Eigenwirt%","Land%","Ungekl%"};
+        String [] ausbauArray = new String[]{"Ausgebaut","Bund%","Eigenwirt%","Land%","Ungekl%", "RWP"};
         String [] beratungsArray = new String[]{"Angeschlossen","Umsetzung","In Bearbeitung","In Beratung","Kontakt aufnehmen","Kein Interesse"};
 
         row = sheet.getRow(0);

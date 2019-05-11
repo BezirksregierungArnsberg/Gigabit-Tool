@@ -23,7 +23,7 @@ public class LogEntryRepository {
         ArrayList<LogEntry> logEntries = new ArrayList<>();
         for(int i = 0; i < result.getRowCount(); i++)
         {
-            logEntries.add(new LogEntry(new ArrayList<String>(Arrays.asList(result.getData()[i]))));
+            logEntries.add(new LogEntry(result.getData().get(i)));
         }
         return logEntries;
     }
